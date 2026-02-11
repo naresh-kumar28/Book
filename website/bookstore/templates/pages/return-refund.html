@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block title %} Return Refund {% endblock %}
+
+{% block content %}
+
+    <div class="bg-white min-h-screen">
+        <section class="pt-24 pb-12 bg-slate-50 border-b border-slate-100">
+            <div class="max-w-4xl mx-auto px-6 text-center">
+                <div
+                    class="inline-flex items-center justify-center w-16 h-16 bg-orange-100 text-orange-600 rounded-2xl mb-6">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M16 15v-1a4 4 0 00-4-4H8m0 0l3 3m-3-3l3-3m9 14V5a2 2 0 00-2-2H6a2 2 0 00-2 2v16l4-2 4 2 4-2 4 2z">
+                        </path>
+                    </svg>
+                </div>
+                <h1 class="text-4xl md:text-5xl font-black text-slate-900 mb-4">Return & <span
+                        class="text-teal-600">Refund</span> Policy</h1>
+                <p class="text-slate-500">Humara maqsad hai aapki mukammal santushti. Agar aap product se khush nahi hain,
+                    toh hum madad ke liye taiyar hain.</p>
+            </div>
+        </section>
+    
+        <section class="py-16">
+            <div class="max-w-5xl mx-auto px-6">
+                <div class="grid md:grid-cols-3 gap-8 mb-16">
+                    <div
+                        class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-xl shadow-slate-100/50 text-center">
+                        <span class="text-4xl mb-4 block">📦</span>
+                        <h3 class="font-bold text-slate-900 mb-2">7 Dino Ka Return</h3>
+                        <p class="text-sm text-slate-500">Delivery ke 7 dino ke andar aap return request kar sakte hain.</p>
+                    </div>
+                    <div
+                        class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-xl shadow-slate-100/50 text-center border-t-teal-500 border-t-4">
+                        <span class="text-4xl mb-4 block">🔍</span>
+                        <h3 class="font-bold text-slate-900 mb-2">Quality Check</h3>
+                        <p class="text-sm text-slate-500">Product ka original condition mein hona zaroori hai.</p>
+                    </div>
+                    <div
+                        class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-xl shadow-slate-100/50 text-center">
+                        <span class="text-4xl mb-4 block">💳</span>
+                        <h3 class="font-bold text-slate-900 mb-2">Quick Refund</h3>
+                        <p class="text-sm text-slate-500">Check hone ke baad 5-7 working days mein paisa wapas.</p>
+                    </div>
+                </div>
+    
+                <div class="space-y-10 max-w-3xl mx-auto">
+    
+                    <div class="border-l-4 border-teal-500 pl-6">
+                        <h2 class="text-2xl font-bold text-slate-900 mb-4">1. Return Ki Shartein (Eligibility)</h2>
+                        <p class="text-slate-600 leading-relaxed">
+                            Return tabhi liya jayega jab product damaged ho, galat item deliver hua ho, ya usmein koi
+                            manufacturing defect ho. Item ka unused hona aur original packing mein hona anivarya hai.
+                        </p>
+                    </div>
+    
+                    <div class="border-l-4 border-slate-200 pl-6">
+                        <h2 class="text-2xl font-bold text-slate-900 mb-4">2. Non-Returnable Items</h2>
+                        <p class="text-slate-600 leading-relaxed mb-4">
+                            Niche diye gaye cases mein return ya exchange nahi ho payega:
+                        </p>
+                        <ul class="list-disc pl-5 space-y-2 text-slate-500">
+                            <li>Digital content ya E-books.</li>
+                            <li>Items jo 7 dino ki limit ke baad report kiye gaye hon.</li>
+                            <li>Used ya damaged products (jo user ki wajah se huye hon).</li>
+                        </ul>
+                    </div>
+    
+                    <div
+                        class="bg-teal-600 rounded-[2.5rem] p-8 md:p-12 text-white relative overflow-hidden shadow-2xl shadow-teal-600/20">
+                        <div class="relative z-10">
+                            <h2 class="text-2xl font-bold mb-4">3. Refund Kaise Milega?</h2>
+                            <p class="opacity-90 mb-6 leading-relaxed">
+                                Ek baar jab humein aapka return mil jayega aur hum use inspect kar lenge, toh hum aapko
+                                email ke zariye soochit karenge. Approved refund automatically aapke original payment method
+                                (Bank/UPI/Card) mein bhej diya jayega.
+                            </p>
+                            <div class="flex items-center gap-4 text-sm font-bold bg-white/10 w-fit px-4 py-2 rounded-lg">
+                                <span>Note:</span> Shipping charges non-refundable ho sakte hain.
+                            </div>
+                        </div>
+                        <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
+                    </div>
+    
+                    <div class="border-l-4 border-orange-400 pl-6">
+                        <h2 class="text-2xl font-bold text-slate-900 mb-4">4. Cancellation Policy</h2>
+                        <p class="text-slate-600 leading-relaxed">
+                            Aap apna order ship hone se pehle kabhi bhi cancel kar sakte hain. Order ship hone ke baad use
+                            cancel nahi kiya ja sakta, uske liye aapko return process hi follow karna hoga.
+                        </p>
+                    </div>
+    
+                </div>
+            </div>
+        </section>
+    
+        <section class="py-16 px-6">
+            <div class="max-w-4xl mx-auto bg-slate-50 rounded-[3rem] p-10 border border-slate-200 text-center">
+                <h3 class="text-xl font-black text-slate-900 mb-2">Koi aur sawal hai?</h3>
+                <p class="text-slate-500 mb-8">Humari support team 24/7 aapki help ke liye available hai.</p>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <a href="mailto:support@yourdomain.com"
+                        class="bg-slate-900 text-white px-8 py-3 rounded-2xl font-bold hover:bg-slate-800 transition-all">Email
+                        Karein</a>
+                    <a href="/contact"
+                        class="bg-white text-slate-900 border border-slate-200 px-8 py-3 rounded-2xl font-bold hover:bg-slate-50 transition-all">Contact
+                        Us</a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+{% endblock %}

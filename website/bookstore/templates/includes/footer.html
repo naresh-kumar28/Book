@@ -1,4 +1,4 @@
-<footer class="bg-gray-900 text-gray-300 pt-16 pb-8">
+<footer  id="main-footer" class="bg-gray-900 text-gray-300 pt-16 pb-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
@@ -45,8 +45,8 @@
                     <li><a href="#" class="hover:text-orange-500 transition-colors">Home</a></li>
                     <li><a href="#" class="hover:text-orange-500 transition-colors">All Books</a></li>
                     <li><a href="#" class="hover:text-orange-500 transition-colors">Best Sellers</a></li>
-                    <li><a href="#" class="hover:text-orange-500 transition-colors">New Arrivals</a></li>
-                    <li><a href="#" class="hover:text-orange-500 transition-colors">Contact Us</a></li>
+                    <li><a href="{% url 'about-us' %}" class="{% if request.path == '/about-us/' %} text-orange-500 {% endif %} hover:text-orange-500 transition-colors">About Us</a></li>
+                    <li><a href="{% url 'contact-us' %}" class="{% if request.path == '/contact-us/' %} text-orange-500 {% endif %} hover:text-orange-500 transition-colors">Contact Us</a></li>
                 </ul>
             </div>
 
@@ -55,9 +55,9 @@
                 <ul class="space-y-2 text-sm">
                     <li><a href="#" class="hover:text-orange-500 transition-colors">My Account</a></li>
                     <li><a href="#" class="hover:text-orange-500 transition-colors">Order Tracking</a></li>
-                    <li><a href="#" class="hover:text-orange-500 transition-colors">Privacy Policy</a></li>
-                    <li><a href="#" class="hover:text-orange-500 transition-colors">Terms & Conditions</a></li>
-                    <li><a href="#" class="hover:text-orange-500 transition-colors">Return & Refund</a></li>
+                    <li><a href="{% url 'privacy-policy' %}" class="{% if request.path == '/privacy-policy/' %} text-orange-500 {% endif %} hover:text-orange-500 transition-colors">Privacy Policy</a></li>
+                    <li><a href="{% url 'terms-condition' %}" class="{% if request.path == '/terms-condition/' %} text-orange-500 {% endif %} hover:text-orange-500 transition-colors">Terms & Conditions</a></li>
+                    <li><a href="{% url 'return-refund' %}" class="{% if request.path == '/return-refund/' %} text-orange-500 {% endif %} hover:text-orange-500 transition-colors">Return & Refund</a></li>
                 </ul>
             </div>
 

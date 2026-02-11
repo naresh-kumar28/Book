@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block title %} Privacy Policy {% endblock %}
+
+{% block content %}
+
+    <div class="bg-white min-h-screen">
+        <section class="pt-24 pb-12 bg-slate-50">
+            <div class="max-w-4xl mx-auto px-6 text-center">
+                <h1 class="text-4xl font-black text-slate-900 mb-4">Privacy <span class="text-teal-600">Policy</span></h1>
+                <p class="text-slate-500">Last Updated: February 2026</p>
+                <div class="w-20 h-1.5 bg-orange-400 mx-auto mt-6 rounded-full"></div>
+            </div>
+        </section>
+    
+        <section class="py-16">
+            <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row gap-12">
+               
+                <aside class="hidden md:block w-1/4 sticky top-[150px] h-fit">
+                    <div class="bg-slate-50 p-6 rounded-3xl border border-slate-100">
+                        <h4 class="font-bold text-slate-900 mb-4 px-2">Privacy Policy</h4>
+                        <nav class="space-y-1">
+                            <a href="#acceptance" class="block px-3 py-2 text-sm font-medium text-teal-600 bg-teal-50 rounded-lg">1.
+                                Introduction</a>
+                            <a href="#account"
+                                class="block px-3 py-2 text-sm font-medium text-slate-500 hover:bg-slate-100 rounded-lg transition-all">2.
+                                Data We Collect</a>
+                            <a href="#ordering"
+                                class="block px-3 py-2 text-sm font-medium text-slate-500 hover:bg-slate-100 rounded-lg transition-all">3.
+                                How We Use Data</a>
+                            <a href="#intellectual"
+                                class="block px-3 py-2 text-sm font-medium text-slate-500 hover:bg-slate-100 rounded-lg transition-all">4.
+                                Data Security</a>
+                            <a href="#refunds"
+                                class="block px-3 py-2 text-sm font-medium text-slate-500 hover:bg-slate-100 rounded-lg transition-all">5.
+                                Cookie Policy</a>
+                            <a href="#liability"
+                                class="block px-3 py-2 text-sm font-medium text-slate-500 hover:bg-slate-100 rounded-lg transition-all">6.
+                                Contact Us</a>
+                        </nav>
+                    </div>
+                </aside>
+
+                <div class="w-full md:w-3/4 prose prose-slate max-w-none">
+    
+                    <div id="introduction" class="mb-12">
+                        <h2 class="text-2xl font-bold text-slate-900 mb-4">1. Introduction</h2>
+                        <p class="text-slate-600 leading-relaxed">
+                            Nageen Prakashan mein hum aapki privacy ki dil se izzat karte hain. Yeh policy batati hai ki jab
+                            aap humari website ya mobile app ka upyog karte hain, toh hum aapki jaankari kaise collect aur
+                            safe rakhte hain. Humari koshish hai ki aapka data hamesha surakshit rahe.
+                        </p>
+                    </div>
+    
+                    <div id="data-collection" class="mb-12">
+                        <h2 class="text-2xl font-bold text-slate-900 mb-4">2. Data We Collect</h2>
+                        <p class="text-slate-600 mb-4">Hum niche di gayi jaankari collect kar sakte hain:</p>
+                        <ul class="list-disc pl-6 space-y-2 text-slate-600">
+                            <li>Aapka naam aur sampark ki jaankari (Email, Phone number).</li>
+                            <li>Address (Order delivery ke liye).</li>
+                            <li>Payment details (Securely processed via third-party gateways).</li>
+                            <li>Usage data (Aap app kaise use karte hain).</li>
+                        </ul>
+                    </div>
+    
+                    <div id="usage" class="mb-12">
+                        <div class="bg-teal-50 p-8 rounded-[2rem] border border-teal-100">
+                            <h2 class="text-2xl font-bold text-teal-900 mb-4">3. How We Use Data</h2>
+                            <p class="text-teal-800 leading-relaxed">
+                                Hum aapka data sirf aapko behtar service dene ke liye use karte hain, jaise order process
+                                karna, naye offers ki jaankari dena, aur app experience ko fast banana. Hum aapka data kisi
+                                bhi third-party ko bina wajah nahi bechte.
+                            </p>
+                        </div>
+                    </div>
+    
+                    <div id="security" class="mb-12">
+                        <h2 class="text-2xl font-bold text-slate-900 mb-4">4. Data Security</h2>
+                        <p class="text-slate-600 leading-relaxed">
+                            Aapka data humare liye priority hai. Hum **SSL encryption** aur secure servers ka upyog karte
+                            hain taaki koi bhi unauthorized person aapki jaankari tak na pahunch sake.
+                        </p>
+                    </div>
+    
+                    <div id="cookies" class="mb-12">
+                        <h2 class="text-2xl font-bold text-slate-900 mb-4">5. Cookie Policy</h2>
+                        <p class="text-slate-600 leading-relaxed">
+                            Humari website 'Cookies' ka upyog karti hai taaki hum yaad rakh sakein ki aapne cart mein kya
+                            dala hai aur aapki pasand kya hai. Aap chahein toh browser setting se ise disable bhi kar sakte
+                            hain.
+                        </p>
+                    </div>
+    
+                    <div id="contact" class="p-8 bg-orange-50 rounded-[2rem] border border-orange-100">
+                        <h2 class="text-2xl font-bold text-orange-900 mb-4">6. Contact Us</h2>
+                        <p class="text-orange-800 mb-4">Agar aapko privacy policy se juda koi bhi sawal hai, toh humein
+                            likhein:</p>
+                        <a href="mailto:privacy@nageenprakashan.com"
+                            class="text-orange-600 font-bold hover:underline">privacy@nageenprakashan.com</a>
+                    </div>
+    
+                </div>
+            </div>
+        </section>
+    </div>
+
+{% endblock %}

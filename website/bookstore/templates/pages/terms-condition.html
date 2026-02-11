@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+
+{% block title %} Terms Condition {% endblock %}
+
+{% block content %}
+
+    <div class="bg-white min-h-screen">
+        <section class="pt-24 pb-12 bg-slate-50 border-b border-slate-100">
+            <div class="max-w-4xl mx-auto px-6 text-center">
+                <span
+                    class="inline-block px-4 py-1.5 mb-4 text-xs font-bold tracking-widest text-orange-600 uppercase bg-orange-100 rounded-full">
+                    Legal Agreements
+                </span>
+                <h1 class="text-4xl md:text-5xl font-black text-slate-900 mb-4">Terms & <span
+                        class="text-teal-600">Conditions</span></h1>
+                <p class="text-slate-500">Kripya humari sevayein upyog karne se pehle inhe dhyan se padhein.</p>
+            </div>
+        </section>
+    
+        <section class="py-16">
+            <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row gap-12">
+    
+                <aside class="hidden md:block w-1/4 sticky top-[150px] h-fit">
+                    <div class="bg-slate-50 p-6 rounded-3xl border border-slate-100">
+                        <h4 class="font-bold text-slate-900 mb-4 px-2">Table of Contents</h4>
+                        <nav class="space-y-1">
+                            <a href="#acceptance"
+                                class="block px-3 py-2 text-sm font-medium text-teal-600 bg-teal-50 rounded-lg">1.
+                                Acceptance</a>
+                            <a href="#account"
+                                class="block px-3 py-2 text-sm font-medium text-slate-500 hover:bg-slate-100 rounded-lg transition-all">2.
+                                User Account</a>
+                            <a href="#ordering"
+                                class="block px-3 py-2 text-sm font-medium text-slate-500 hover:bg-slate-100 rounded-lg transition-all">3.
+                                Ordering & Payment</a>
+                            <a href="#intellectual"
+                                class="block px-3 py-2 text-sm font-medium text-slate-500 hover:bg-slate-100 rounded-lg transition-all">4.
+                                Intellectual Property</a>
+                            <a href="#refunds"
+                                class="block px-3 py-2 text-sm font-medium text-slate-500 hover:bg-slate-100 rounded-lg transition-all">5.
+                                Returns & Refunds</a>
+                            <a href="#liability"
+                                class="block px-3 py-2 text-sm font-medium text-slate-500 hover:bg-slate-100 rounded-lg transition-all">6.
+                                Limitation of Liability</a>
+                        </nav>
+                    </div>
+                </aside>
+    
+                <div class="w-full md:w-3/4 space-y-12">
+    
+                    <div id="acceptance" class="scroll-mt-24">
+                        <h2 class="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-3">
+                            <span
+                                class="w-8 h-8 bg-teal-600 text-white text-sm rounded-lg flex items-center justify-center">01</span>
+                            Acceptance of Terms
+                        </h2>
+                        <p class="text-slate-600 leading-relaxed">
+                            Nageen Prakashan ki website ya mobile app ka upyog karke, aap ye sweekar karte hain ki aapne
+                            humari Terms & Conditions ko padh liya hai aur aap unka palan karne ke liye taiyar hain. Agar
+                            aap in terms se sehmat nahi hain, toh kripya humari services ka upyog na karein.
+                        </p>
+                    </div>
+    
+                    <div id="account" class="scroll-mt-24">
+                        <h2 class="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-3">
+                            <span
+                                class="w-8 h-8 bg-teal-600 text-white text-sm rounded-lg flex items-center justify-center">02</span>
+                            User Account & Security
+                        </h2>
+                        <p class="text-slate-600 leading-relaxed">
+                            App ya website par account banate samay aapko sahi jaankari deni hogi. Aapke account ka password
+                            aur uski security aapki zimmedari hai. Kisi bhi unauthorized activity ki sochna aapko turant
+                            humein deni hogi.
+                        </p>
+                    </div>
+    
+                    <div id="ordering" class="scroll-mt-24 bg-slate-50 p-8 rounded-[2rem] border border-slate-100">
+                        <h2 class="text-2xl font-bold text-slate-900 mb-4">3. Ordering & Payment</h2>
+                        <p class="text-slate-600 mb-4">Kitabon ka order dete samay niche di gayi baaton ka dhyan rakhein:
+                        </p>
+                        <ul class="space-y-3 text-slate-600">
+                            <li class="flex items-start gap-3">
+                                <span class="text-teal-600 mt-1">✔</span>
+                                <span>Sabhi prices Indian Rupees (INR) mein hain.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="text-teal-600 mt-1">✔</span>
+                                <span>Order confirmation email milne ke baad hi order valid mana jayega.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="text-teal-600 mt-1">✔</span>
+                                <span>Delivery charges aapke location aur order value ke hisab se apply ho sakte
+                                    hain.</span>
+                            </li>
+                        </ul>
+                    </div>
+    
+                    <div id="intellectual" class="scroll-mt-24">
+                        <h2 class="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-3">
+                            <span
+                                class="w-8 h-8 bg-teal-600 text-white text-sm rounded-lg flex items-center justify-center">04</span>
+                            Intellectual Property
+                        </h2>
+                        <p class="text-slate-600 leading-relaxed">
+                            Is platform par maujood saara content (text, graphics, logos, images, aur books) Nageen
+                            Prakashan ki sampatti hai. Bina written permission ke kisi bhi content ka copy ya reuse karna
+                            kanoonan jurm hai.
+                        </p>
+                    </div>
+    
+                    <div id="refunds" class="scroll-mt-24 p-8 bg-orange-50 rounded-[2rem] border border-orange-100">
+                        <h2 class="text-2xl font-bold text-orange-900 mb-4">5. Returns & Refunds</h2>
+                        <p class="text-orange-800 leading-relaxed mb-4">
+                            Hum chahte hain ki aap khush rahein! Agar aapko galat ya damaged book milti hai, toh aap
+                            delivery ke **7 dino** ke andar return request daal sakte hain. Refund process hone mein 5-7
+                            working days ka samay lag sakta hai.
+                        </p>
+                        <a href="#" class="inline-block font-bold text-orange-600 hover:text-orange-700 underline">Read Full
+                            Refund Policy →</a>
+                    </div>
+    
+                    <div id="liability" class="scroll-mt-24">
+                        <h2 class="text-2xl font-bold text-slate-900 mb-4 flex items-center gap-3">
+                            <span
+                                class="w-8 h-8 bg-teal-600 text-white text-sm rounded-lg flex items-center justify-center">06</span>
+                            Limitation of Liability
+                        </h2>
+                        <p class="text-slate-600 leading-relaxed">
+                            Nageen Prakashan kisi bhi indirect, accidental, ya consequential damage ke liye zimmedar nahi
+                            hoga jo humari website ya products ke upyog se juda ho.
+                        </p>
+                    </div>
+    
+                </div>
+            </div>
+        </section>
+    
+    </div>
+
+{% endblock %}
+
