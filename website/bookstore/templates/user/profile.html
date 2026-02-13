@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}Book Warm | Profile{% endblock %}
+
+{% block content %}
+
+{% include 'includes/sticky-button.html' %}
+
+<div class="min-h-screen bg-gray-50 py-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col md:flex-row gap-8">
+
+            <!-- sidebar section -->
+            {% include 'user/sidebar.html' %}
+
+            <main class="flex-1 space-y-6">
+
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8">
+                    <h2 class="text-xl md:text-2xl font-bold text-gray-900 border-l-4 border-orange-500 pl-3 mb-8">My
+                        Profile</h2>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label class="text-sm font-semibold text-gray-700">First Name</label>
+                            <input type="text" placeholder="Sponsorship"
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm font-semibold text-gray-700">Last Name</label>
+                            <input type="text" placeholder="Email"
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm font-semibold text-gray-700">Email Address</label>
+                            <input type="email" placeholder="rajatekofficial@gmail.com"
+                                class="w-full px-4 py-3 rounded-xl border border-gray-100 bg-gray-50 text-gray-500 outline-none cursor-not-allowed"
+                                disabled>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm font-semibold text-gray-700">Phone Number</label>
+                            <input type="tel" placeholder="+91 00000 00000"
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all">
+                        </div>
+                    </div>
+
+                    <div class="mt-8 flex justify-end">
+                        <button
+                            class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-xl transition-all shadow-md active:scale-95 text-sm">
+                            Update Profile
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8">
+                    <h2 class="text-xl md:text-2xl font-bold text-gray-900 border-l-4 border-orange-500 pl-3 mb-8">
+                        Change Password</h2>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label class="text-sm font-semibold text-gray-700">New Password</label>
+                            <input type="password" placeholder="••••••••"
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm font-semibold text-gray-700">Confirm New Password</label>
+                            <input type="password" placeholder="••••••••"
+                                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all">
+                        </div>
+                    </div>
+
+                    <div class="mt-8 flex justify-end">
+                        <button
+                            class="bg-gray-800 hover:bg-black text-white font-bold py-3 px-8 rounded-xl transition-all shadow-md active:scale-95 text-sm">
+                            Change Password
+                        </button>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

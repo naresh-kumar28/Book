@@ -28,3 +28,5 @@ staticfiles/
 
 # Node (agar future me frontend add ho)
 node_modules/
+
+raw.html
