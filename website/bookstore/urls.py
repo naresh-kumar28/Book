@@ -20,9 +20,9 @@ urlpatterns = [
 
 
     # User Section
-    path('my-account/address/', address, name='address'),
-    path('my-account/profile/', profile, name='profile'),
-    path('my-account/dashboard/', dashboard, name='dashboard'),
-    path('my-account/my-order/', myOrder, name='my-order'),
-    path('my-account/wishlist/', wishlist, name='wishlist'),
+    path('account/address/', address, name='address'),
+    path('account/profile/', profile, name='profile'),
+    path('account/dashboard/', dashboard, name='dashboard'),
+    path('account/my-order/', myOrder, name='my-order'),
+    path('account/wishlist/', wishlist, name='wishlist'),
 ]

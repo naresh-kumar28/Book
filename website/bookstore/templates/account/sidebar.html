@@ -15,14 +15,14 @@
 
         <nav class="p-4 space-y-1">
             <a href="{% url 'dashboard' %}" class="flex items-center space-x-3 p-3 rounded-xl transition-all group
-                {% if request.path == '/my-account/dashboard/' %}
+                {% if request.path == '/account/dashboard/' %}
                     bg-orange-50 text-orange-600 font-bold border border-orange-100 
                 {% else %}
                     text-gray-600 hover:bg-gray-50 hover:text-orange-500
                 {% endif %} ">
 
                 <svg class="w-5 h-5  
-                {% if request.path == '/my-account/dashboard/' %} 
+                {% if request.path == '/account/dashboard/' %} 
                         text-orange-500 
                     {% else %} 
                         text-gray-400 group-hover:text-orange-500 
@@ -33,7 +33,7 @@
                 <span class=" text-sm">Dashboard</span>
             </a>
             <a href="{% url 'my-order' %}" class="flex items-center space-x-3 p-3 rounded-xl group
-                {% if request.path == '/my-account/my-order/' %} 
+                {% if request.path == '/account/my-order/' %} 
                     bg-orange-50 text-orange-600 font-bold border border-orange-100 
                 {% else %} 
                     text-gray-600 hover:bg-gray-50 hover:text-orange-500
@@ -41,7 +41,7 @@
 
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                     stroke="currentColor" class="w-5 h-5 
-                    {% if request.path == '/my-account/my-order/' %} 
+                    {% if request.path == '/account/my-order/' %} 
                         text-orange-500 
                     {% else %} 
                         text-gray-400 group-hover:text-orange-500 
@@ -54,14 +54,14 @@
             </a>
 
             <a href="{% url 'profile' %}" class="flex items-center space-x-3 p-3 rounded-xl group
-                {% if request.path == '/my-account/profile/' %} 
+                {% if request.path == '/account/profile/' %} 
                     bg-orange-50 text-orange-600 font-bold border border-orange-100 
                 {% else %} 
                     text-gray-600 hover:bg-gray-50 hover:text-orange-500
                 {% endif %}">
 
                 <svg class="w-5 h-5
-                    {% if request.path == '/my-account/profile/' %} 
+                    {% if request.path == '/account/profile/' %} 
                         text-orange-500 
                     {% else %} 
                         text-gray-400 group-hover:text-orange-500 
@@ -74,13 +74,13 @@
             </a>
 
             <a href="{% url 'address' %}" class="flex items-center space-x-3 p-3 rounded-xl transition-all
-                {% if request.path == '/my-account/address/' %}
+                {% if request.path == '/account/address/' %}
                     bg-orange-50 text-orange-600 font-bold border border-orange-100 
                 {% else %}
                     text-gray-600 hover:bg-gray-50 hover:text-orange-500
                 {% endif %}">
                 <svg class="w-5 h-5 
-                    {% if request.path == '/my-account/address/' %}
+                    {% if request.path == '/account/address/' %}
                         text-orange-500 
                     {% else %} 
                         text-gray-400 group-hover:text-orange-500 
@@ -94,14 +94,14 @@
             </a>
 
             <a href="{% url 'wishlist' %}" class="flex items-center space-x-3 p-3 rounded-xl transition-colors group
-                {% if request.path == '/my-account/wishlist/' %}
+                {% if request.path == '/account/wishlist/' %}
                     bg-orange-50 text-orange-600 font-bold border border-orange-100 
                 {% else %}
                     text-gray-600 hover:bg-gray-50 hover:text-orange-500
                 {% endif %}">
 
                 <svg class="w-5 h-5 
-                    {% if request.path == '/my-account/wishlist/' %}
+                    {% if request.path == '/account/wishlist/' %}
                         text-orange-500 
                     {% else %} 
                         text-gray-400 group-hover:text-orange-500 
