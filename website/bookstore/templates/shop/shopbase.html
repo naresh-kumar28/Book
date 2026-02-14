@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,36 +8,41 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap"
         rel="stylesheet">
-    
+
     <style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
-    
+
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
-    
+
         .no-scrollbar {
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
     </style>
 </head>
-<body>
 
-    <header class="bg-white border-2-b border-2-gray-200 sticky top-0 z-50 shadow-sm">
+<body>
+    {% url 'cart' as cart_url %}
+    {% url 'delivery_address' as address_url %}
+    {% url 'payment' as payment_url %}
+    {% url 'summary' as summary_url %}
+
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
         <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16 md:h-20">
-    
+
                 <div class="flex-shrink-0 flex items-center min-w-[40px]">
-                    <a href="{% url 'home' %}" class="hidden md:block text-2xl font-bold text-indigo-600 tracking-tight">
+                    <a href="{% url 'home' %}"
+                        class="hidden md:block text-2xl font-bold text-indigo-600 tracking-tight">
                         Book<span class="text-orange-500">Worm</span>
                     </a>
-    
-                    <!-- Mobile Profile icon -->
+
                     <div class="block md:hidden pr-5">
-                        <div class="w-10 h-10 rounded-full overflow-hidden border-2-2 border-2-orange-400">
+                        <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-orange-400">
                             <a href="{% url 'home' %}">
                                 <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User DP"
                                     class="w-full h-full object-cover">
@@ -44,56 +50,89 @@
                         </div>
                     </div>
                 </div>
-    
-                <!-- stepper  -->
+
                 <div class="flex-1 max-w-[280px] md:max-w-md mx-auto pt-2 pb-5 md:pb-8">
                     <div class="relative flex items-center justify-between w-full">
-    
+
                         <div class="absolute left-0 top-1/2 -translate-y-1/2 w-full h-[1.5px] bg-gray-100 z-0"></div>
-    
+
                         <div class="absolute left-0 top-1/2 -translate-y-1/2 h-[1.5px] bg-orange-500 z-0 transition-all duration-500"
-                            style="width: 0%;"></div>
-    
+                            style="width: {% if request.path == address_url %}33%{% elif request.path == payment_url %}66%{% elif request.path == summary_url %}100%{% else %}0%{% endif %};">
+                        </div>
+
                         <div class="relative z-10 flex flex-col items-center">
                             <div
-                                class="w-7 h-7 bg-white border-2 border-orange-500 rounded-full flex items-center justify-center shadow-sm transition-all">
+                                class="w-7 h-7 rounded-full flex items-center justify-center shadow-sm transition-all border-2 
+                                {% if request.path == cart_url or request.path == address_url or request.path == payment_url or request.path == summary_url %} border-orange-500 bg-white {% else %} border-gray-200 bg-white {% endif %}">
+
+                                {% if request.path == address_url or request.path == payment_url or request.path == summary_url %}
+                                <svg class="w-4 h-4 text-orange-600" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                        clip-rule="evenodd"></path>
+                                </svg>
+                                {% else %}
                                 <span class="text-orange-600 font-medium text-[10px] md:text-xs">1</span>
+                                {% endif %}
                             </div>
                             <span
-                                class="absolute top-8 text-[10px] md:text-xs font-medium text-orange-600 whitespace-nowrap">Cart</span>
+                                class="absolute top-8 text-[10px] md:text-xs font-medium whitespace-nowrap {% if request.path == cart_url or request.path == address_url or request.path == payment_url or request.path == summary_url %} text-orange-600 {% else %} text-gray-400 {% endif %}">Cart</span>
                         </div>
-    
+
                         <div class="relative z-10 flex flex-col items-center">
                             <div
-                                class="w-7 h-7 bg-white border-2 border-gray-200 rounded-full flex items-center justify-center text-gray-400 transition-all">
-                                <span class="font-medium text-[10px] md:text-xs">2</span>
+                                class="w-7 h-7 rounded-full flex items-center justify-center transition-all border-2 
+                                {% if request.path == address_url or request.path == payment_url or request.path == summary_url %} border-orange-500 bg-white {% else %} border-gray-200 bg-white {% endif %}">
+
+                                {% if request.path == payment_url or request.path == summary_url %}
+                                <svg class="w-4 h-4 text-orange-600" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                        clip-rule="evenodd"></path>
+                                </svg>
+                                {% else %}
+                                <span
+                                    class="font-medium text-[10px] md:text-xs {% if request.path == address_url %} text-orange-600 {% else %} text-gray-400 {% endif %}">2</span>
+                                {% endif %}
                             </div>
                             <span
-                                class="absolute top-8 text-[10px] md:text-xs font-medium text-gray-400 whitespace-nowrap">Address</span>
+                                class="absolute top-8 text-[10px] md:text-xs font-medium whitespace-nowrap {% if request.path == address_url or request.path == payment_url or request.path == summary_url %} text-orange-600 {% else %} text-gray-400 {% endif %}">Address</span>
                         </div>
-    
+
                         <div class="relative z-10 flex flex-col items-center">
                             <div
-                                class="w-7 h-7 bg-white border-2 border-gray-200 rounded-full flex items-center justify-center text-gray-400 transition-all">
-                                <span class="font-medium text-[10px] md:text-xs">3</span>
+                                class="w-7 h-7 rounded-full flex items-center justify-center transition-all border-2 
+                                {% if request.path == payment_url or request.path == summary_url %} border-orange-500 bg-white {% else %} border-gray-200 bg-white {% endif %}">
+
+                                {% if request.path == summary_url %}
+                                <svg class="w-4 h-4 text-orange-600" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                        clip-rule="evenodd"></path>
+                                </svg>
+                                {% else %}
+                                <span
+                                    class="font-medium text-[10px] md:text-xs {% if request.path == payment_url %} text-orange-600 {% else %} text-gray-400 {% endif %}">3</span>
+                                {% endif %}
                             </div>
                             <span
-                                class="absolute top-8 text-[10px] md:text-xs font-medium text-gray-400 whitespace-nowrap">Payment</span>
+                                class="absolute top-8 text-[10px] md:text-xs font-medium whitespace-nowrap {% if request.path == payment_url or request.path == summary_url %} text-orange-600 {% else %} text-gray-400 {% endif %}">Payment</span>
                         </div>
-    
+
                         <div class="relative z-10 flex flex-col items-center">
                             <div
-                                class="w-7 h-7 bg-white border-2 border-gray-200 rounded-full flex items-center justify-center text-gray-400 transition-all">
-                                <span class="font-medium text-[10px] md:text-xs">4</span>
+                                class="w-7 h-7 rounded-full flex items-center justify-center transition-all border-2 
+                                {% if request.path == summary_url %} border-orange-500 bg-white {% else %} border-gray-200 bg-white {% endif %}">
+                                <span
+                                    class="font-medium text-[10px] md:text-xs {% if request.path == summary_url %} text-orange-600 {% else %} text-gray-400 {% endif %}">4</span>
                             </div>
                             <span
-                                class="absolute top-8 text-[10px] md:text-xs font-medium text-gray-400 whitespace-nowrap">Summary</span>
+                                class="absolute top-8 text-[10px] md:text-xs font-medium whitespace-nowrap {% if request.path == summary_url %} text-orange-600 {% else %} text-gray-400 {% endif %}">Summary</span>
                         </div>
-    
+
                     </div>
                 </div>
-    
-                <!-- cart, wishlist, login  -->
+
                 <div class="hidden md:flex items-center space-x-6">
                     <a href="#" class="text-gray-600 hover:text-red-500 transition-colors relative">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24"
@@ -104,7 +143,7 @@
                         <span
                             class="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">2</span>
                     </a>
-    
+
                     <a href="#" class="text-gray-600 hover:text-orange-500 transition-colors relative">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
@@ -114,15 +153,15 @@
                         <span
                             class="absolute -top-2 -right-2 bg-orange-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">3</span>
                     </a>
-    
+
                     <button
                         class="bg-gray-900 text-white px-5 py-2.5 rounded-lg hover:bg-orange-600 transition-all font-medium">
                         Login
                     </button>
                 </div>
-    
+
                 <div class="block md:hidden min-w-[40px]"></div>
-    
+
             </div>
         </nav>
     </header>
@@ -130,6 +169,4 @@
     {% block content %}
 
     {% endblock %}
-
 </body>
-</html>

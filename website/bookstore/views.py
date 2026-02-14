@@ -30,6 +30,9 @@ def productDetails(req):
 def cart(req):
     return render(req, 'shop/cart.html')
 
+def deliveryAddress(req):
+    return render(req, 'shop/delivery_address.html')
+
 def payment(req):
     return render(req, 'shop/payment.html')
 
@@ -39,17 +42,17 @@ def summary(req):
 
 # User Section
 def address(req):
-    return render(req, 'user/address.html')
+    return render(req, 'my-account/address.html')
 
 def dashboard(req):
-    return render(req, 'user/dashboard.html')
+    return render(req, 'my-account/dashboard.html')
 
 def profile(req):
-    return render(req, 'user/profile.html')
+    return render(req, 'my-account/profile.html')
 
 def myOrder(req):
-    return render(req, 'user/my-order.html')
+    return render(req, 'my-account/my-order.html')
 
 def wishlist(req):
-    return render(req, 'user/wishlist.html')
+    return render(req, 'my-account/wishlist.html')
 

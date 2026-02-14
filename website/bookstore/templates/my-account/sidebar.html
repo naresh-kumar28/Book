@@ -15,14 +15,14 @@
 
         <nav class="p-4 space-y-1">
             <a href="{% url 'dashboard' %}" class="flex items-center space-x-3 p-3 rounded-xl transition-all group
-                {% if request.path == '/user/dashboard/' %}
+                {% if request.path == '/my-account/dashboard/' %}
                     bg-orange-50 text-orange-600 font-bold border border-orange-100 
                 {% else %}
                     text-gray-600 hover:bg-gray-50 hover:text-orange-500
                 {% endif %} ">
 
                 <svg class="w-5 h-5  
-                {% if request.path == '/user/dashboard/' %} 
+                {% if request.path == '/my-account/dashboard/' %} 
                         text-orange-500 
                     {% else %} 
                         text-gray-400 group-hover:text-orange-500 
@@ -32,9 +32,8 @@
                 </svg>
                 <span class=" text-sm">Dashboard</span>
             </a>
-            <a href="{% url 'my-order' %}"
-                class="flex items-center space-x-3 p-3 rounded-xl group
-                {% if request.path == '/user/my-order/' %} 
+            <a href="{% url 'my-order' %}" class="flex items-center space-x-3 p-3 rounded-xl group
+                {% if request.path == '/my-account/my-order/' %} 
                     bg-orange-50 text-orange-600 font-bold border border-orange-100 
                 {% else %} 
                     text-gray-600 hover:bg-gray-50 hover:text-orange-500
@@ -42,7 +41,7 @@
 
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
                     stroke="currentColor" class="w-5 h-5 
-                    {% if request.path == '/user/my-order/' %} 
+                    {% if request.path == '/my-account/my-order/' %} 
                         text-orange-500 
                     {% else %} 
                         text-gray-400 group-hover:text-orange-500 
@@ -55,14 +54,14 @@
             </a>
 
             <a href="{% url 'profile' %}" class="flex items-center space-x-3 p-3 rounded-xl group
-                {% if request.path == '/user/profile/' %} 
+                {% if request.path == '/my-account/profile/' %} 
                     bg-orange-50 text-orange-600 font-bold border border-orange-100 
                 {% else %} 
                     text-gray-600 hover:bg-gray-50 hover:text-orange-500
                 {% endif %}">
 
                 <svg class="w-5 h-5
-                    {% if request.path == '/user/profile/' %} 
+                    {% if request.path == '/my-account/profile/' %} 
                         text-orange-500 
                     {% else %} 
                         text-gray-400 group-hover:text-orange-500 
@@ -75,13 +74,13 @@
             </a>
 
             <a href="{% url 'address' %}" class="flex items-center space-x-3 p-3 rounded-xl transition-all
-                {% if request.path == '/user/address/' %}
+                {% if request.path == '/my-account/address/' %}
                     bg-orange-50 text-orange-600 font-bold border border-orange-100 
                 {% else %}
                     text-gray-600 hover:bg-gray-50 hover:text-orange-500
                 {% endif %}">
                 <svg class="w-5 h-5 
-                    {% if request.path == '/user/address/' %}
+                    {% if request.path == '/my-account/address/' %}
                         text-orange-500 
                     {% else %} 
                         text-gray-400 group-hover:text-orange-500 
@@ -94,21 +93,19 @@
                 <span class="text-sm">Address</span>
             </a>
 
-            <a href="{% url 'wishlist' %}"
-                class="flex items-center space-x-3 p-3 rounded-xl transition-colors group
-                {% if request.path == '/user/wishlist/' %}
+            <a href="{% url 'wishlist' %}" class="flex items-center space-x-3 p-3 rounded-xl transition-colors group
+                {% if request.path == '/my-account/wishlist/' %}
                     bg-orange-50 text-orange-600 font-bold border border-orange-100 
                 {% else %}
                     text-gray-600 hover:bg-gray-50 hover:text-orange-500
                 {% endif %}">
 
                 <svg class="w-5 h-5 
-                    {% if request.path == '/user/wishlist/' %}
+                    {% if request.path == '/my-account/wishlist/' %}
                         text-orange-500 
                     {% else %} 
                         text-gray-400 group-hover:text-orange-500 
-                    {% endif %}" fill="none" stroke="currentColor"
-                    viewBox="0 0 24 24">
+                    {% endif %}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                 </svg>

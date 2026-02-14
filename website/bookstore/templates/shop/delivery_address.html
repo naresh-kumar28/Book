@@ -1,0 +1,126 @@
+{% extends 'shop/shopbase.html' %}
+
+{% block title %}Book Warm | Delivery Address{% endblock %}
+
+{% block content %}
+
+    <div class="max-w-6xl mx-auto px-4 py-8 md:px-6 my-8">
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+            <div class="lg:col-span-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-lg font-bold text-gray-800">Select Delivery Address</h2>
+                    <button
+                        class="flex items-center gap-1 text-orange-600 font-bold text-sm uppercase hover:text-orange-700 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Add New Address
+                    </button>
+                </div>
+
+                <div class="space-y-4">
+
+                    <div class="bg-orange-50/80 border-2 border-orange-200 p-5 rounded-xl shadow-sm transition-all">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="flex gap-4">
+                                <div class="mt-1 shrink-0">
+                                    <span
+                                        class="block w-5 h-5 bg-orange-500 border-[3px] border-orange-200 rounded-full flex items-center justify-center shadow-sm">
+                                        <span class="block w-2 h-2 bg-white rounded-full"></span>
+                                    </span>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-gray-900 text-base flex items-center gap-2">
+                                        Naresh Kumar
+                                        <span
+                                            class="text-[10px] font-bold bg-white border border-orange-100 text-orange-600 px-2 py-0.5 rounded uppercase tracking-wider">Home</span>
+                                    </h3>
+                                    <p class="text-sm text-gray-600 mt-2 leading-relaxed font-medium">
+                                        00, Sarna Chowk, Maharajganj, Near- Lalu General Store, Purnea, Bihar, 854301
+                                    </p>
+                                    <p class="text-sm font-bold text-gray-800 mt-3">Phone: 9304197423</p>
+                                </div>
+                            </div>
+                            <button
+                                class="text-orange-600 font-bold text-xs uppercase hover:text-orange-700 tracking-wider shrink-0">Edit</button>
+                        </div>
+
+                        <button
+                            class="w-full bg-orange-500 text-white py-3.5 rounded-lg font-bold text-sm uppercase tracking-wide shadow-md hover:bg-orange-600 active:scale-[0.98] transition-all">
+                            Deliver to this Address
+                        </button>
+                    </div>
+
+                    <div
+                        class="bg-white border border-gray-100 p-5 rounded-xl shadow-sm hover:border-orange-200 transition-all cursor-pointer group">
+                        <div class="flex justify-between items-start">
+                            <div class="flex gap-4">
+                                <div class="mt-1 shrink-0">
+                                    <span
+                                        class="block w-5 h-5 bg-white border-2 border-gray-300 rounded-full group-hover:border-orange-400 transition-colors"></span>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-gray-900 text-base flex items-center gap-2">
+                                        Office Address
+                                        <span
+                                            class="text-[10px] font-bold bg-gray-50 border border-gray-100 text-gray-500 px-2 py-0.5 rounded uppercase tracking-wider">Work</span>
+                                    </h3>
+                                    <p class="text-sm text-gray-600 mt-2 leading-relaxed font-medium">
+                                        Line Bazar, Near Hospital Chowk, Purnea, Bihar, 854301
+                                    </p>
+                                    <p class="text-sm font-bold text-gray-800 mt-3">Phone: 8877665544</p>
+                                </div>
+                            </div>
+                            <button
+                                class="text-gray-400 font-bold text-xs uppercase hover:text-orange-600 tracking-wider shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">Edit</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="lg:col-span-4 sticky top-6">
+                <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-md">
+                    <h2 class="text-lg font-bold text-gray-800 mb-5">Price Details</h2>
+
+                    <div class="space-y-3 mb-5">
+                        <div class="flex justify-between text-sm text-gray-500 font-medium">
+                            <span>Product Price (1 item)</span>
+                            <span class="text-gray-800 font-semibold">₹218.00</span>
+                        </div>
+                        <div class="flex justify-between text-sm text-gray-500 font-medium">
+                            <span>Shipping</span>
+                            <span class="text-gray-800 font-semibold">₹49.00</span>
+                        </div>
+                        <div class="flex justify-between text-sm text-gray-500 font-medium border-b border-gray-50 pb-3">
+                            <span>Tax (5% GST)</span>
+                            <span class="text-gray-800 font-semibold">₹10.90</span>
+                        </div>
+                        <div
+                            class="flex justify-between text-xs font-bold text-green-600 bg-green-50 p-2.5 rounded-lg border border-dashed border-green-200">
+                            <span>Total Discount</span>
+                            <span>-₹20.00</span>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center pt-2 border-t border-dashed border-gray-100">
+                        <span class="text-sm font-bold text-gray-800">Order Total</span>
+                        <span class="text-xl font-black text-gray-900">₹257.90</span>
+                    </div>
+
+                    <p class="text-xs text-gray-400 mt-4 text-center font-medium">
+                        Proceed to payment on the next step.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    {% include 'includes/footer.html' %}
+
+{% endblock %}

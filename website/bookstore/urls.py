@@ -16,11 +16,13 @@ urlpatterns = [
     path('shop/cart/', cart, name='cart'),
     path('shop/payment/', payment, name='payment'),
     path('shop/summary/', summary, name='summary'),
+    path('shop/delivery_address/', deliveryAddress, name='delivery_address'),
+
 
     # User Section
-    path('user/address/', address, name='address'),
-    path('user/profile/', profile, name='profile'),
-    path('user/dashboard/', dashboard, name='dashboard'),
-    path('user/my-order/', myOrder, name='my-order'),
-    path('user/wishlist/', wishlist, name='wishlist'),
+    path('my-account/address/', address, name='address'),
+    path('my-account/profile/', profile, name='profile'),
+    path('my-account/dashboard/', dashboard, name='dashboard'),
+    path('my-account/my-order/', myOrder, name='my-order'),
+    path('my-account/wishlist/', wishlist, name='wishlist'),
 ]

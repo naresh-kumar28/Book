@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
-{% include 'includes/filter.html' %}
 
-{% include 'includes/sticky-button.html' %}
+    {% include 'includes/category.html' %}
+    {% include 'includes/sticky-button.html' %}
 
     <section class="relative bg-gray-900 text-white relative">
         <div class="absolute inset-0">
@@ -122,6 +122,6 @@
         </div>
     </section>
 
-    {% include 'books/book_list_home.html' %}
+    {% include 'book_list/book_list_home.html' %}
 
 {% endblock %}
