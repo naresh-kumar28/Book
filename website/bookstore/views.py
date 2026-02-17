@@ -56,3 +56,7 @@ def myOrder(req):
 def wishlist(req):
     return render(req, 'account/wishlist.html')
 
+
+#authentication system
+def signup(req):
+    return render(req, 'registration/signup.html')

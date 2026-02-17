@@ -25,4 +25,7 @@ urlpatterns = [
     path('account/dashboard/', dashboard, name='dashboard'),
     path('account/my-order/', myOrder, name='my-order'),
     path('account/wishlist/', wishlist, name='wishlist'),
+
+    #login and signup page
+    path('registration/signup/', signup, name='signup')
 ]

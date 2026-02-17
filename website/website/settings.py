@@ -38,7 +38,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bookstore',
+
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -48,6 +57,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = 'website.urls'
@@ -66,6 +77,24 @@ TEMPLATES = [
         },
     },
 ]
+
+AUTHENTICATION_BACKENDS = [
+    
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by email
+    'allauth.account.auth_backends.AuthenticationBackend',
+    
+]
+
+#SMTP CONFIGURATION
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST="smtp.gmail.com"
+EMAIL_PORT=587
+EMAIL_HOST_USER="rajatekofficial@gmail.com"
+EMAIL_HOST_PASSWORD="nxjdyoufjiwzjbve"
+EMAIL_USE_TLS=True
 
 WSGI_APPLICATION = 'website.wsgi.application'
 
@@ -116,3 +145,21 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+#----------------------------------
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = 'login'
+
+ACCOUNT_LOGOUT_ON_GET = True  # logout URL par sirf click (GET request) se logout ho jayega, confirmation page nahi aayega
+SOCIALACCOUNT_LOGIN_ON_GET = True  # extra confirmation page nahi dikhega, direct sign in page khulega
+
+
+# Email signup system
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_CHANGE_EMAIL = True   # user apna primary email change kar sakta hai (additional email add karne ka option nahi hota by default)
+ACCOUNT_EMAIL_NOTIFICATIONS = True   # security related emails aayenge (password change, reset, etc.)
+ACCOUNT_USERNAME_REQUIRED = False   # username ki requirement hata di (sirf email se login hoga)
+ACCOUNT_LOGIN_METHODS = {"email"}   # login only email se allowed
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"   # signup ke baad email verify karna compulsory
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True  # email verify karte hi user automatically login ho jayega
