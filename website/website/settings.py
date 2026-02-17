@@ -147,6 +147,8 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 #----------------------------------
+# for msg
+ACCOUNT_ADAPTER = 'allauth.account.adapter.DefaultAccountAdapter'
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
