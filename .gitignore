@@ -30,3 +30,6 @@ staticfiles/
 node_modules/
 
 raw.html
+
+# Django settings
+*/settings.py

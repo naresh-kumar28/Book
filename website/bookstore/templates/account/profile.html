@@ -22,23 +22,23 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-2">
                             <label class="text-sm font-semibold text-gray-700">First Name</label>
-                            <input type="text" placeholder="Sponsorship"
+                            <input type="text" 
                                 class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all">
                         </div>
                         <div class="space-y-2">
                             <label class="text-sm font-semibold text-gray-700">Last Name</label>
-                            <input type="text" placeholder="Email"
+                            <input type="text" 
                                 class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all">
                         </div>
                         <div class="space-y-2">
                             <label class="text-sm font-semibold text-gray-700">Email Address</label>
-                            <input type="email" placeholder="rajatekofficial@gmail.com"
+                            <input type="email" value="{{request.user.email}}"
                                 class="w-full px-4 py-3 rounded-xl border border-gray-100 bg-gray-50 text-gray-500 outline-none cursor-not-allowed"
                                 disabled>
                         </div>
                         <div class="space-y-2">
                             <label class="text-sm font-semibold text-gray-700">Phone Number</label>
-                            <input type="tel" placeholder="+91 00000 00000"
+                            <input type="tel" placeholder="+91 "
                                 class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 outline-none transition-all">
                         </div>
                     </div>
@@ -51,7 +51,7 @@
                     </div>
                 </div>
 
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8">
+                <!-- <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8">
                     <h2 class="text-xl md:text-2xl font-bold text-gray-900 border-l-4 border-orange-500 pl-3 mb-8">
                         Change Password</h2>
 
@@ -74,7 +74,7 @@
                             Change Password
                         </button>
                     </div>
-                </div>
+                </div> -->
 
             </main>
         </div>

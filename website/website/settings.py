@@ -149,7 +149,7 @@ STATIC_URL = 'static/'
 #----------------------------------
 
 LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = 'login'
+LOGOUT_REDIRECT_URL = '/'
 
 ACCOUNT_LOGOUT_ON_GET = True  # logout URL par sirf click (GET request) se logout ho jayega, confirmation page nahi aayega
 SOCIALACCOUNT_LOGIN_ON_GET = True  # extra confirmation page nahi dikhega, direct sign in page khulega
