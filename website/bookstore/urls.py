@@ -27,6 +27,8 @@ urlpatterns = [
     path('account/wishlist/', wishlist, name='wishlist'),
 
     #admin section
-    path('admin/', admin_dashboard, name='admin-dashboard'),
+    path('admin/', adminDashboard, name='admin.dashboard'),
+    path('admin/category/', manageCategory, name='admin.category'),
+    path('admin/product/', manageProduct, name='admin.product'),
 
 ]

@@ -98,5 +98,11 @@ def wishlist(req):
 
 #admin section
 
-def admin_dashboard(req):
+def adminDashboard(req):
     return render(req, 'admin/admin_dashboard.html')
+
+def manageCategory(req):
+    return render(req, 'admin/manage_category.html')
+
+def manageProduct(req):
+    return render(req, 'admin/manage_product.html')

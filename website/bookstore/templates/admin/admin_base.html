@@ -4,156 +4,213 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Admin Dashboard | BookWorm{% endblock %}</title>
+    <title>Admin Dashboard | BookWorm</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Custom Scrollbar for sidebar */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
+            height: 6px;
         }
 
         ::-webkit-scrollbar-track {
-            background: transparent;
+            background: #0B0F19;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
+            background: #1F2937;
             border-radius: 10px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
+            background: #374151;
         }
     </style>
 </head>
 
-<body class="bg-[#F4F7FE] text-gray-800 font-sans antialiased">
+<body class="bg-[#0f172a] text-slate-300 antialiased flex h-screen overflow-hidden">
 
-    <aside id="default-sidebar"
-        class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 bg-white border-r border-gray-100 shadow-[4px_0_24px_rgba(0,0,0,0.02)]"
-        aria-label="Sidebar">
+    <aside class="w-64 bg-[#1e293b] flex flex-col transition-all duration-300 border-r border-slate-700/50 z-20">
 
-        <div class="h-20 flex items-center px-8 border-b border-gray-50">
-            <a href="/" class="text-2xl font-black tracking-tight text-gray-900">
-                Book<span class="text-orange-500">Worm</span> <span
-                    class="text-xs text-indigo-600 ml-1 font-bold uppercase tracking-widest bg-indigo-50 px-2 py-1 rounded-md">Admin</span>
+        <div class="h-16 flex items-center px-6 border-b border-slate-700/50">
+            <div
+                class="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center mr-3 shadow-lg shadow-indigo-500/30">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+            </div>
+            <a href="/" class="text-xl font-bold text-indigo-600 tracking-wide">
+                Book<span class="text-orange-500">Worm</span>
             </a>
         </div>
 
-        <div class="h-[calc(100vh-5rem)] px-4 py-6 overflow-y-auto">
-            <ul class="space-y-1.5 font-medium">
+        <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+            {% url 'admin.dashboard' as admin_dashboard_url %}
+            <a href="{{ admin_dashboard_url }}"
+                class="flex items-center px-3 py-2.5 rounded-lg font-semibold group transition-all
+                    {% if request.path == admin_dashboard_url %}
+                        bg-indigo-600/10 text-indigo-400 border-l-2 border-indigo-500
+                    {% else %}
+                        text-slate-400 hover:text-white hover:bg-slate-800 border-l-2 border-transparent hover:border-slate-500
+                    {% endif %}">
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+                Dashboard
+            </a>
 
-                <li>
-                    <a href="{% url 'admin-dashboard' %}"
-                        class="flex items-center px-4 py-3 rounded-xl transition-all duration-200 group {% if request.resolver_match.url_name == 'admin.dashboard' %}bg-indigo-50 text-indigo-700 font-bold{% else %}text-gray-500 hover:bg-gray-50 hover:text-gray-900{% endif %}">
-                        <svg class="w-5 h-5 transition duration-75 {% if request.resolver_match.url_name == 'admin.dashboard' %}text-indigo-600{% else %}text-gray-400 group-hover:text-indigo-500{% endif %}"
-                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M10 6.025A7.5 7.5 0 1 0 17.975 14H10V6.025Z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M13.5 3c-.169 0-.334.014-.5.025V11h7.975c.011-.166.025-.331.025-.5A7.5 7.5 0 0 0 13.5 3Z" />
-                        </svg>
-                        <span class="ms-3">Dashboard</span>
-                    </a>
-                </li>
+            {% url 'admin.category' as admin_category_url %}
+            <a href="{{ admin_category_url }}" class="flex items-center px-3 py-2.5 rounded-lg font-medium transition-all group
+                {% if request.path == admin_category_url %}
+                    bg-indigo-600/10 text-indigo-400 border-l-2 border-indigo-500
+                {% else %}
+                    text-slate-400 hover:text-white hover:bg-slate-800 border-l-2 border-transparent hover:border-slate-500
+                {% endif %}">
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
+                Manage Categories
+            </a>
 
-                <li class="pt-4 pb-2">
-                    <span class="px-4 text-[11px] font-black tracking-wider text-gray-400 uppercase">Catalog</span>
-                </li>
+            {% url 'admin.product' as admin_product_url %}
+            <a href="{{ admin_product_url }}" class="flex items-center px-3 py-2.5 rounded-lg font-medium transition-all group 
+                {% if request.path == admin_product_url %}
+                    bg-indigo-600/10 text-indigo-400 border-l-2 border-indigo-500
+                {% else %}
+                    text-slate-400 hover:text-white hover:bg-slate-800 border-l-2 border-transparent hover:border-slate-500
+                {% endif %}">
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+                Manage Products
+            </a>
 
-                <li>
-                    <a href=""
-                        class="flex items-center px-4 py-3 rounded-xl transition-all duration-200 group {% if request.resolver_match.url_name == 'admin.category' %}bg-indigo-50 text-indigo-700 font-bold{% else %}text-gray-500 hover:bg-gray-50 hover:text-gray-900{% endif %}">
-                        <svg class="w-5 h-5 transition duration-75 {% if request.resolver_match.url_name == 'admin.category' %}text-indigo-600{% else %}text-gray-400 group-hover:text-indigo-500{% endif %}"
-                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-                        </svg>
-                        <span class="flex-1 ms-3 whitespace-nowrap">Categories</span>
-                    </a>
-                </li>
+            <a href="#"
+                class="flex items-center px-3 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white font-medium transition-all group border-l-2 border-transparent hover:border-slate-500">
+                <svg class="w-5 h-5 mr-3 text-slate-500 group-hover:text-slate-300" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+                Manage Users
+            </a>
 
-                <li>
-                    <a href=""
-                        class="flex items-center px-4 py-3 rounded-xl transition-all duration-200 group {% if request.resolver_match.url_name == 'admin.product' %}bg-indigo-50 text-indigo-700 font-bold{% else %}text-gray-500 hover:bg-gray-50 hover:text-gray-900{% endif %}">
-                        <svg class="w-5 h-5 transition duration-75 {% if request.resolver_match.url_name == 'admin.product' %}text-indigo-600{% else %}text-gray-400 group-hover:text-indigo-500{% endif %}"
-                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                        </svg>
-                        <span class="flex-1 ms-3 whitespace-nowrap">Books (Products)</span>
-                    </a>
-                </li>
-
-                <li class="pt-4 pb-2">
-                    <span class="px-4 text-[11px] font-black tracking-wider text-gray-400 uppercase">Sales &
-                        Users</span>
-                </li>
-
-                <li>
-                    <a href="#"
-                        class="flex items-center px-4 py-3 rounded-xl transition-all duration-200 text-gray-500 hover:bg-gray-50 hover:text-gray-900 group">
-                        <svg class="w-5 h-5 text-gray-400 transition duration-75 group-hover:text-indigo-500"
-                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                        </svg>
-                        <span class="flex-1 ms-3 whitespace-nowrap">Orders</span>
-                        <span
-                            class="inline-flex items-center justify-center w-5 h-5 text-[10px] font-bold text-white bg-orange-500 rounded-full">3</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#"
-                        class="flex items-center px-4 py-3 rounded-xl transition-all duration-200 text-gray-500 hover:bg-gray-50 hover:text-gray-900 group">
-                        <svg class="w-5 h-5 text-gray-400 transition duration-75 group-hover:text-indigo-500"
-                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                        </svg>
-                        <span class="flex-1 ms-3 whitespace-nowrap">Customers</span>
-                    </a>
-                </li>
-
-                <li class="pt-4 pb-2">
-                    <span class="px-4 text-[11px] font-black tracking-wider text-gray-400 uppercase">Management</span>
-                </li>
-
-                <li>
-                    <a href="#"
-                        class="flex items-center px-4 py-3 rounded-xl transition-all duration-200 text-gray-500 hover:bg-gray-50 hover:text-gray-900 group">
-                        <svg class="w-5 h-5 text-gray-400 transition duration-75 group-hover:text-indigo-500"
-                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-                        </svg>
-                        <span class="flex-1 ms-3 whitespace-nowrap">Coupons</span>
-                    </a>
-                </li>
-            </ul>
-
-            <div class="mt-8 pt-6 border-t border-gray-100">
-                <a href="/"
-                    class="flex items-center px-4 py-3 rounded-xl transition-all duration-200 text-red-500 hover:bg-red-50 font-semibold group">
-                    <svg class="w-5 h-5 mr-3 transition-transform group-hover:-translate-x-1" fill="none"
+            <a href="#"
+                class="flex items-center justify-between px-3 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white font-medium transition-all group border-l-2 border-transparent hover:border-slate-500">
+                <div class="flex items-center">
+                    <svg class="w-5 h-5 mr-3 text-slate-500 group-hover:text-slate-300" fill="none"
                         stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                            d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                     </svg>
-                    Logout
-                </a>
-            </div>
+                    Manage Orders
+                </div>
+                <span class="bg-indigo-600 text-white text-[10px] px-2 py-0.5 rounded-full font-bold">12</span>
+            </a>
+
+            <a href="#"
+                class="flex items-center px-3 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white font-medium transition-all group border-l-2 border-transparent hover:border-slate-500">
+                <svg class="w-5 h-5 mr-3 text-slate-500 group-hover:text-slate-300" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                </svg>
+                Manage Coupons
+            </a>
+
+            <a href="#"
+                class="flex items-center px-3 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white font-medium transition-all group border-l-2 border-transparent hover:border-slate-500">
+                <svg class="w-5 h-5 mr-3 text-slate-500 group-hover:text-slate-300" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.243-4.243a8 8 0 1111.314 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                Manage Address
+            </a>
+
+        </nav>
+
+        <div class="p-4 border-t border-slate-700/50">
+            <a href="#"
+                class="flex items-center px-3 py-2.5 rounded-lg text-red-400 hover:bg-red-500/10 hover:text-red-300 font-medium transition-all group">
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                Logout
+            </a>
         </div>
     </aside>
 
-    <main class="p-4 sm:ml-64 min-h-screen">
-        <div class="p-4 md:p-8 rounded-3xl mt-14 sm:mt-0">
-            {% block content %}
-            {% endblock %}
-        </div>
-    </main>
+    <main class="flex-1 flex flex-col h-screen overflow-hidden">
 
+        <header class="h-16 bg-[#1e293b] border-b border-slate-700/50 flex items-center justify-between px-6 shrink-0">
+
+            <div class="flex items-center gap-4">
+                <button
+                    class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-md flex items-center gap-2 text-sm font-semibold transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                    Menu
+                </button>
+
+                <div class="relative hidden sm:block">
+                    <svg class="w-4 h-4 absolute left-3 top-2.5 text-slate-500" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    <input type="text" placeholder="Search..."
+                        class="bg-[#0f172a] text-slate-300 text-sm rounded-lg pl-10 pr-4 py-2 border border-slate-700/50 focus:outline-none focus:border-indigo-500 w-64 transition-colors placeholder:text-slate-500">
+                </div>
+            </div>
+
+            <div class="flex items-center gap-5">
+                <button class="relative text-slate-400 hover:text-white transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                    </svg>
+                    <span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                </button>
+
+                <div class="flex items-center gap-3 cursor-pointer">
+                    <img src="https://ui-avatars.com/api/?name=Admin+Joe&background=6366f1&color=fff" alt="Admin"
+                        class="w-9 h-9 rounded-full border border-slate-600">
+                    <div class="hidden sm:block text-sm">
+                        <p class="font-bold text-white leading-tight">Admin Joe</p>
+                        <p class="text-[11px] text-slate-400 font-medium">Admin</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- <div class="mt-6 border-2 border-dashed border-slate-700 rounded-xl h-64 flex items-center justify-center">
+            <p class="text-slate-500 font-medium">
+                
+            </p>
+        </div> -->
+
+        {% block content %}
+        
+        {% endblock %}
+    </main>
 </body>
 
 </html>
