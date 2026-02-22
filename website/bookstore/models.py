@@ -1,3 +1,87 @@
 from django.db import models
 
 # Create your models here.
+
+class Category(models.Model):
+    cat_name = models.CharField(max_length=100)
+    cat_slug = models.SlugField(unique=True)
+
+    def __str__(self):
+        return self.cat_name
+
+
+class Author(models.Model):
+    author_name = models.CharField(max_length=200)
+    author_image = models.ImageField(upload_to='authors/profiles/', blank=True, null=True)
+    
+    def __str__(self):
+        return self.author_name
+
+
+class Brand(models.Model):
+    brand_name = models.CharField(max_length=200) # e.g., NCERT
+    
+    def __str__(self):
+        return self.brand_name
+
+
+class BookType(models.Model):
+    name = models.CharField(max_length=100) # e.g., Old Books, Bestsellers
+    
+    def __str__(self):
+        return self.name
+
+
+class Publisher(models.Model):
+    publisher_name = models.CharField(max_length=200) # e.g., Rupa Publications, Bloomsbury India
+    publisher_image = models.ImageField(upload_to='publishers/logos/', blank=True, null=True, help_text="Publisher ka logo")
+    
+    def __str__(self):
+        return self.publisher_name
+
+
+
+class Product(models.Model):
+    
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
+    author = models.ForeignKey(Author, on_delete=models.SET_NULL, null=True, blank=True)
+    brand = models.ForeignKey(Brand, on_delete=models.SET_NULL, null=True, blank=True)
+    book_type = models.ForeignKey(BookType, on_delete=models.SET_NULL, null=True, blank=True)
+    publisher = models.ForeignKey(Publisher, on_delete=models.SET_NULL, null=True, blank=True)
+
+    title = models.CharField(max_length=255)
+    slug = models.SlugField(max_length=255, unique=True)
+    description = models.TextField()
+    image = models.ImageField(upload_to='products/main/')
+    cover_image = models.ImageField(upload_to='products/covers/', blank=True, null=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    discount_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+
+    # --- HIGHLIGHTS ---
+    language = models.CharField(max_length=50, default='Hindi')
+    pages = models.PositiveIntegerField(help_text="Total number of pages")
+    isbn = models.CharField(max_length=20, unique=True, verbose_name="ISBN Number")
+    binding_type = models.CharField(max_length=50, help_text="e.g., Spiral, Paperback, Hardcover")
+    width = models.CharField(max_length=50, help_text="e.g., 13 MM", blank=True)
+    height = models.CharField(max_length=50, help_text="e.g., 19 MM", blank=True)
+    weight = models.CharField(max_length=50, help_text="e.g., 117 GRAM", blank=True)
+    publish_date = models.DateField(blank=True, null=True)
+    quality_check = models.CharField(max_length=50, help_text="e.g., 32", blank=True)
+
+    # --- STATUS ---
+    STATUS_CHOICES = (
+        ('draft', 'Draft (Hidden)'),
+        ('published', 'Published (Visible)'),
+        ('out_of_stock', 'Out of Stock'),
+    )
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='draft')
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.title
+        
+    @property
+    def is_discounted(self):
+        return self.discount_price and self.discount_price < self.price
