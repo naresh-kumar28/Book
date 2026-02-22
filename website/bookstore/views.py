@@ -95,3 +95,8 @@ def myOrder(req):
 def wishlist(req):
     return render(req, 'account/wishlist.html')
 
+
+#admin section
+
+def admin_dashboard(req):
+    return render(req, 'admin/admin_dashboard.html')

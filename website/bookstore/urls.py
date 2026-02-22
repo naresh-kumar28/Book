@@ -26,4 +26,7 @@ urlpatterns = [
     path('account/my-order/', myOrder, name='my-order'),
     path('account/wishlist/', wishlist, name='wishlist'),
 
+    #admin section
+    path('admin/', admin_dashboard, name='admin-dashboard'),
+
 ]

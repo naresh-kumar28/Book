@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Dashboard | BookWorm{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom Scrollbar for sidebar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+
+<body class="bg-[#F4F7FE] text-gray-800 font-sans antialiased">
+
+    <aside id="default-sidebar"
+        class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 bg-white border-r border-gray-100 shadow-[4px_0_24px_rgba(0,0,0,0.02)]"
+        aria-label="Sidebar">
+
+        <div class="h-20 flex items-center px-8 border-b border-gray-50">
+            <a href="/" class="text-2xl font-black tracking-tight text-gray-900">
+                Book<span class="text-orange-500">Worm</span> <span
+                    class="text-xs text-indigo-600 ml-1 font-bold uppercase tracking-widest bg-indigo-50 px-2 py-1 rounded-md">Admin</span>
+            </a>
+        </div>
+
+        <div class="h-[calc(100vh-5rem)] px-4 py-6 overflow-y-auto">
+            <ul class="space-y-1.5 font-medium">
+
+                <li>
+                    <a href="{% url 'admin-dashboard' %}"
+                        class="flex items-center px-4 py-3 rounded-xl transition-all duration-200 group {% if request.resolver_match.url_name == 'admin.dashboard' %}bg-indigo-50 text-indigo-700 font-bold{% else %}text-gray-500 hover:bg-gray-50 hover:text-gray-900{% endif %}">
+                        <svg class="w-5 h-5 transition duration-75 {% if request.resolver_match.url_name == 'admin.dashboard' %}text-indigo-600{% else %}text-gray-400 group-hover:text-indigo-500{% endif %}"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M10 6.025A7.5 7.5 0 1 0 17.975 14H10V6.025Z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13.5 3c-.169 0-.334.014-.5.025V11h7.975c.011-.166.025-.331.025-.5A7.5 7.5 0 0 0 13.5 3Z" />
+                        </svg>
+                        <span class="ms-3">Dashboard</span>
+                    </a>
+                </li>
+
+                <li class="pt-4 pb-2">
+                    <span class="px-4 text-[11px] font-black tracking-wider text-gray-400 uppercase">Catalog</span>
+                </li>
+
+                <li>
+                    <a href=""
+                        class="flex items-center px-4 py-3 rounded-xl transition-all duration-200 group {% if request.resolver_match.url_name == 'admin.category' %}bg-indigo-50 text-indigo-700 font-bold{% else %}text-gray-500 hover:bg-gray-50 hover:text-gray-900{% endif %}">
+                        <svg class="w-5 h-5 transition duration-75 {% if request.resolver_match.url_name == 'admin.category' %}text-indigo-600{% else %}text-gray-400 group-hover:text-indigo-500{% endif %}"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                        </svg>
+                        <span class="flex-1 ms-3 whitespace-nowrap">Categories</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href=""
+                        class="flex items-center px-4 py-3 rounded-xl transition-all duration-200 group {% if request.resolver_match.url_name == 'admin.product' %}bg-indigo-50 text-indigo-700 font-bold{% else %}text-gray-500 hover:bg-gray-50 hover:text-gray-900{% endif %}">
+                        <svg class="w-5 h-5 transition duration-75 {% if request.resolver_match.url_name == 'admin.product' %}text-indigo-600{% else %}text-gray-400 group-hover:text-indigo-500{% endif %}"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                        <span class="flex-1 ms-3 whitespace-nowrap">Books (Products)</span>
+                    </a>
+                </li>
+
+                <li class="pt-4 pb-2">
+                    <span class="px-4 text-[11px] font-black tracking-wider text-gray-400 uppercase">Sales &
+                        Users</span>
+                </li>
+
+                <li>
+                    <a href="#"
+                        class="flex items-center px-4 py-3 rounded-xl transition-all duration-200 text-gray-500 hover:bg-gray-50 hover:text-gray-900 group">
+                        <svg class="w-5 h-5 text-gray-400 transition duration-75 group-hover:text-indigo-500"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                        </svg>
+                        <span class="flex-1 ms-3 whitespace-nowrap">Orders</span>
+                        <span
+                            class="inline-flex items-center justify-center w-5 h-5 text-[10px] font-bold text-white bg-orange-500 rounded-full">3</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#"
+                        class="flex items-center px-4 py-3 rounded-xl transition-all duration-200 text-gray-500 hover:bg-gray-50 hover:text-gray-900 group">
+                        <svg class="w-5 h-5 text-gray-400 transition duration-75 group-hover:text-indigo-500"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        <span class="flex-1 ms-3 whitespace-nowrap">Customers</span>
+                    </a>
+                </li>
+
+                <li class="pt-4 pb-2">
+                    <span class="px-4 text-[11px] font-black tracking-wider text-gray-400 uppercase">Management</span>
+                </li>
+
+                <li>
+                    <a href="#"
+                        class="flex items-center px-4 py-3 rounded-xl transition-all duration-200 text-gray-500 hover:bg-gray-50 hover:text-gray-900 group">
+                        <svg class="w-5 h-5 text-gray-400 transition duration-75 group-hover:text-indigo-500"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                        </svg>
+                        <span class="flex-1 ms-3 whitespace-nowrap">Coupons</span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="mt-8 pt-6 border-t border-gray-100">
+                <a href="/"
+                    class="flex items-center px-4 py-3 rounded-xl transition-all duration-200 text-red-500 hover:bg-red-50 font-semibold group">
+                    <svg class="w-5 h-5 mr-3 transition-transform group-hover:-translate-x-1" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    Logout
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <main class="p-4 sm:ml-64 min-h-screen">
+        <div class="p-4 md:p-8 rounded-3xl mt-14 sm:mt-0">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </main>
+
+</body>
+
+</html>
