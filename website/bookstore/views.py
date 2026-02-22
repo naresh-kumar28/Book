@@ -3,6 +3,8 @@ from django.core.mail import send_mail
 from django.contrib import messages
 from django.conf import settings
 from django.contrib.auth.decorators import login_required 
+from .models import *
+from .forms import *
     
 
 # Create your views here.
@@ -102,7 +104,30 @@ def adminDashboard(req):
     return render(req, 'admin/admin_dashboard.html')
 
 def manageCategory(req):
-    return render(req, 'admin/manage_category.html')
+    form = CategoryInsertForm(req.POST or None)
+    categories = Category.objects.all()
+    if form.is_valid():
+        form.save()
+        return redirect(manageCategory)
+    return render(req, 'admin/manage_category.html',{"form" : form, "categories" : categories})
+
+def deleteCategory(req, id):
+    category = Category.objects.get(id=id)
+    category.delete()
+    return redirect(manageCategory)
 
 def manageProduct(req):
     return render(req, 'admin/manage_product.html')
+
+def manageAuthor(req):
+    form = AuthorInsertForm(req.POST or None, req.FILES or None)
+    authors = Author.objects.all()
+    if form.is_valid():
+        form.save()
+        return redirect(manageAuthor)
+    return render(req, 'admin/manage_author.html', {"form" : form, "authors" : authors})
+
+def deleteAuthor(req, id):
+    author = Author.objects.get(id=id)
+    author.delete()
+    return redirect(manageAuthor)

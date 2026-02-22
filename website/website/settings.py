@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bookstore',
+    "crispy_forms",
+    "crispy_tailwind",
 
     'django.contrib.sites',
     'allauth',
@@ -51,6 +53,9 @@ INSTALLED_APPS = [
 ]
 
 SITE_ID = 1
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
+CRISPY_TEMPLATE_PACK = "tailwind"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -148,6 +153,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+#IMAGE WORK
+MEDIA_URL = '/media/'
+MEDIA_ROOT = 'media'
 
 #----------------------------------
 # for msg

@@ -1,6 +1,10 @@
 from django.urls import path
 from .views import *
 
+#image work
+from django.conf import settings
+from django.conf.urls.static import static
+
 urlpatterns = [
     path('', home, name='home'),
 
@@ -29,6 +33,11 @@ urlpatterns = [
     #admin section
     path('admin/', adminDashboard, name='admin.dashboard'),
     path('admin/category/', manageCategory, name='admin.category'),
+    path('admin/category/<int:id>/delete/', deleteCategory, name='admin.category.delete'),
+
+    path('admin/author/', manageAuthor, name='admin.author'),
+    path('admin/author/<int:id>/delete/', deleteAuthor, name='admin.author.delete'),
+
     path('admin/product/', manageProduct, name='admin.product'),
 
-]
+]+static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

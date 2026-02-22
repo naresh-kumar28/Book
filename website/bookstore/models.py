@@ -13,6 +13,7 @@ class Category(models.Model):
 class Author(models.Model):
     author_name = models.CharField(max_length=200)
     author_image = models.ImageField(upload_to='authors/profiles/', blank=True, null=True)
+    author_slug = models.SlugField(unique=True)
     
     def __str__(self):
         return self.author_name
@@ -20,6 +21,7 @@ class Author(models.Model):
 
 class Brand(models.Model):
     brand_name = models.CharField(max_length=200) # e.g., NCERT
+    brand_slug = models.SlugField(unique=True)
     
     def __str__(self):
         return self.brand_name
@@ -27,6 +29,7 @@ class Brand(models.Model):
 
 class BookType(models.Model):
     name = models.CharField(max_length=100) # e.g., Old Books, Bestsellers
+    slug = models.SlugField(unique=True)
     
     def __str__(self):
         return self.name
@@ -35,6 +38,7 @@ class BookType(models.Model):
 class Publisher(models.Model):
     publisher_name = models.CharField(max_length=200) # e.g., Rupa Publications, Bloomsbury India
     publisher_image = models.ImageField(upload_to='publishers/logos/', blank=True, null=True, help_text="Publisher ka logo")
+    publisher_slug = models.SlugField(unique=True)
     
     def __str__(self):
         return self.publisher_name
