@@ -116,8 +116,6 @@ def deleteCategory(req, id):
     category.delete()
     return redirect(manageCategory)
 
-def manageProduct(req):
-    return render(req, 'admin/manage_product.html')
 
 def manageAuthor(req):
     form = AuthorInsertForm(req.POST or None, req.FILES or None)
@@ -131,3 +129,80 @@ def deleteAuthor(req, id):
     author = Author.objects.get(id=id)
     author.delete()
     return redirect(manageAuthor)
+
+
+def manageBrand(req):
+    form = BrandInsertForm(req.POST or None)
+    brands = Brand.objects.all()
+    if form.is_valid():
+        form.save()
+        return redirect(manageBrand)
+    return render(req, 'admin/manage_brand.html', {"form" : form, "brands" : brands})
+
+def deleteBrand(req, id):
+    brand = Brand.objects.get(id=id)
+    brand.delete()
+    return redirect(manageBrand)
+
+
+def manageBooktype(req):
+    form = BooktypeInsertForm(req.POST or None)
+    booktypes = BookType.objects.all()
+    if form.is_valid():
+        form.save()
+        return redirect(manageBooktype)
+    return render(req, 'admin/manage_booktype.html', {"form" : form, "booktypes" : booktypes})
+
+def deleteBooktype(req, id):
+    booktype = BookType.objects.get(id=id)
+    booktype.delete()
+    return render(manageBooktype)
+
+
+def managePublisher(req):
+    form = PublisherInsertForm(req.POST or None, req.FILES or None)
+    publishers = Publisher.objects.all()
+    if form.is_valid():
+        form.save()
+        return redirect(managePublisher)
+
+    return render(req, 'admin/manage_publisher.html', {"form" : form, "publishers" : publishers })
+
+def deletePublisher(req, id):
+    publisher = Publisher.objects.all()
+    publisher.delete()
+    return redirect(managePublisher)
+
+
+def manageProduct(req):
+    products = Product.objects.all()
+
+    return render(req, 'admin/manage_product.html', {"products" : products})
+
+def addProduct(req):
+    form = ProductInsertForm(req.POST or None, req.FILES or None)
+    if form.is_valid():
+        form.save()
+        return redirect(manageProduct)
+    return render(req, 'admin/add_product.html', {"form" : form})
+
+def deleteProduct(req, id):
+    product = Product.objects.get(id=id)
+    product.delete()
+    return redirect(manageProduct)
+
+
+def studentClass(req):
+    form = ClassInsertForm(req.POST or None)
+    classes = StudentClass.objects.all()
+    if form.is_valid():
+        form.save()
+        return redirect(studentClass)
+    
+    return render(req, 'admin/student_class.html', {"form": form, "classes": classes})
+
+
+def deleteStudentClass(req, id):
+    studentclass = StudentClass.objects.get(id=id)
+    studentclass.delete()
+    return redirect(studentClass)

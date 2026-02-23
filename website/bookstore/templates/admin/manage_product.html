@@ -1,6 +1,170 @@
 {% extends 'admin/admin_base.html' %}
+{% load tailwind_filters %}
 
 {% block content %}
 
+<div class="flex-1 overflow-y-auto p-6 lg:p-8">
+
+    <div class="flex justify-between items-center mb-6">
+
+        <div>
+            <h1 class="text-2xl font-bold text-white tracking-wide">
+                Manage Products
+            </h1>
+
+            <p class="text-sm font-medium text-slate-500 mt-1">
+                View, edit, delete or add new product.
+            </p>
+        </div>
+
+        <div>
+            
+            <a href="{% url 'admin.product.add' %}"
+                class="inline-flex items-center gap-2 bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-400 hover:text-indigo-300 border border-indigo-500/30 hover:border-indigo-500/50 px-5 py-2.5 rounded-xl font-semibold text-sm shadow-sm transition-all duration-200">
+
+                <!-- Plus Icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+
+                Insert Product
+            </a>
+        </div>
+
+    </div>
+
+    <div
+        class="lg:col-span-8 bg-gradient-to-br from-[#1e293b] to-[#0f172a] border border-slate-700/50 rounded-2xl shadow-xl overflow-hidden">
+    
+        <div class="p-5 border-b border-slate-700/50 flex justify-between items-center bg-slate-800/40 backdrop-blur">
+            <h2 class="text-lg font-bold text-white tracking-wide">Product List</h2>
+    
+            <span
+                class="bg-indigo-500/10 text-indigo-400 text-xs font-semibold px-3 py-1 rounded-full border border-indigo-500/30">
+                Total: {{ products|length }}
+            </span>
+        </div>
+    
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left whitespace-nowrap">
+    
+                <thead class="text-xs text-slate-300 uppercase bg-slate-900/60 border-b border-slate-700/50 tracking-wider">
+                    <tr>
+                        <th class="px-6 py-4 font-semibold">ID</th>
+                        <th class="px-6 py-4 font-semibold">Product Details</th>
+                        <th class="px-6 py-4 font-semibold">Price</th>
+                        <th class="px-6 py-4 font-semibold">Status</th>
+                        <th class="px-6 py-4 font-semibold text-right">Actions</th>
+                    </tr>
+                </thead>
+    
+                <tbody class="divide-y divide-slate-700/40">
+    
+                    {% for product in products %}
+                    <tr class="hover:bg-slate-800/40 transition duration-200 even:bg-slate-900/20 group">
+    
+                        <td class="px-6 py-4">
+                            <span
+                                class="bg-slate-800 text-slate-400 text-xs px-2.5 py-1 rounded-md border border-slate-700">
+                                #{{ product.id }}
+                            </span>
+                        </td>
+    
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-4">
+                                {% if product.image %}
+                                <img src="{{ product.image.url }}" alt="{{ product.title }}"
+                                    class="w-12 h-12 rounded-lg object-cover border border-slate-600 shadow-sm">
+                                {% else %}
+                                <div
+                                    class="w-12 h-12 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 font-bold text-lg">
+                                    {{ product.title|slice:":1"|upper }}
+                                </div>
+                                {% endif %}
+    
+                                <div>
+                                    <p class="font-bold text-slate-200 group-hover:text-white transition text-base">
+                                        {{ product.title|truncatechars:35 }}
+                                    </p>
+                                    <p class="text-xs text-slate-500 mt-0.5 font-medium">
+                                        {{ product.category.cat_name }} {% if product.student_class %} | {{ product.student_class.name }} {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                        </td>
+    
+                        <td class="px-6 py-4">
+                            {% if product.discount_price %}
+                            <div class="flex flex-col">
+                                <span class="font-bold text-emerald-400">₹{{ product.discount_price }}</span>
+                                <span class="text-xs text-slate-500 line-through">₹{{ product.price }}</span>
+                            </div>
+                            {% else %}
+                            <span class="font-bold text-white">₹{{ product.price }}</span>
+                            {% endif %}
+                        </td>
+    
+                        <td class="px-6 py-4">
+                            {% if product.status == 'published' %}
+                            <span
+                                class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[11px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">
+                                Active
+                            </span>
+                            {% elif product.status == 'out_of_stock' %}
+                            <span
+                                class="bg-red-500/10 text-red-400 border border-red-500/20 text-[11px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">
+                                Out of Stock
+                            </span>
+                            {% else %}
+                            <span
+                                class="bg-amber-500/10 text-amber-400 border border-amber-500/20 text-[11px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">
+                                Draft
+                            </span>
+                            {% endif %}
+                        </td>
+    
+                        <td class="px-6 py-4 text-right space-x-2">
+                            <a href="#"
+                                class="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-slate-800 text-slate-400 hover:text-indigo-400 hover:bg-indigo-500/10 border border-slate-700 hover:border-indigo-500/40 transition-all shadow-sm"
+                                title="Edit">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                </svg>
+                            </a>
+    
+                            <a href="{% url 'admin.product.delete' product.id %}"
+                                class="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-slate-800 text-slate-400 hover:text-red-400 hover:bg-red-500/10 border border-slate-700 hover:border-red-500/40 transition-all shadow-sm"
+                                title="Delete" onclick="return confirm('Are you sure you want to delete this product?');">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </a>
+                        </td>
+    
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="px-6 py-12 text-center text-slate-500">
+                            <svg class="w-12 h-12 mx-auto text-slate-600 mb-3" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                            </svg>
+                            <p class="font-medium text-slate-400">No products found.</p>
+                            <p class="text-xs mt-1 text-slate-600">Add a new book from the right panel.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+    
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
 
 {% endblock %}

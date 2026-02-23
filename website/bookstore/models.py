@@ -2,6 +2,14 @@ from django.db import models
 
 # Create your models here.
 
+class StudentClass(models.Model):
+    name = models.CharField(max_length=100) # e.g., Class 10, Class 12 Science, B.Tech
+    slug = models.SlugField(max_length=100, unique=True, blank=True)
+
+    def __str__(self):
+        return self.name
+        
+
 class Category(models.Model):
     cat_name = models.CharField(max_length=100)
     cat_slug = models.SlugField(unique=True)
@@ -44,7 +52,6 @@ class Publisher(models.Model):
         return self.publisher_name
 
 
-
 class Product(models.Model):
     
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
@@ -52,11 +59,12 @@ class Product(models.Model):
     brand = models.ForeignKey(Brand, on_delete=models.SET_NULL, null=True, blank=True)
     book_type = models.ForeignKey(BookType, on_delete=models.SET_NULL, null=True, blank=True)
     publisher = models.ForeignKey(Publisher, on_delete=models.SET_NULL, null=True, blank=True)
+    student_class = models.ForeignKey(StudentClass, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Class/Grade")
 
     title = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, unique=True)
-    description = models.TextField()
-    image = models.ImageField(upload_to='products/main/')
+    description = models.TextField(blank=True)
+    image = models.ImageField(upload_to='products/main/', help_text="Main display image")
     cover_image = models.ImageField(upload_to='products/covers/', blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     discount_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)

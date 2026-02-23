@@ -7,8 +7,8 @@
 
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <div>
-            <h1 class="text-2xl font-bold text-white tracking-wide">Manage Categories</h1>
-            <p class="text-sm font-medium text-slate-500 mt-1">View, edit, delete or add new book categories.</p>
+            <h1 class="text-2xl font-bold text-white tracking-wide">Manage Student Class</h1>
+            <p class="text-sm font-medium text-slate-500 mt-1">View, edit, delete or add new class.</p>
         </div>
     </div>
 
@@ -16,113 +16,111 @@
 
         <div
             class="lg:col-span-8 bg-gradient-to-br from-[#1e293b] to-[#0f172a] border border-slate-700/50 rounded-2xl shadow-xl overflow-hidden">
-        
-            <div class="p-5 border-b border-slate-700/50 flex justify-between items-center bg-slate-800/40 backdrop-blur">
-                <h2 class="text-lg font-bold text-white tracking-wide">Category List</h2>
-        
+
+            <div
+                class="p-5 border-b border-slate-700/50 flex justify-between items-center bg-slate-800/40 backdrop-blur">
+                <h2 class="text-lg font-bold text-white tracking-wide">Classes List</h2>
+
                 <span
                     class="bg-indigo-500/10 text-indigo-400 text-xs font-semibold px-3 py-1 rounded-full border border-indigo-500/30">
-                    Total: {{ categories|length }}
+                    Total: {{ classes|length }}
                 </span>
             </div>
-        
+
             <div class="overflow-x-auto">
                 <table class="w-full text-sm text-left whitespace-nowrap">
-        
-                    <thead class="text-xs text-slate-300 uppercase bg-slate-900/60 border-b border-slate-700/50 tracking-wider">
+
+                    <thead
+                        class="text-xs text-slate-300 uppercase bg-slate-900/60 border-b border-slate-700/50 tracking-wider">
                         <tr>
                             <th class="px-6 py-4 font-semibold">ID</th>
-                            <th class="px-6 py-4 font-semibold">Category Title</th>
+                            <th class="px-6 py-4 font-semibold">Student Class</th>
                             <th class="px-6 py-4 font-semibold">Slug</th>
                             <th class="px-6 py-4 font-semibold text-right">Actions</th>
                         </tr>
                     </thead>
-        
+
                     <tbody class="divide-y divide-slate-700/40">
-        
-                        {% for category in categories %}
+
+                        {% for class in classes %}
                         <tr class="hover:bg-slate-800/40 transition duration-200 even:bg-slate-900/20 group">
-        
+
                             <!-- ID -->
                             <td class="px-6 py-4">
                                 <span
                                     class="bg-slate-800 text-slate-400 text-xs px-2.5 py-1 rounded-md border border-slate-700">
-                                    #{{ category.id }}
+                                    #{{ class.id }}
                                 </span>
                             </td>
-        
+
                             <!-- Name -->
                             <td class="px-6 py-4">
-                                <div class="flex items-center gap-3">
-                                    <div
-                                        class="w-9 h-9 rounded-xl bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-indigo-400 font-bold shadow-inner">
-                                        {{ category.cat_name|slice:":1"|upper }}
-                                    </div>
-        
-                                    <span class="font-semibold text-slate-200 group-hover:text-white transition">
-                                        {{ category.cat_name }}
-                                    </span>
-                                </div>
+
+                                <span class="font-semibold text-slate-200 group-hover:text-white transition">
+                                    {{ class.name }}
+                                </span>
+
                             </td>
-        
+
                             <!-- Slug -->
                             <td class="px-6 py-4">
                                 <span
                                     class="bg-slate-900/70 text-indigo-300 text-xs px-3 py-1 rounded-lg border border-slate-700 font-mono">
-                                    /{{ category.cat_slug }}
+                                    /{{ class.slug }}
                                 </span>
                             </td>
-        
+
                             <!-- Actions -->
                             <td class="px-6 py-4 text-right space-x-2">
-        
+
                                 <a href="#"
                                     class="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-slate-800 text-slate-400 hover:text-indigo-400 hover:bg-indigo-500/10 border border-slate-700 hover:border-indigo-500/40 transition-all shadow-sm"
                                     title="Edit">
-        
+
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                                     </svg>
-        
+
                                 </a>
-        
-                                <a href="{% url 'admin.category.delete' category.id %}"
+
+                                <a href="{% url 'admin.studentclass.delete' class.id %}"
                                     class="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-slate-800 text-slate-400 hover:text-red-400 hover:bg-red-500/10 border border-slate-700 hover:border-red-500/40 transition-all shadow-sm"
-                                    title="Delete" onclick="return confirm('Are you sure you want to delete this category?');">
-        
+                                    title="Delete"
+                                    onclick="return confirm('Are you sure you want to delete this class?');">
+
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                     </svg>
-        
+
                                 </a>
-        
+
                             </td>
-        
+
                         </tr>
                         {% empty %}
                         <tr>
                             <td colspan="4" class="px-6 py-12 text-center text-slate-500">
-        
+
                                 <svg class="w-12 h-12 mx-auto text-slate-600 mb-3" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
                                 </svg>
-        
+
                                 <p class="font-medium text-slate-400">
-                                    No categories found.
+                                    No classes found.
                                 </p>
-        
+
                                 <p class="text-xs mt-1 text-slate-600">
-                                    Add a new category from the right panel.
+                                    Add a new class from the right panel.
                                 </p>
-        
+
                             </td>
                         </tr>
                         {% endfor %}
-        
+
                     </tbody>
                 </table>
             </div>
@@ -131,8 +129,8 @@
         <div class="lg:col-span-4 bg-[#1e293b] border border-slate-700/50 rounded-2xl shadow-lg p-6">
 
             <div class="flex items-center gap-3 mb-6">
-                
-                <h2 class="text-lg font-bold text-white">Insert Category</h2>
+
+                <h2 class="text-lg font-bold text-white">Add Class</h2>
             </div>
 
             <div class="dark-form-container">
@@ -144,7 +142,7 @@
                     <div class="pt-4 mt-6 border-t border-slate-700/50">
                         <button type="submit"
                             class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/20">
-                            Add Category
+                            Add Class
                         </button>
                     </div>
                 </form>
