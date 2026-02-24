@@ -2,12 +2,13 @@
 <section class="bg-gray-50 py-12 border-b border-gray-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
+        {% url 'book.newely' as book_newely_url%}
         <div class="flex justify-between items-start mb-8">
             <h2 class="text-lg md:text-2xl font-bold text-gray-900 border-l-[3px] md:border-l-4 border-orange-500 pl-2 md:pl-3">
                 Newely Relase
             </h2>
         
-            <a href="#"
+            <a href="{{ book_newely_url }}"
                 class="text-orange-500 font-bold text-sm md:text-base hover:underline flex items-center whitespace-nowrap ml-4 mt-1.5 flex-shrink-0">
                 View All
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24"
@@ -21,75 +22,74 @@
             <div class="flex overflow-x-auto space-x-6 pb-8 no-scrollbar snap-x">
 
                 <!-- 1 Product  -->
-                {% for i in "12345" %}
-                <div
-                    class="flex-shrink-0 w-64 bg-white rounded-2xl shadow-sm border border-gray-100 p-4 snap-start hover:shadow-xl transition-all duration-300 relative group/card">
-
-                    <span
-                        class="absolute top-6 left-6 bg-orange-500 text-white text-[10px] font-bold px-2 py-1 rounded-md z-20 shadow-sm">15%
-                        OFF
-                    </span>
-
-                    <button
-                        class="absolute top-6 right-6 bg-white p-1.5 rounded-full shadow-md text-gray-400 hover:text-red-500 transition-colors z-20">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                        </svg>
-                    </button>
-
+                    {% for book in books %}
                     <div
-                        class="relative h-52 flex items-center justify-center mb-4 bg-gray-50 rounded-xl overflow-hidden">
-                        <div class="relative flex items-center justify-center w-full">
-
-                            <img src="https://nageenprakashan.in/cdn/shop/files/Nootan_UP_Board_Hindi_Text_Book_For_Class_12th_-_Academic_Year_2025-26_By_Survesh_Kant_Verma_-_Nageen_Prakashan_8.webp?v=1744361938"
-                                class="w-32 h-40 object-cover rounded shadow-2xl z-10 border-2 border-white">
-
+                        class="flex-shrink-0 w-64 bg-white rounded-2xl shadow-sm border border-gray-100 p-4 snap-start hover:shadow-xl transition-all duration-300 relative group/card">
+    
+                        <span
+                            class="absolute top-6 left-6 bg-orange-500 text-white text-[10px] font-bold px-2 py-1 rounded-md z-20 shadow-sm">15%
+                            OFF
+                        </span>
+    
+                        <button
+                            class="absolute top-6 right-6 bg-white p-1.5 rounded-full shadow-md text-gray-400 hover:text-red-500 transition-colors z-20">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                            </svg>
+                        </button>
+    
+                        <div
+                            class="relative h-52 flex items-center justify-center mb-4 bg-gray-50 rounded-xl overflow-hidden">
+                            <div class="relative flex items-center justify-center w-full">
+    
+                                <img src="{{book.image.url}}"
+                                    class="w-32 h-40 object-cover rounded shadow-2xl z-10 border-2 border-white">
+    
+                            </div>
+                        </div>
+    
+                        <div class="space-y-1 mb-4">
+                            <h3 class="font-bold text-gray-800 truncate" title="Complete PCM Master Set">{{book.title}}</h3>
+                            <p
+                                class="text-[10px] text-indigo-600 font-bold uppercase tracking-wider bg-indigo-50 w-max px-2 py-0.5 rounded">
+                                {{book.brand}}
+                            </p>
+                            <div class="flex items-center space-x-2 pt-1">
+                                <span class="text-lg font-bold text-green-600">₹{{book.price|floatformat:0}}</span>
+                                <span class="text-sm text-gray-400 line-through">₹{{book.discount_price|floatformat:0}}</span>
+                                <!-- <span
+                                    class="bg-green-600 text-white text-[9px] px-1.5 py-0.5 rounded font-bold ml-auto uppercase">Save
+                                    ₹200</span> -->
+                            </div>
+                        </div>
+    
+                        <div class="flex gap-2">
+                            <button
+                                class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-xl text-[12px] font-bold transition-all transform active:scale-95 shadow-sm">
+                                Buy Now
+                            </button>
+                            <button
+                                class="w-full bg-teal-600 hover:bg-teal-700 text-white py-2.5 rounded-xl text-[12px] font-semibold flex items-center justify-center transition-colors">
+                                Add to Cart
+                            </button>
                         </div>
                     </div>
-
-                    <div class="space-y-1 mb-4">
-                        <h3 class="font-bold text-gray-800 truncate" title="Complete PCM Master Set">Hindi II For Class
-                            - 12...</h3>
-                        <p
-                            class="text-[10px] text-indigo-600 font-bold uppercase tracking-wider bg-indigo-50 w-max px-2 py-0.5 rounded">
-                            NCERT
-                        </p>
-                        <div class="flex items-center space-x-2 pt-1">
-                            <span class="text-lg font-bold text-green-600">₹450</span>
-                            <span class="text-sm text-gray-400 line-through">₹650</span>
-                            <span
-                                class="bg-green-600 text-white text-[9px] px-1.5 py-0.5 rounded font-bold ml-auto uppercase">Save
-                                ₹200</span>
-                        </div>
-                    </div>
-
-                    <div class="flex gap-2">
-                        <button
-                            class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-xl text-[12px] font-bold transition-all transform active:scale-95 shadow-sm">
-                            Buy Now
-                        </button>
-                        <button
-                            class="w-full bg-teal-600 hover:bg-teal-700 text-white py-2.5 rounded-xl text-[12px] font-semibold flex items-center justify-center transition-colors">
-                            Add to Cart
-                        </button>
-                    </div>
-                </div>
-                {% endfor %}
+                    {% endfor %}
             </div>
         </div>
     </div>
 </section>
 
-<!-- Bestsellers Books -->
+<!-- Top Selling -->
 <section class="bg-gray-50 py-12 border-b border-gray-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         <div class="flex justify-between items-start mb-8">
             <h2
                 class="text-lg md:text-2xl font-bold text-gray-900 border-l-[3px] md:border-l-4 border-orange-500 pl-2 md:pl-3">
-                Bestsellers Books
+                Top Selling
             </h2>
 
             <a href="#"
@@ -105,7 +105,63 @@
         <div class="relative group">
             <div class="flex overflow-x-auto space-x-6 pb-8 no-scrollbar snap-x">
 
-                <!-- 1 Product  -->
+                <!-- 2 books  -->
+                <div
+                    class="flex-shrink-0 w-64 bg-white rounded-2xl shadow-sm border border-gray-100 p-4 snap-start hover:shadow-xl transition-all duration-300 relative group/card">
+                    <span
+                        class="absolute top-6 left-6 bg-green-600 text-white text-[10px] font-bold px-2 py-1 rounded-md z-20 shadow-sm">SAVE
+                        ₹150
+                    </span>
+
+                    <button
+                        class="absolute top-6 right-6 bg-white p-1.5 rounded-full shadow-md text-gray-400 hover:text-red-500 transition-colors z-20">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+
+                    <div
+                        class="relative h-52 flex items-center justify-center mb-4 bg-gray-50 rounded-xl overflow-hidden">
+                        <div class="relative flex items-center justify-center w-full">
+
+                            <img src="https://nageenprakashan.in/cdn/shop/files/Nootan_UP_Board_Chemistry_Text_Book_For_Class_12th_-_Academic_Year_2025-26_By_Dr._H.C._Srivastava_-_Nageen_Prakashan.webp"
+                                class="w-24 h-32 object-cover rounded shadow-md transform -rotate-12 border border-white">
+                            <img src="https://nageenprakashan.in/cdn/shop/files/Nootan_ISC_Board_Physics_Text_Book_For_Class_12th_-_Academic_Year_2025-26_By_Kumar-Mittal_-_Nageen_Prakashan_11.webp"
+                                class="w-24 h-32 object-cover rounded shadow-2xl rotate-12 z-10 border border-white">
+
+                        </div>
+                    </div>
+
+                    <div class="space-y-1 mb-4">
+                        <h3 class="font-bold text-gray-800 truncate" title="Complete PCM Master Set">Combo PCM Set
+                            (Class 12)</h3>
+                        <p
+                            class="text-[10px] text-indigo-600 font-bold uppercase tracking-wider bg-indigo-50 w-max px-2 py-0.5 rounded">
+                            2 Books Bundle
+                        </p>
+                        <div class="flex items-center space-x-2 pt-1">
+                            <span class="text-lg font-bold text-green-600">₹299</span>
+                            <span class="text-sm text-gray-400 line-through">₹449</span>
+                            <span
+                                class="bg-yellow-100 text-yellow-700 text-[9px] px-1.5 py-0.5 rounded font-bold ml-auto uppercase">Popular</span>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <button
+                            class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-xl text-[12px] font-bold transition-all transform active:scale-95 shadow-sm">
+                            Buy Combo
+                        </button>
+                        <button
+                            class="w-full bg-teal-600 hover:bg-teal-700 text-white py-2.5 rounded-xl text-[12px] font-semibold flex items-center justify-center transition-colors">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 1 book slot  -->
                 <div
                     class="flex-shrink-0 w-64 bg-white rounded-2xl shadow-sm border border-gray-100 p-4 snap-start hover:shadow-xl transition-all duration-300 relative group/card">
 
@@ -160,6 +216,266 @@
                         </button>
                     </div>
                 </div>
+
+                <!--  4 books  -->
+                <div
+                    class="flex-shrink-0 w-64 bg-white rounded-2xl shadow-sm border border-gray-100 p-4 snap-start hover:shadow-xl transition-all duration-300 relative group/card">
+                    <span
+                        class="absolute top-6 left-6 bg-green-600 text-white text-[10px] font-bold px-2 py-1 rounded-md z-20 shadow-sm">SAVE
+                        ₹150
+                    </span>
+
+                    <button
+                        class="absolute top-6 right-6 bg-white p-1.5 rounded-full shadow-md text-gray-400 hover:text-red-500 transition-colors z-20">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+
+                    <div
+                        class="relative h-52 flex items-center justify-center mb-4 bg-gray-50 rounded-xl overflow-hidden">
+                        <div class="relative flex items-center justify-center w-full">
+
+                            <img src="https://nageenprakashan.in/cdn/shop/files/Nootan_UP_Board_Chemistry_Text_Book_For_Class_12th_-_Academic_Year_2025-26_By_Dr._H.C._Srivastava_-_Nageen_Prakashan.webp"
+                                class="w-24 h-32 object-cover rounded shadow-md transform -rotate-12 -translate-x-12 border border-white">
+
+                            <img src="https://nageenprakashan.in/cdn/shop/files/Nootan_UP_Board_Chemistry_Text_Book_For_Class_12th_-_Academic_Year_2025-26_By_Dr._H.C._Srivastava_-_Nageen_Prakashan.webp"
+                                class="w-24 h-32 object-cover rounded shadow-md transform -rotate-6 absolute -translate-x-5 border border-white">
+
+                            <img src="https://nageenprakashan.in/cdn/shop/files/Nootan_ISC_Board_Physics_Text_Book_For_Class_12th_-_Academic_Year_2025-26_By_Kumar-Mittal_-_Nageen_Prakashan_11.webp"
+                                class="w-24 h-32 object-cover rounded shadow-2xl rotate-6 absolute translate-x-5 z-10 border border-white">
+
+                            <img src="https://nageenprakashan.in/cdn/shop/files/Nootan_ISC_Board_Physics_Text_Book_For_Class_12th_-_Academic_Year_2025-26_By_Kumar-Mittal_-_Nageen_Prakashan_11.webp"
+                                class="w-24 h-32 object-cover rounded shadow-2xl rotate-12 absolute translate-x-12 z-20 border border-white">
+
+                        </div>
+                    </div>
+
+                    <div class="space-y-1 mb-4">
+                        <h3 class="font-bold text-gray-800 truncate" title="Complete PCM Master Set">Combo PCM Set
+                            (Class 12)</h3>
+                        <p
+                            class="text-[10px] text-indigo-600 font-bold uppercase tracking-wider bg-indigo-50 w-max px-2 py-0.5 rounded">
+                            2 Books Bundle
+                        </p>
+                        <div class="flex items-center space-x-2 pt-1">
+                            <span class="text-lg font-bold text-green-600">₹299</span>
+                            <span class="text-sm text-gray-400 line-through">₹449</span>
+                            <span
+                                class="bg-yellow-100 text-yellow-700 text-[9px] px-1.5 py-0.5 rounded font-bold ml-auto uppercase">Popular</span>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <button
+                            class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-xl text-[12px] font-bold transition-all transform active:scale-95 shadow-sm">
+                            Buy Combo
+                        </button>
+                        <button
+                            class="w-full bg-teal-600 hover:bg-teal-700 text-white py-2.5 rounded-xl text-[12px] font-semibold flex items-center justify-center transition-colors">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 5 books -->
+                <div
+                    class="flex-shrink-0 w-64 bg-white rounded-2xl shadow-sm border border-gray-100 p-4 snap-start hover:shadow-xl transition-all duration-300 relative group/card">
+
+                    <span
+                        class="absolute top-6 left-6 bg-green-600 text-white text-[10px] font-bold px-2 py-1 rounded-md z-20 shadow-sm">MEGA
+                        PACK
+
+                    </span>
+
+                    <button
+                        class="absolute top-6 right-6 bg-white p-1.5 rounded-full shadow-md text-gray-400 hover:text-red-500 transition-colors z-40">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+
+                    <div
+                        class="relative h-52 flex items-center justify-center mb-4 bg-slate-50 rounded-xl overflow-hidden">
+                        <div class="relative flex items-center justify-center w-full h-full pt-4">
+
+                            <img src="https://nageenprakashan.in/cdn/shop/files/Nootan_UP_Board_Hindi_Text_Book_For_Class_12th_-_Academic_Year_2025-26_By_Survesh_Kant_Verma_-_Nageen_Prakashan_8.webp?v=1744361938"
+                                class="absolute w-24 h-32 object-cover rounded shadow-md transform -translate-x-16 -rotate-12 z-0 border border-white opacity-80">
+
+                            <img src="https://nageenprakashan.in/cdn/shop/files/Nootan_UP_Board_English_Text_Book_For_Class_9th_-_Academic_Year_2025-26_By_Ajeet_Pratap_Singh_-_Nageen_Prakashan.webp?v=1743750033&width=533"
+                                class="absolute w-24 h-32 object-cover rounded shadow-lg transform -translate-x-10 -rotate-6 z-10 border border-white">
+
+                            <img src="https://nageenprakashan.in/cdn/shop/files/Math1.webp?v=1756461882"
+                                class="absolute w-24 h-32 object-cover rounded shadow-2xl z-30 border-2 border-white transform scale-105">
+
+                            <img src="https://nageenprakashan.in/cdn/shop/files/Nootan_ISC_Board_Physics_Text_Book_For_Class_12th_-_Academic_Year_2025-26_By_Kumar-Mittal_-_Nageen_Prakashan_11.webp"
+                                class="absolute w-24 h-32 object-cover rounded shadow-lg transform translate-x-10 rotate-6 z-10 border border-white">
+
+                            <img src="https://nageenprakashan.in/cdn/shop/files/Nootan_UP_Board_Chemistry_Text_Book_For_Class_12th_-_Academic_Year_2025-26_By_Dr._H.C._Srivastava_-_Nageen_Prakashan.webp"
+                                class="absolute w-24 h-32 object-cover rounded shadow-md transform translate-x-16 rotate-12 z-0 border border-white opacity-80">
+
+                        </div>
+                    </div>
+
+                    <div class="space-y-1 mb-4">
+                        <h3 class="font-bold text-gray-800 truncate" title="Complete PCM Master Set">Complete PCM Set
+                            (Class 12)</h3>
+                        <p
+                            class="text-[10px] text-indigo-600 font-bold uppercase tracking-wider bg-indigo-50 w-max px-2 py-0.5 rounded">
+                            5 Books Complete
+                        </p>
+                        <div class="flex items-center space-x-2 pt-1">
+                            <span class="text-lg font-bold text-green-600">₹1199</span>
+                            <span class="text-sm text-gray-400 line-through">₹1599</span>
+                            <span
+                                class="bg-yellow-100 text-yellow-700 text-[9px] px-1.5 py-0.5 rounded font-bold ml-auto uppercase">Best
+                                Deal</span>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <button
+                            class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-xl text-[12px] font-bold transition-all transform active:scale-95 shadow-sm">
+                            Buy Combo
+                        </button>
+                        <button
+                            class="w-full bg-teal-600 hover:bg-teal-700 text-white py-2.5 rounded-xl text-[12px] font-semibold flex items-center justify-center transition-colors">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 4 books  -->
+                <div
+                    class="flex-shrink-0 w-64 bg-white rounded-2xl shadow-sm border border-gray-100 p-4 snap-start hover:shadow-xl transition-all duration-300 relative group/card">
+
+                    <span
+                        class="absolute top-6 left-6 bg-green-600 text-white text-[10px] font-bold px-2 py-1 rounded-md z-30 shadow-sm">SAVE
+                        ₹250</span>
+
+                    <button
+                        class="absolute top-6 right-6 bg-white p-1.5 rounded-full shadow-md text-gray-400 hover:text-red-500 transition-colors z-30">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+
+                    <div
+                        class="relative h-52 flex items-center justify-center mb-4 bg-gray-50 rounded-xl overflow-hidden">
+                        <div class="relative grid grid-cols-2 gap-x-2 gap-y-2 p-4">
+                            <img src="https://nageenprakashan.in/cdn/shop/files/Math1.webp?v=1756461882"
+                                class="w-20 h-24 object-cover rounded shadow-md transform -rotate-3 border border-white">
+
+                            <img src="https://nageenprakashan.in/cdn/shop/files/Nootan_UP_Board_Biology_Text_Book_For_Class_12th_-_Academic_Year_2025-26_By_Dr._D.K._Jain_-_Nageen_Prakashan.webp?v=1743679990"
+                                class="w-20 h-24 object-cover rounded shadow-md transform rotate-3 border border-white">
+
+                            <img src="https://nageenprakashan.in/cdn/shop/files/Nootan_CBSE_Board_Physics_Text_Book_For_Class_12th_-_Academic_Year_2025-26_By_Kumar-Mittal_-_Nageen_Prakashan_1.webp?v=1739604389"
+                                class="w-20 h-24 object-cover rounded shadow-md transform rotate-2 border border-white -mt-4 z-10">
+
+                            <img src="https://nageenprakashan.in/cdn/shop/files/Nootan_UP_Board_Chemistry_Text_Book_For_Class_12th_-_Academic_Year_2025-26_By_Dr._H.C._Srivastava_-_Nageen_Prakashan.webp"
+                                class="w-20 h-24 object-cover rounded shadow-md transform -rotate-2 border border-white -mt-4 z-10">
+                        </div>
+                    </div>
+
+                    <div class="space-y-1 mb-4">
+                        <h3 class="font-bold text-gray-800 truncate" title="Complete Science Set">Complete PCMB Set</h3>
+                        <p
+                            class="text-[10px] text-indigo-600 font-bold uppercase tracking-wider bg-indigo-50 w-max px-2 py-0.5 rounded">
+                            4 Books Bundle
+                        </p>
+                        <div class="flex items-center space-x-2 pt-1">
+                            <span class="text-lg font-bold text-green-600">₹899</span>
+                            <span class="text-sm text-gray-400 line-through">₹1,150</span>
+                            <span
+                                class="bg-yellow-100 text-yellow-700 text-[9px] px-1.5 py-0.5 rounded font-bold ml-auto uppercase">Top
+                                Value</span>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <button
+                            class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-xl text-[12px] font-bold transition-all transform active:scale-95 shadow-sm">
+                            Buy Combo
+                        </button>
+                        <button
+                            class="w-full bg-teal-600 hover:bg-teal-700 text-white py-2.5 rounded-xl text-[12px] font-semibold flex items-center justify-center transition-colors">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 4 books -->
+                <div
+                    class="flex-shrink-0 w-64 bg-white rounded-2xl shadow-sm border border-gray-100 p-4 snap-start hover:shadow-xl transition-all duration-300 relative group/card">
+
+                    <span
+                        class="absolute top-6 left-6 bg-green-600 text-white text-[10px] font-bold px-2 py-1 rounded-md z-20 shadow-sm">MEGA
+                        PACK
+
+                    </span>
+
+                    <button
+                        class="absolute top-6 right-6 bg-white p-1.5 rounded-full shadow-md text-gray-400 hover:text-red-500 transition-colors z-40">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </button>
+
+                    <div
+                        class="relative h-52 flex items-center justify-center mb-4 bg-slate-50 rounded-xl overflow-hidden">
+                        <div class="relative flex items-center justify-center w-full h-full pt-4">
+
+                            <img src="https://nageenprakashan.in/cdn/shop/files/Nootan_UP_Board_Hindi_Text_Book_For_Class_12th_-_Academic_Year_2025-26_By_Survesh_Kant_Verma_-_Nageen_Prakashan_8.webp?v=1744361938"
+                                class="absolute w-24 h-32 object-cover rounded shadow-md transform -translate-x-16 -rotate-12 z-0 border border-white opacity-80">
+
+                            <img src="https://nageenprakashan.in/cdn/shop/files/Nootan_UP_Board_English_Text_Book_For_Class_9th_-_Academic_Year_2025-26_By_Ajeet_Pratap_Singh_-_Nageen_Prakashan.webp?v=1743750033&width=533"
+                                class="absolute w-24 h-32 object-cover rounded shadow-lg transform -translate-x-6 -rotate-6 z-10 border border-white">
+
+                            <img src="https://nageenprakashan.in/cdn/shop/files/Nootan_ISC_Board_Physics_Text_Book_For_Class_12th_-_Academic_Year_2025-26_By_Kumar-Mittal_-_Nageen_Prakashan_11.webp"
+                                class="absolute w-24 h-32 object-cover rounded shadow-lg transform translate-x-6 rotate-6 z-10 border border-white">
+
+                            <img src="https://nageenprakashan.in/cdn/shop/files/Nootan_UP_Board_Chemistry_Text_Book_For_Class_12th_-_Academic_Year_2025-26_By_Dr._H.C._Srivastava_-_Nageen_Prakashan.webp"
+                                class="absolute w-24 h-32 object-cover rounded shadow-md transform translate-x-16 rotate-12 z-0 border border-white opacity-80">
+
+                        </div>
+                    </div>
+
+                    <div class="space-y-1 mb-4">
+                        <h3 class="font-bold text-gray-800 truncate" title="Complete PCM Master Set">Complete PCM Set
+                            (Class 12)</h3>
+                        <p
+                            class="text-[10px] text-indigo-600 font-bold uppercase tracking-wider bg-indigo-50 w-max px-2 py-0.5 rounded">
+                            5 Books Complete
+                        </p>
+                        <div class="flex items-center space-x-2 pt-1">
+                            <span class="text-lg font-bold text-green-600">₹1199</span>
+                            <span class="text-sm text-gray-400 line-through">₹1599</span>
+                            <span
+                                class="bg-yellow-100 text-yellow-700 text-[9px] px-1.5 py-0.5 rounded font-bold ml-auto uppercase">Best
+                                Deal</span>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <button
+                            class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-xl text-[12px] font-bold transition-all transform active:scale-95 shadow-sm">
+                            Buy Combo
+                        </button>
+                        <button
+                            class="w-full bg-teal-600 hover:bg-teal-700 text-white py-2.5 rounded-xl text-[12px] font-semibold flex items-center justify-center transition-colors">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>

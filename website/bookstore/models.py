@@ -22,6 +22,7 @@ class Author(models.Model):
     author_name = models.CharField(max_length=200)
     author_image = models.ImageField(upload_to='authors/profiles/', blank=True, null=True)
     author_slug = models.SlugField(unique=True)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     
     def __str__(self):
         return self.author_name
@@ -54,7 +55,7 @@ class Publisher(models.Model):
 
 class Product(models.Model):
     
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products', null=True, blank=True)
     author = models.ForeignKey(Author, on_delete=models.SET_NULL, null=True, blank=True)
     brand = models.ForeignKey(Brand, on_delete=models.SET_NULL, null=True, blank=True)
     book_type = models.ForeignKey(BookType, on_delete=models.SET_NULL, null=True, blank=True)
@@ -97,3 +98,11 @@ class Product(models.Model):
     @property
     def is_discounted(self):
         return self.discount_price and self.discount_price < self.price
+    
+    @property
+    def discount_percentage(self):
+        if self.price > 0 and self.discount_price and self.discount_price < self.price:
+            # Percentage ka formula: ((Price - Discount Price) / Price) * 100
+            percent = ((self.price - self.discount_price) / self.price) * 100
+            return int(percent) # int() decimal (15.5%) ko hata kar direct 15% dega
+        return 0

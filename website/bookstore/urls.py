@@ -55,4 +55,8 @@ urlpatterns = [
     path('admin/studentclass/', studentClass, name='admin.studentclass'),
     path('admin/studentclass/<int:id>/delete', deleteStudentClass, name='admin.studentclass.delete'),
 
+    #book_list
+    path('book/newely/', newelyRelase, name='book.newely'),
+
+
 ]+static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

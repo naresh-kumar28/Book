@@ -10,7 +10,10 @@ from .forms import *
 # Create your views here.
 
 def home(req):
-    return render(req, 'home.html')
+    author = Author.objects.all().order_by('-created_at')
+    category = BookType.objects.filter(name="Newely Relase").first()
+    books = Product.objects.filter(book_type = category)
+    return render(req, 'home.html', {"authors": author, "books" : books})
 
 
 #Static Page Section
@@ -206,3 +209,10 @@ def deleteStudentClass(req, id):
     studentclass = StudentClass.objects.get(id=id)
     studentclass.delete()
     return redirect(studentClass)
+
+# book_list
+def newelyRelase(req):
+    category = BookType.objects.filter(name="Newely Relase").first()
+    books = Product.objects.filter(book_type = category)
+
+    return render(req, 'book_list/newely_relase.html', {"books" : books})
