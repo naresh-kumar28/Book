@@ -33,7 +33,6 @@ class PublisherInsertForm(ModelForm):
 
 
 class ProductInsertForm(ModelForm):
-    
     def __init__(self, *args, **kwargs):
         super(ProductInsertForm, self).__init__(*args, **kwargs)
         
@@ -45,7 +44,6 @@ class ProductInsertForm(ModelForm):
         self.fields['publisher'].empty_label = "Select Publisher"
         self.fields['student_class'].empty_label = "Select Class/Grade"
         self.fields['subject'].empty_label = "Select Subject"
-
     class Meta:
         model = Product
         fields = [

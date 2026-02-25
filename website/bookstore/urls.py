@@ -16,7 +16,7 @@ urlpatterns = [
     path('return-refund/',returnRefund , name='return-refund'),
 
     #Shop Section
-    path('shop/product-details/', productDetails, name='product-details'),
+    path('shop/product-details/<int:id>/', productDetails, name='product-details'),
     path('shop/cart/', cart, name='cart'),
     path('shop/payment/', payment, name='payment'),
     path('shop/summary/', summary, name='summary'),

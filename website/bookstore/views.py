@@ -68,9 +68,9 @@ def returnRefund(req):
 
 
 #Shop Section
-def productDetails(req):
+def productDetails(req, id):
     data = {}
-    data['products'] = Product.objects.all()
+    data['product'] = Product.objects.get(id=id)
 
     return render(req, 'shop/product-details.html', data)
 

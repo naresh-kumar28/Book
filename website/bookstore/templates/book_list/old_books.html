@@ -25,11 +25,12 @@
             </div>
     
             <div class="relative group">
-                <a href="{% url 'product-details' %}">
-                    <div class="flex overflow-x-auto space-x-6 pb-8 no-scrollbar snap-x">
-        
-                        <!-- 1 Product  -->
-                        {% for book in oldbooks %}
+                
+                <div class="flex overflow-x-auto space-x-6 pb-8 no-scrollbar snap-x">
+    
+                    <!-- 1 Product  -->
+                    {% for book in oldbooks %}
+                    <a href="{% url 'product-details' book.id %}">
                         <div
                             class="flex-shrink-0 w-64 bg-white rounded-2xl shadow-sm border border-gray-100 p-4 snap-start hover:shadow-xl transition-all duration-300 relative group/card">
         
@@ -87,9 +88,10 @@
                                 </button>
                             </div>
                         </div>
-                        {% endfor %}
-                    </div>
-                </a>
+                    </a>
+                    {% endfor %}
+                </div>
+                
             </div>
         </div>
     </section>
