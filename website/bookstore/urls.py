@@ -55,8 +55,13 @@ urlpatterns = [
     path('admin/studentclass/', studentClass, name='admin.studentclass'),
     path('admin/studentclass/<int:id>/delete', deleteStudentClass, name='admin.studentclass.delete'),
 
+    path('admin/subject/', manageSubject, name='admin.subject'),
+    path('admin/subject/<int:id>/delete', deleteSubject, name='admin.subject.delete'),
+
     #book_list
     path('book/newely/', newelyRelase, name='book.newely'),
+    path('book/old/', oldBooks, name='book.old'),
+    path('book/recently/', recentlyAdded, name='book.recently'),
 
 
 ]+static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

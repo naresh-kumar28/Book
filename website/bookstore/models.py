@@ -2,6 +2,14 @@ from django.db import models
 
 # Create your models here.
 
+class Subject(models.Model):
+    subject_name = models.CharField(max_length=150)
+    subject_slug = models.SlugField(unique=True)
+
+    def __str__(self):
+        return self.subject_name
+
+
 class StudentClass(models.Model):
     name = models.CharField(max_length=100) # e.g., Class 10, Class 12 Science, B.Tech
     slug = models.SlugField(max_length=100, unique=True, blank=True)
@@ -61,11 +69,12 @@ class Product(models.Model):
     book_type = models.ForeignKey(BookType, on_delete=models.SET_NULL, null=True, blank=True)
     publisher = models.ForeignKey(Publisher, on_delete=models.SET_NULL, null=True, blank=True)
     student_class = models.ForeignKey(StudentClass, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Class/Grade")
+    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True, blank=True)
 
     title = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, unique=True)
     description = models.TextField(blank=True)
-    image = models.ImageField(upload_to='products/main/', help_text="Main display image")
+    image = models.ImageField(upload_to='products/main/')
     cover_image = models.ImageField(upload_to='products/covers/', blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     discount_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
@@ -95,14 +104,20 @@ class Product(models.Model):
     def __str__(self):
         return self.title
         
-    @property
-    def is_discounted(self):
-        return self.discount_price and self.discount_price < self.price
     
     @property
     def discount_percentage(self):
-        if self.price > 0 and self.discount_price and self.discount_price < self.price:
-            # Percentage ka formula: ((Price - Discount Price) / Price) * 100
-            percent = ((self.price - self.discount_price) / self.price) * 100
-            return int(percent) # int() decimal (15.5%) ko hata kar direct 15% dega
+
+        if self.discount_price and self.price and self.discount_price > self.price:
+            percent = ((self.discount_price - self.price) / self.discount_price) * 100
+            return int(percent)
+        return 0
+    
+
+    @property
+    def save_amount(self):
+        
+        if self.discount_price and self.price and self.discount_price > self.price:
+            amount = self.discount_price - self.price
+            return int(amount)
         return 0

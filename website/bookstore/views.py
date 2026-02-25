@@ -5,15 +5,22 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required 
 from .models import *
 from .forms import *
+from django.utils import timezone
+from datetime import timedelta
     
 
 # Create your views here.
 
 def home(req):
-    author = Author.objects.all().order_by('-created_at')
-    category = BookType.objects.filter(name="Newely Relase").first()
-    books = Product.objects.filter(book_type = category)
-    return render(req, 'home.html', {"authors": author, "books" : books})
+    last_24_hours = timezone.now() - timedelta(hours=24)
+     
+    data = {}
+    data['authors']= Author.objects.all().order_by('-created_at')
+    data['oldbooks'] = Product.objects.filter(book_type__name__iexact="Old Books", status='published')
+    data['newbooks'] = Product.objects.filter(book_type__name__iexact="Newely Relase", status='published')
+    data['recent_books'] = Product.objects.filter(created_at__gte=last_24_hours).order_by('-created_at')
+    
+    return render(req, 'home.html',data)
 
 
 #Static Page Section
@@ -62,7 +69,10 @@ def returnRefund(req):
 
 #Shop Section
 def productDetails(req):
-    return render(req, 'shop/product-details.html')
+    data = {}
+    data['products'] = Product.objects.all()
+
+    return render(req, 'shop/product-details.html', data)
 
 def cart(req):
     return render(req, 'shop/cart.html')
@@ -210,9 +220,38 @@ def deleteStudentClass(req, id):
     studentclass.delete()
     return redirect(studentClass)
 
+def manageSubject(req):
+    form = SubjectInsertForm(req.POST or None)
+    subjects = Subject.objects.all()
+    if form.is_valid():
+        form.save()
+        return redirect(manageSubject)
+    return render(req, 'admin/manage_subject.html',{"form": form, "subjects": subjects})
+
+
+def deleteSubject(req, id):
+    subjects = Subject.objects.get(id=id)
+    subjects.delete()
+    return redirect(manageSubject)
+
+
 # book_list
 def newelyRelase(req):
-    category = BookType.objects.filter(name="Newely Relase").first()
-    books = Product.objects.filter(book_type = category)
+    data = {}
+    data['newbooks'] = Product.objects.filter(book_type__name__iexact='Newely Relase', status='published')
 
-    return render(req, 'book_list/newely_relase.html', {"books" : books})
+    return render(req, 'book_list/newely_relase.html', data)
+
+def oldBooks(req):
+    data = {}
+    data['oldbooks'] = Product.objects.filter(book_type__name__iexact='Old Books', status='published')
+
+    return render(req, 'book_list/old_books.html', data)
+
+
+def recentlyAdded(req):
+
+    last_24_hours = timezone.now() - timedelta(hours=24)
+    recent_books = Product.objects.filter(created_at__gte=last_24_hours).order_by('-created_at')
+
+    return render(req, 'book_list/recently_added.html', {"recent_books": recent_books})
