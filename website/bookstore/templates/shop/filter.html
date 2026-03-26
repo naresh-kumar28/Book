@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% include 'includes/category.html' %}
+{% include 'includes/sticky-button.html' %}
+
+<div class="bg-gray-50 min-h-screen py-8 px-4 sm:px-6 lg:px-8 font-sans">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row gap-8">
+
+        <aside class="hidden md:flex w-full md:w-64 flex-shrink-0">
+            <div class="bg-white border border-gray-200 rounded-xl p-5 sticky top-24 shadow-sm">
+
+                <div class="mb-6">
+                    <h2 class="text-lg font-bold text-gray-800 tracking-wide">Filters</h2>
+                    <p class="text-xs text-gray-500 mt-1">Add Filters for more accurate results</p>
+                </div>
+
+                <div class="mb-6 border-b border-gray-100 pb-5">
+                    <h3 class="font-semibold text-gray-800 mb-3 text-sm">Price</h3>
+                    <div class="space-y-2.5">
+                        <label class="flex items-center space-x-3 cursor-pointer group">
+                            <input type="checkbox"
+                                class="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 transition-colors">
+                            <span class="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">0 -
+                                100</span>
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer group">
+                            <input type="checkbox"
+                                class="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 transition-colors">
+                            <span class="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">101 -
+                                200</span>
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer group">
+                            <input type="checkbox"
+                                class="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 transition-colors">
+                            <span class="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">200 -
+                                400</span>
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer group">
+                            <input type="checkbox"
+                                class="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 transition-colors">
+                            <span class="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">400
+                                Above</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mb-6 border-b border-gray-100 pb-5">
+                    <h3 class="font-semibold text-gray-800 mb-3 text-sm">Language</h3>
+                    <div class="space-y-2.5 max-h-40 overflow-y-auto pr-2 custom-scrollbar">
+                        <label class="flex items-center space-x-3 cursor-pointer group">
+                            <input type="checkbox"
+                                class="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 transition-colors">
+                            <span
+                                class="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">English</span>
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer group">
+                            <input type="checkbox"
+                                class="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 transition-colors">
+                            <span class="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">Hindi</span>
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer group">
+                            <input type="checkbox"
+                                class="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 transition-colors">
+                            <span
+                                class="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">Sanskrit</span>
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer group">
+                            <input type="checkbox"
+                                class="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 transition-colors">
+                            <span class="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">Urdu</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="font-semibold text-gray-800 mb-3 text-sm">Binding</h3>
+                    <div class="space-y-2.5">
+                        <label class="flex items-center space-x-3 cursor-pointer group">
+                            <input type="checkbox"
+                                class="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 transition-colors">
+                            <span
+                                class="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">Paperback</span>
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer group">
+                            <input type="checkbox"
+                                class="w-4 h-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 transition-colors">
+                            <span
+                                class="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">Hardcover</span>
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+        </aside>
+
+        <main class="flex-1">
+
+            <div class="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center pb-4 border-b border-gray-200">
+                <div class="mb-4 sm:mb-0">
+                    <h1 class="text-xl font-bold text-gray-900">{{title}}'s Books ({{ books|length }})</h1>
+                    <!-- Breadcum -->
+                    <div class="border-b border-slate-200 px-5 py-5">
+                        <a href="{% url 'home' %}" class="text-sm font-normal text-slate-700">Home</a>
+                    
+                        <span>&raquo;</span>
+                    
+                        {% if title.cat_slug %}
+                        <a href="{% url 'category_filter' title.cat_slug %}" class="text-sm text-slate-700">
+                            {{ title.cat_name }}
+                        </a>
+                        {% else %}
+                        <span class="text-sm text-slate-700">{{ title }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
+
+                {% for book in books %}
+                <a href="{% url 'product-details' book.id %}">
+                    <div
+                        class="flex-shrink-0 w-64 bg-white rounded-2xl shadow-sm border border-gray-100 p-4 snap-start hover:shadow-xl transition-all duration-300 relative group/card">
+
+                        {% if book.discount_percentage > 0 %}
+                        <span
+                            class="absolute top-6 left-6 bg-orange-500 text-white text-[10px] font-bold px-2 py-1 rounded-md z-20 shadow-sm">
+                            {{ book.discount_percentage }}% OFF
+                        </span>
+                        {% endif %}
+
+                        <button
+                            class="absolute top-6 right-6 bg-white p-1.5 rounded-full shadow-md text-gray-400 hover:text-red-500 transition-colors z-20">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                            </svg>
+                        </button>
+
+                        <div
+                            class="relative h-52 flex items-center justify-center mb-4 bg-gray-50 rounded-xl overflow-hidden">
+                            <div class="relative flex items-center justify-center w-full h-full">
+                                <img src="{{ book.image.url }}"
+                                    class="w-32 h-40 object-cover rounded shadow-2xl z-10 border-2 border-white">
+
+                                <span
+                                    class="absolute bottom-2 right-2 bg-yellow-100 text-yellow-700 text-[9px] px-2 py-1 rounded-md font-bold uppercase z-20 shadow-sm border border-yellow-200">
+                                    Popular
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="space-y-1 mb-4">
+                            <h3 class="font-bold text-gray-800 truncate" title="Complete PCM Master Set">{{book.title}}
+                            </h3>
+                            <p
+                                class="text-[10px] text-indigo-600 font-bold uppercase tracking-wider bg-indigo-50 w-max px-2 py-0.5 rounded">
+                                {{book.brand}}
+                            </p>
+                            <div class="flex items-center space-x-2 pt-1">
+                                <span class="text-lg font-bold text-green-600">₹{{book.price|floatformat:0}}</span>
+                                <span
+                                    class="text-sm text-gray-400 line-through">₹{{book.discount_price|floatformat:0}}</span>
+                                {% if book.save_amount > 0 %}
+                                <span
+                                    class="bg-green-600 text-white text-[9px] px-1.5 py-0.5 rounded font-bold ml-auto uppercase">
+                                    Save ₹{{ book.save_amount }}
+                                </span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="flex gap-2">
+                            <button
+                                class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-xl text-[12px] font-bold transition-all transform active:scale-95 shadow-sm">
+                                Buy Now
+                            </button>
+                            <button
+                                class="w-full bg-teal-600 hover:bg-teal-700 text-white py-2.5 rounded-xl text-[12px] font-semibold flex items-center justify-center transition-colors">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+
+            </div>
+        </main>
+    </div>
+</div>
+
+{% endblock %}

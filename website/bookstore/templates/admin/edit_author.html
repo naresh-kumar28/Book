@@ -1,0 +1,40 @@
+{% extends 'admin/admin_base.html' %}
+{% block title %} Edit Author | BookWorm {% endblock %}
+{% load tailwind_filters %}
+
+{% block content %}
+
+<div class="flex-1 overflow-y-auto p-6 lg:p-8">
+
+    <div class="bg-[#1e293b] grid border border-slate-700/50 rounded-2xl shadow-lg p-6">
+
+        <div class="flex items-center gap-3 mb-10">
+            <h2 class="text-3xl font-bold text-white">Edit Author</h2>
+        </div>
+
+        <div class="dark-form-container">
+            <form action="" method="post" enctype="multipart/form-data" class="overflow-hidden grid grid-cols-2 gap-5">
+                {% csrf_token %}
+
+                {{ form|crispy }}
+
+                <div class="pt-4 col-span-2 mt-6 border-t border-slate-700/50">
+                    <div class="flex items-center gap-4">
+                        <button type="submit"
+                            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/20">
+                            Update
+                        </button>
+                        <a href="{% url 'admin.author' %}"
+                            class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/20">
+                            Back
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -126,7 +126,7 @@
                         </td>
     
                         <td class="px-6 py-4 text-right space-x-2">
-                            <a href="#"
+                            <a href="{% url 'admin.product.edit' product.id %}"
                                 class="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-slate-800 text-slate-400 hover:text-indigo-400 hover:bg-indigo-500/10 border border-slate-700 hover:border-indigo-500/40 transition-all shadow-sm"
                                 title="Edit">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -163,8 +163,31 @@
                 </tbody>
             </table>
         </div>
+        
     </div>
-
+    <!-- summary of pages  -->
+    <div class="flex items-center gap-3 mt-5 text-sm text-slate-500">
+        <p>Total products: {{products.paginator.count}}</p>
+        <p>Showing: {{products.start_index}} to {{products.end_index}}</p>
+        <p>Page No: {{products.number}}</p>
+    </div>
+    
+    <!-- pagination work -->
+    <div class="mt-5 flex items-center gap-3 justify-between">
+        {% if products.has_previous %}
+        <span class="px-3 py-1 border bg-gray-300 text-blue-600"><a href="?page={{ products.previous_page_number }}">Previous</a></span>
+    
+        {% else %}
+        <span class="px-3 py-1 border bg-gray-300 text-gray-500 cursor-not-allowed">Previous</span>
+        {% endif %}
+    
+        {% if products.has_next %}
+        <span class="px-3 py-1 border bg-gray-300 text-blue-600"><a href="?page={{ products.next_page_number }}">Next</a></span>
+        {% else %}
+        <span class="px-3 py-1 border bg-gray-300 text-gray-500 cursor-not-allowed">Next</span>
+        {% endif %}
+    
+    </div>
 </div>
 
 {% endblock %}

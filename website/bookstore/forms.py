@@ -5,31 +5,31 @@ from .models import *
 class CategoryInsertForm(ModelForm):
     class Meta:
         model = Category
-        fields = ['cat_name', 'cat_slug']
+        exclude = ['cat_slug']
 
 
 class AuthorInsertForm(ModelForm):
     class Meta:
         model = Author
-        fields = ['author_name', 'author_slug', 'author_image']
+        exclude = ['author_slug']
 
 
 class BrandInsertForm(ModelForm):
     class Meta:
         model = Brand
-        fields = ['brand_name', 'brand_slug']
+        exclude = ['brand_slug']
 
 
 class BooktypeInsertForm(ModelForm):
     class Meta:
         model = BookType
-        fields = ['name', 'slug']
+        exclude = ['slug']
 
 
 class PublisherInsertForm(ModelForm):
     class Meta:
         model = Publisher
-        fields = ['publisher_name', 'publisher_slug', 'publisher_image']
+        exclude = ['publisher_slug']
 
 
 class ProductInsertForm(ModelForm):
@@ -46,32 +46,19 @@ class ProductInsertForm(ModelForm):
         self.fields['subject'].empty_label = "Select Subject"
     class Meta:
         model = Product
-        fields = [
-                'category', 'subject', 'author', 
-                'brand', 'book_type', 
-                'publisher', 'student_class', 'title', 
-                'slug', 'description', 
-                'image', 'cover_image', 
-                'price', 'discount_price', 
-                'language', 'pages', 'isbn', 
-                'binding_type', 'width', 
-                'height', 'weight', 
-                'publish_date', 
-                'quality_check', 'status'
-        ]
+        exclude = ['slug']
         widgets = {
             'publish_date': DateInput(attrs={'type': 'date'}),
         }
         
 
-
 class ClassInsertForm(ModelForm):
     class Meta:
         model = StudentClass
-        fields = ['name', 'slug']
+        exclude = ['slug']
 
 
 class SubjectInsertForm(ModelForm):
     class Meta:
         model = Subject
-        fields = ['subject_name', 'subject_slug']
+        exclude = ['subject_slug']

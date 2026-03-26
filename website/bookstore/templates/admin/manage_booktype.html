@@ -69,7 +69,7 @@
     
                                 <td class="px-6 py-4 text-right space-x-2">
     
-                                    <a href="#"
+                                    <a href="{% url 'admin.booktype.edit' booktype.id %}"
                                         class="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-slate-800 text-slate-400 hover:text-indigo-400 hover:bg-indigo-500/10 border border-slate-700 hover:border-indigo-500/40 transition-all shadow-sm"
                                         title="Edit">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -115,6 +115,31 @@
     
                         </tbody>
                     </table>
+                </div>
+                <!-- pagination work -->
+                <div class="mt-3 border-t pt-3 flex items-center gap-3 justify-between px-4 mb-3">
+                    {% if booktypes.has_previous %}
+                    <span class="px-3 py-1 border bg-gray-300 text-blue-600"><a
+                            href="?page={{ booktypes.previous_page_number }}">Previous</a></span>
+                
+                    {% else %}
+                    <span class="px-3 py-1 border bg-gray-300 text-gray-500 cursor-not-allowed">Previous</span>
+                    {% endif %}
+                
+                    <!-- summary of pages  -->
+                    <div class="flex items-center gap-3 text-sm text-slate-500 px-4">
+                        <p>Total booktypes: {{booktypes.paginator.count}}</p>
+                        <p>Showing: {{booktypes.start_index}} to {{booktypes.end_index}}</p>
+                        <p>Page No: {{booktypes.number}}</p>
+                    </div>
+                
+                    {% if booktypes.has_next %}
+                    <span class="px-3 py-1 border bg-gray-300 text-blue-600 "><a
+                            href="?page={{ booktypes.next_page_number }}">Next</a></span>
+                    {% else %}
+                    <span class="px-3 py-1 border bg-gray-300 text-gray-500 cursor-not-allowed">Next</span>
+                    {% endif %}
+                
                 </div>
             </div>
     

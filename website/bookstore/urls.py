@@ -1,5 +1,6 @@
 from django.urls import path
 from .views import *
+from .adminView import *
 
 #image work
 from django.conf import settings
@@ -21,7 +22,8 @@ urlpatterns = [
     path('shop/payment/', payment, name='payment'),
     path('shop/summary/', summary, name='summary'),
     path('shop/delivery_address/', deliveryAddress, name='delivery_address'),
-
+    path('shop/filter/', filter, name='filter'),
+    path('shop/filter/<slug:slug>/', filter, name='category_filter'),
 
     # User Section
     path('account/address/', address, name='address'),
@@ -33,30 +35,40 @@ urlpatterns = [
     #admin section
     path('admin/', adminDashboard, name='admin.dashboard'),
 
-    path('admin/category/', manageCategory, name='admin.category'),
-    path('admin/category/<int:id>/delete/', deleteCategory, name='admin.category.delete'),
-
-    path('admin/author/', manageAuthor, name='admin.author'),
-    path('admin/author/<int:id>/delete/', deleteAuthor, name='admin.author.delete'),
-
-    path('admin/brand/', manageBrand, name='admin.brand'),
-    path('admin/brand/<int:id>/delete/', deleteBrand, name='admin.brand.delete'),
-
-    path('admin/booktype/', manageBooktype, name='admin.booktype'),
-    path('admin/booktype/<int:id>/delete/', deleteBooktype, name='admin.booktype.delete'),
-
-    path('admin/publisher/', managePublisher, name='admin.publisher'),
-    path('admin/publisher/<int:id>/delete/', deletePublisher, name='admin.publisher.delete'),
-
     path('admin/product/', manageProduct, name='admin.product'),
     path('admin/product/add/', addProduct, name='admin.product.add'),
+    path('admin/product/<int:id>/edit/', editProduct, name='admin.product.edit'),
     path('admin/product/<int:id>/delete/', deleteProduct, name='admin.product.delete'),
 
+    path('admin/category/', manageCategory, name='admin.category'),
+    path('admin/category/<int:id>/edit/', editCategory, name='admin.category.edit'),
+    path('admin/category/<int:id>/delete/', deleteCategory, name='admin.category.delete'),
+
     path('admin/studentclass/', studentClass, name='admin.studentclass'),
+    path('admin/studentclass/<int:id>/edit', editStudentClass, name='admin.studentclass.edit'),
     path('admin/studentclass/<int:id>/delete', deleteStudentClass, name='admin.studentclass.delete'),
 
     path('admin/subject/', manageSubject, name='admin.subject'),
-    path('admin/subject/<int:id>/delete', deleteSubject, name='admin.subject.delete'),
+    path('admin/subject/<int:id>/delete/', deleteSubject, name='admin.subject.delete'),
+    path('admin/subject/<int:id>/edit/', editSubject, name='admin.subject.edit'),
+
+    path('admin/author/', manageAuthor, name='admin.author'),
+    path('admin/author/<int:id>/delete/', deleteAuthor, name='admin.author.delete'),
+    path('admin/author/<int:id>/edit/', editAuthor, name='admin.author.edit'),
+
+    path('admin/brand/', manageBrand, name='admin.brand'),
+    path('admin/brand/<int:id>/delete/', deleteBrand, name='admin.brand.delete'),
+    path('admin/brand/<int:id>/edit/', editBrand, name='admin.brand.edit'),
+
+    path('admin/booktype/', manageBooktype, name='admin.booktype'),
+    path('admin/booktype/<int:id>/delete/', deleteBooktype, name='admin.booktype.delete'),
+    path('admin/booktype/<int:id>/edit/', editBooktype, name='admin.booktype.edit'),
+
+    path('admin/publisher/', managePublisher, name='admin.publisher'),
+    path('admin/publisher/<int:id>/delete/', deletePublisher, name='admin.publisher.delete'),
+    path('admin/publisher/<int:id>/edit/', editPublisher, name='admin.publisher.edit'),
+
+    
 
     #book_list
     path('book/newely/', newelyRelase, name='book.newely'),
