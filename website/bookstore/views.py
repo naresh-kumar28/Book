@@ -93,13 +93,22 @@ def summary(req):
     return render(req, 'shop/summary.html')
 
 
+
 def filter(req, slug=None):
     data = {}
     data['categories'] = Category.objects.all()
     data['title'] = "All Books"
 
     if req.GET.get("search"):
-        search = req.GET.get("search")
+        search = req.GET.get("search").strip()
+
+        # ISBN match check
+        product = Product.objects.filter(isbn=search).first()
+
+        if product:
+            return redirect('product-details', id=product.id)
+
+        # ISBN nahi mila to normal title search
         data['books'] = Product.objects.filter(title__icontains=search)
         data['title'] = search
 

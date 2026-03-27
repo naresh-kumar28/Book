@@ -21,9 +21,6 @@ def admin_required(view_func):
         
         if not request.user.is_staff:
             return redirect('home')
-        
-        if not request.user.is_superuser:
-            return redirect('home')
 
         return view_func(request, *args, **kwargs)
     
