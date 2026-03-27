@@ -78,6 +78,7 @@ urlpatterns = [
     path('book/newely/', newelyRelase, name='book.newely'),
     path('book/old/', oldBooks, name='book.old'),
     path('book/recently/', recentlyAdded, name='book.recently'),
+    path('book/combo/', comboBooks, name='book.combo'),
 
 
 ]+static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

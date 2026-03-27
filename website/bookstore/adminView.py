@@ -74,7 +74,7 @@ def editProduct(req, id):
     form = ProductInsertForm(req.POST or None, req.FILES or None, instance=product)
     
     if req.method=='POST':
-        if form.is_vaid():
+        if form.is_valid():
             data = form.save(commit=False)
             data.slug = slugify(data.title)
             data.save()

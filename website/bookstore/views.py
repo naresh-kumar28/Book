@@ -20,6 +20,7 @@ def home(req):
     data['authors']= Author.objects.all().order_by('-created_at')
     data['oldbooks'] = Product.objects.filter(book_type__name__iexact="Old Books", status='published')
     data['newbooks'] = Product.objects.filter(book_type__name__iexact="Newely Relase", status='published')
+    data['combo'] = Product.objects.filter(book_type__name__iexact="Value Combo Packs", status='published')
     data['recent_books'] = Product.objects.filter(created_at__gte=last_24_hours).order_by('-created_at')
     
     return render(req, 'home.html',data)
@@ -143,9 +144,16 @@ def oldBooks(req):
 
 
 def recentlyAdded(req):
-
+    data = {}
     last_24_hours = timezone.now() - timedelta(hours=24)
-    recent_books = Product.objects.filter(created_at__gte=last_24_hours).order_by('-created_at')
-    
+    data['recent_books'] = Product.objects.filter(created_at__gte=last_24_hours).order_by('-created_at')
+    data['categories'] = Category.objects.all()
 
-    return render(req, 'book_list/recently_added.html', {"recent_books": recent_books})
+    return render(req, 'book_list/recently_added.html', data)
+
+def comboBooks(req):
+    data = {}
+    data['combobooks'] = Product.objects.filter(book_type__name__iexact='Value Combo Packs', status='published')
+    data['categories'] = Category.objects.all()
+
+    return render(req, 'book_list/combo_books.html', data)
