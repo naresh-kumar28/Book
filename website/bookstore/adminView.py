@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
 from .forms import *
 from functools import wraps
@@ -371,3 +371,71 @@ def editPublisher(req, id):
             data.save()
             return redirect(managePublisher)
     return render(req, 'admin/edit_publisher.html', {"form": form})
+
+@admin_required
+def manageUser(req):
+    context = {}
+    users = User.objects.all()
+
+    #pagination
+    paginator = Paginator(users, 10)
+    page_number = req.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context['users'] = page_obj
+
+    return render(req, 'admin/manage_user.html', context)
+
+
+@admin_required
+def deleteUser(req, id):
+    # 1. Pehle user ko dhoondo (agar id galat hui toh 404 error dega, crash nahi hoga)
+    user_to_delete = get_object_or_404(User, id=id)
+
+    # SAFETY LOCK 1: Admin ko delete hone se bachana
+    if user_to_delete.is_superuser:
+        messages.error(req, "Security Alert: Aap kisi Admin ko delete nahi kar sakte!")
+        return redirect(manageUser)
+
+    # SAFETY LOCK 2: Khud ko delete hone se bachana (Extra precaution)
+    if user_to_delete == req.user:
+        messages.error(req, "Bhai, aap khud ka account delete nahi kar sakte!")
+        return redirect(manageUser)
+
+    # Agar upar wale dono locks cross ho gaye, iska matlab wo normal customer/staff hai
+    name = user_to_delete.first_name or user_to_delete.username # Naam nikalne ke liye
+    user_to_delete.delete()
+    
+    # Delete hone ke baad success message bhej do
+    messages.success(req, f"User '{name}' successfully delete ho gaya hai.")
+
+    return redirect(manageUser)
+
+
+@admin_required
+def changeUserRole(req, id):
+    if req.method == 'POST':
+        # User dhoondo jiska role change karna hai
+        user_to_update = get_object_or_404(User, id=id)
+        new_role = req.POST.get('role')
+
+        # SAFETY LOCK: Admin khud ka role change na kar paye
+        if user_to_update == req.user:
+            messages.error(req, "Bhai, aap khud ka admin access remove nahi kar sakte!")
+            return redirect(manageUser) 
+
+        # Role Logic Apply Karein
+        if new_role == 'admin':
+            user_to_update.is_staff = True
+            user_to_update.is_superuser = True
+        elif new_role == 'staff':
+            user_to_update.is_staff = True
+            user_to_update.is_superuser = False
+        elif new_role == 'customer':
+            user_to_update.is_staff = False
+            user_to_update.is_superuser = False
+
+        user_to_update.save()
+        messages.success(req, f"{user_to_update.first_name} ka role successfully '{new_role}' update ho gaya hai!")
+
+    return redirect(manageUser)

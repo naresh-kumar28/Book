@@ -1,6 +1,8 @@
 from django.urls import path
 from .views import *
 from .adminView import *
+from .accountView import *
+from .checkoutView import *
 
 #image work
 from django.conf import settings
@@ -68,7 +70,9 @@ urlpatterns = [
     path('admin/publisher/<int:id>/delete/', deletePublisher, name='admin.publisher.delete'),
     path('admin/publisher/<int:id>/edit/', editPublisher, name='admin.publisher.edit'),
 
-    
+    path('admin/user/', manageUser, name='admin.user'),
+    path('admin/user/<int:id>/delete/', deleteUser, name='admin.user.delete'), 
+    path('admin/user/role/<int:id>/', changeUserRole, name='admin.change_role'),
 
     #book_list
     path('book/newely/', newelyRelase, name='book.newely'),

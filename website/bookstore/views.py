@@ -115,27 +115,6 @@ def filter(req, slug=None):
     return render(req, 'shop/filter.html', data)
 
 
-# User Section
-@login_required
-def address(req):
-    return render(req, 'account/address.html')
-
-@login_required
-def dashboard(req):
-    return render(req, 'account/dashboard.html')
-
-@login_required
-def profile(req):
-    return render(req, 'account/profile.html')
-
-@login_required
-def myOrder(req):
-    return render(req, 'account/my-order.html')
-
-def wishlist(req):
-    return render(req, 'account/wishlist.html')
-
-
 
 
 # book_list

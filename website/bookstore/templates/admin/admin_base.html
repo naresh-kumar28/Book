@@ -58,6 +58,7 @@
             /* Force hint texts to be light gray */
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body class="bg-[#0f172a] text-slate-300 antialiased flex h-screen overflow-hidden">
@@ -221,8 +222,14 @@
                 Manage Publisher
             </a>
 
-            <a href="#"
-                class="flex items-center px-3 py-2.5 rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white font-medium transition-all group border-l-2 border-transparent hover:border-slate-500">
+            {% url 'admin.user' as admin_user_url %}
+            <a href="{{ admin_user_url }}"
+                class="flex items-center px-3 py-2.5 rounded-lg font-medium transition-all group
+                {% if request.path == admin_user_url %}
+                    bg-indigo-600/10 text-indigo-400 border-l-2 border-indigo-500
+                {% else %}
+                    text-slate-400 hover:text-white hover:bg-slate-800 border-l-2 border-transparent hover:border-slate-500
+                {% endif %}">
                 <svg class="w-5 h-5 mr-3 text-slate-500 group-hover:text-slate-300" fill="none" stroke="currentColor"
                     viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -335,6 +342,65 @@
 
         {% endblock %}
     </main>
+
+
+    
+    <script>
+        // Dark Theme Setup for Admin Panel
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            background: '#1e293b', /* Admin Dark Background */
+            color: '#e2e8f0',      /* Light Slate Text */
+            customClass: {
+                popup: 'rounded-2xl border border-slate-700 shadow-2xl border-l-4',
+            }
+        });
+
+        // 1. Django Messages Framework ke liye
+        {% if messages %}
+        {% for message in messages %}
+        let iconTag = '{{ message.tags }}';
+
+        // Admin Theme Colors: Success (Emerald), Error (Red), Warning (Orange)
+        let bColor = '#3b82f6'; // Default Blue
+        if (iconTag === 'success') bColor = '#10b981'; // Emerald
+        if (iconTag === 'error' || iconTag === 'danger') bColor = '#ef4444'; // Red
+        if (iconTag === 'warning') bColor = '#f59e0b'; // Amber
+
+        Toast.fire({
+            icon: iconTag === 'error' || iconTag === 'danger' ? 'error' : iconTag,
+            title: '{{ message|escapejs }}',
+            didOpen: (toast) => { toast.style.borderLeftColor = bColor; }
+        });
+        {% endfor %}
+        {% endif %}
+
+        // 2. Login/Form Validation Errors ke liye
+        {% if form.errors %}
+        {% for field, errors in form.errors.items %}
+        {% for error in errors %}
+        Toast.fire({
+            icon: 'error',
+            title: '{{ error|escapejs }}',
+            didOpen: (toast) => { toast.style.borderLeftColor = '#ef4444'; }
+        });
+        {% endfor %}
+        {% endfor %}
+
+        // Non-field errors
+        {% for error in form.non_field_errors %}
+        Toast.fire({
+            icon: 'error',
+            title: '{{ error|escapejs }}',
+            didOpen: (toast) => { toast.style.borderLeftColor = '#ef4444'; }
+        });
+        {% endfor %}
+        {% endif %}
+    </script>
 </body>
 
 </html>
