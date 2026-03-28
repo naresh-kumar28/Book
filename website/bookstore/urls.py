@@ -26,6 +26,9 @@ urlpatterns = [
     path('shop/delivery_address/', deliveryAddress, name='delivery_address'),
     path('shop/filter/', filter, name='filter'),
     path('shop/filter/<slug:slug>/', filter, name='category_filter'),
+    path('shop/filter/author/<slug:author_slug>/', filter, name='author_filter'),
+    path('shop/filter/publisher/<slug:publisher_slug>/', filter, name='publisher_filter'),
+    path('shop/recent-viewed/', recentViewedBooks, name='recent_viewed'),
 
     # User Section
     path('account/address/', address, name='address'),

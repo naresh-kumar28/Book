@@ -13,17 +13,46 @@ from datetime import timedelta
 
 def home(req):
     last_24_hours = timezone.now() - timedelta(hours=24)
+    one_week_ago = timezone.now() - timedelta(days=7)
+
     data = {}
-    
-    data['allbooks'] = Product.objects.filter(status='published')
+
     data['categories'] = Category.objects.all()
-    data['authors']= Author.objects.all().order_by('-created_at')
+    data['authors'] = Author.objects.all().order_by('-created_at')
     data['oldbooks'] = Product.objects.filter(book_type__name__iexact="Old Books", status='published')
     data['newbooks'] = Product.objects.filter(book_type__name__iexact="Newely Relase", status='published')
     data['combo'] = Product.objects.filter(book_type__name__iexact="Value Combo Packs", status='published')
     data['recent_books'] = Product.objects.filter(created_at__gte=last_24_hours).order_by('-created_at')
-    
-    return render(req, 'home.html',data)
+
+    # recent viewed books logic
+    recent_viewed = req.session.get('recent_viewed', [])
+    filtered_recent = []
+
+    for item in recent_viewed:
+        if isinstance(item, int):
+            filtered_recent.append({
+                'id': item,
+                'viewed_at': timezone.now().isoformat()
+            })
+        elif isinstance(item, dict) and 'id' in item and 'viewed_at' in item:
+            viewed_at = timezone.datetime.fromisoformat(item['viewed_at'])
+            if timezone.is_naive(viewed_at):
+                viewed_at = timezone.make_aware(viewed_at)
+
+            if viewed_at >= one_week_ago:
+                filtered_recent.append(item)
+
+    req.session['recent_viewed'] = filtered_recent
+
+    recent_books_list = []
+    for item in filtered_recent:
+        book = Product.objects.filter(id=item['id'], status='published').first()
+        if book:
+            recent_books_list.append(book)
+
+    data['recent_viewed_books'] = recent_books_list
+
+    return render(req, 'home.html', data)
 
 
 #Static Page Section
@@ -71,12 +100,77 @@ def returnRefund(req):
 
 
 #Shop Section
+
+
 def productDetails(req, id):
     data = {}
-    data['product'] = Product.objects.get(id=id)
+    last_24_hours = timezone.now() - timedelta(hours=24)
+    product = Product.objects.get(id=id)
+
+    data['product'] = product
     data['categories'] = Category.objects.all()
 
+    data['same_author_books'] = Product.objects.filter(
+        author=product.author,
+        status='published'
+    ).exclude(id=product.id)
+
+    data['same_publisher_books'] = Product.objects.filter(
+        publisher=product.publisher,
+        status='published'
+    ).exclude(id=product.id)
+
+    # recent viewed with timestamp
+    recent_viewed = req.session.get('recent_viewed', [])
+    now = timezone.now()
+    one_week_ago = now - timedelta(days=7)
+
+    filtered_recent = []
+
+    for item in recent_viewed:
+        # old int format handle karo
+        if isinstance(item, int):
+            filtered_recent.append({
+                'id': item,
+                'viewed_at': now.isoformat()
+            })
+        elif isinstance(item, dict) and 'id' in item and 'viewed_at' in item:
+            viewed_at = timezone.datetime.fromisoformat(item['viewed_at'])
+            if timezone.is_naive(viewed_at):
+                viewed_at = timezone.make_aware(viewed_at)
+
+            if viewed_at >= one_week_ago:
+                filtered_recent.append(item)
+
+    recent_viewed = [item for item in filtered_recent if item['id'] != id]
+
+    recent_viewed.insert(0, {
+        'id': id,
+        'viewed_at': now.isoformat()
+    })
+
+    recent_viewed = recent_viewed[:10]
+    req.session['recent_viewed'] = recent_viewed
+
+    recent_books = []
+    for item in recent_viewed:
+        if item['id'] != product.id:
+            book = Product.objects.filter(id=item['id'], status='published').first()
+            if book:
+                recent_books.append(book)
+
+    data['recent_viewed_books'] = recent_books
+
+    
+    
+    data['oldbooks'] = Product.objects.filter(book_type__name__iexact="Old Books", status='published')
+    data['newbooks'] = Product.objects.filter(book_type__name__iexact="Newely Relase", status='published')
+    data['combo'] = Product.objects.filter(book_type__name__iexact="Value Combo Packs", status='published')
+    data['recent_books'] = Product.objects.filter(created_at__gte=last_24_hours).order_by('-created_at')
+
     return render(req, 'shop/product-details.html', data)
+
+
 
 def cart(req):
     return render(req, 'shop/cart.html')
@@ -95,7 +189,7 @@ def summary(req):
 
 
 
-def filter(req, slug=None):
+def filter(req, slug=None, author_slug=None, publisher_slug=None):
     data = {}
     data['categories'] = Category.objects.all()
     data['title'] = "All Books"
@@ -103,15 +197,22 @@ def filter(req, slug=None):
     if req.GET.get("search"):
         search = req.GET.get("search").strip()
 
-        # ISBN match check
         product = Product.objects.filter(isbn=search).first()
-
         if product:
             return redirect('product-details', id=product.id)
 
-        # ISBN nahi mila to normal title search
         data['books'] = Product.objects.filter(title__icontains=search)
         data['title'] = search
+
+    elif author_slug:
+        author = get_object_or_404(Author, author_slug=author_slug)
+        data['books'] = Product.objects.filter(author=author)
+        data['title'] = author.author_name
+
+    elif publisher_slug:
+        publisher = get_object_or_404(Publisher, publisher_slug=publisher_slug)
+        data['books'] = Product.objects.filter(publisher=publisher)
+        data['title'] = publisher.publisher_name
 
     elif slug:
         category = get_object_or_404(Category, cat_slug=slug)
@@ -157,3 +258,29 @@ def comboBooks(req):
     data['categories'] = Category.objects.all()
 
     return render(req, 'book_list/combo_books.html', data)
+
+
+def recentViewedBooks(req):
+    data = {}
+    data['categories'] = Category.objects.all()
+
+    recent_viewed = req.session.get('recent_viewed', [])
+    one_week_ago = timezone.now() - timedelta(days=7)
+
+    books = []
+
+    for item in recent_viewed:
+        viewed_at = timezone.datetime.fromisoformat(item['viewed_at'])
+        if timezone.is_naive(viewed_at):
+            viewed_at = timezone.make_aware(viewed_at)
+
+        # sirf 7 din ke andar wale
+        if viewed_at >= one_week_ago:
+            book = Product.objects.filter(id=item['id'], status='published').first()
+            if book:
+                books.append(book)
+
+    data['books'] = books
+    data['title'] = "Your Recent Viewed Books"
+
+    return render(req, 'shop/filter.html', data)
