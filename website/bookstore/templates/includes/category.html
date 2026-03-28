@@ -6,6 +6,13 @@
             {% url 'home' as home_url %}
             <a href="{% url 'home' %}" class="flex-shrink-0 px-6 py-2 rounded-full text-sm font-medium transition-all
                 {% if request.path == home_url %} bg-green-200 text-green-800 {% else %} bg-gray-100 text-gray-700 hover:bg-gray-200 {% endif %}">
+                Home
+            </a>
+
+            {% url 'filter' as filter_url %}
+            <a href="{% url 'filter' %}"
+                class="flex-shrink-0 px-6 py-2 rounded-full text-sm font-medium transition-all 
+                {% if request.path == filter_url and not active_category_id %} bg-green-200 text-green-800 {% else %} bg-gray-100 text-gray-700 hover:bg-gray-200 {% endif %}">
                 All
             </a>
 

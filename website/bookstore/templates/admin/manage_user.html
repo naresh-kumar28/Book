@@ -85,9 +85,16 @@
                                 </div>
 
                                 <div>
-                                    <p class="font-bold text-slate-200 group-hover:text-white transition text-base">
-                                        {{ user.first_name }} {{ user.last_name }}
-                                    </p>
+                                    {% if user.first_name and user.last_name %}
+                                        <p class="font-bold text-slate-200 group-hover:text-white transition text-base">
+                                            {{ user.first_name }} {{ user.last_name }}
+                                        </p>
+                                        {% else %}
+                                        <p class="font-bold text-slate-200 group-hover:text-white transition text-base">
+                                            {{ user.username }}
+                                        </p>
+                                    {% endif %}
+
                                     <p class="text-xs text-slate-500 mt-0.5 font-medium">
                                         {{ user.email }}
                                     </p>

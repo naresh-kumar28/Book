@@ -14,8 +14,8 @@ from datetime import timedelta
 def home(req):
     last_24_hours = timezone.now() - timedelta(hours=24)
     data = {}
-
     
+    data['allbooks'] = Product.objects.filter(status='published')
     data['categories'] = Category.objects.all()
     data['authors']= Author.objects.all().order_by('-created_at')
     data['oldbooks'] = Product.objects.filter(book_type__name__iexact="Old Books", status='published')
