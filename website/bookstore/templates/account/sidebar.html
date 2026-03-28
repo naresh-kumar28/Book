@@ -13,7 +13,11 @@
                 
             </div>
             <div>
-                <h4 class="font-bold text-gray-900 truncate w-40">{{request.user.username}}</h4>
+                {% if user.first_name and user.last_name %}
+                    <h4 class="font-bold text-gray-900 truncate w-40">Hi, {{request.user.first_name}}</h4>
+                {% else %}
+                    <h4 class="font-bold text-gray-900 truncate w-40">{{request.user.username}}</h4>
+                {% endif %}
                 <p class="text-xs text-gray-500 truncate w-40">{{request.user.email}}</p>
             </div>
         </div>
