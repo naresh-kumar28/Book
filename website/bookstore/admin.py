@@ -10,3 +10,8 @@ admin.site.register(Brand)
 admin.site.register(BookType)
 admin.site.register(Publisher)
 admin.site.register(Product)
+
+admin.site.register(Address)
+admin.site.register(Order)
+admin.site.register(OrderItem)
+admin.site.register(Coupon)

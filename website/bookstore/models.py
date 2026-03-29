@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import User
+from decimal import Decimal
 
 # Create your models here.
 
@@ -121,3 +123,86 @@ class Product(models.Model):
             amount = self.discount_price - self.price
             return int(amount)
         return 0
+
+
+
+
+class OrderItem(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    ordered = models.BooleanField(default=False)
+    item = models.ForeignKey(Product, on_delete=models.CASCADE)
+    qty = models.IntegerField(default=1)
+
+    def __str__(self):
+        return self.item.title
+
+    def get_total_price(self):
+        return self.item.price * self.qty
+
+
+class Coupon(models.Model):
+    code = models.CharField(max_length=15)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return self.code
+
+
+class Address(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=200)
+    alt_contact = models.CharField(max_length=200)
+    street = models.CharField(max_length=200)
+    landmark = models.CharField(max_length=200)
+    city = models.CharField(max_length=200)
+    state = models.CharField(max_length=200)
+    pincode = models.CharField(max_length=10)
+    type = models.CharField(
+        max_length=20,
+        choices=(
+            ("Home", "Home"),
+            ("Office", "Office"),
+        )
+    )
+
+    def __str__(self):
+        return self.name
+
+
+class Order(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    items = models.ManyToManyField(OrderItem)
+    ordered = models.BooleanField(default=False)
+    ordered_date = models.DateTimeField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    coupon = models.ForeignKey(Coupon, on_delete=models.SET_NULL, null=True, blank=True)
+    address = models.ForeignKey(Address, on_delete=models.SET_NULL, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.user.username} - Order #{self.id}"
+    
+
+    def get_subtotal(self):
+        total = Decimal('0.00')
+        for order_item in self.items.all():
+            total += order_item.item.price * order_item.qty
+        return total
+
+    def get_shipping(self):
+        subtotal = self.get_subtotal()
+        if subtotal >= Decimal('500.00'):
+            return Decimal('0.00')
+        return Decimal('49.00')
+
+    def get_tax(self):
+        subtotal = self.get_subtotal()
+        return subtotal * Decimal('0.18')
+
+    def get_discount(self):
+        if self.coupon:
+            return self.coupon.amount
+        return Decimal('0.00')
+
+    def get_total(self):
+        return self.get_subtotal() + self.get_shipping() + self.get_tax() - self.get_discount()

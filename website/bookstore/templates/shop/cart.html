@@ -4,154 +4,233 @@
 
 {% block content %}
 
-    {% include 'includes/sticky-button.html' %}
+{% include 'includes/sticky-button.html' %}
 
-    <div class="max-w-6xl mx-auto px-4 py-8 md:px-6 my-8">
-    
-        <div class="mb-6">
-            <h1 class="text-2xl md:text-3xl font-bold text-gray-800">Your Shopping Cart</h1>
-            <nav class="flex mt-1 text-xs text-gray-400 font-medium">
-                <a href="#" class="hover:text-orange-600 transition-colors">Home</a>
-                <span class="mx-2">/</span>
-                <span class="text-gray-700">Shopping Cart</span>
-            </nav>
-        </div>
-    
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-    
-            <div class="lg:col-span-8">
-                <div class="overflow-x-auto border border-gray-100 rounded-xl">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr
-                                class="bg-gray-50 text-[12px] uppercase text-gray-500 font-semibold border-b border-gray-100">
-                                <th class="px-4 py-3 w-[45%]">Product</th>
-                                <th class="py-3 text-center">Price</th>
-                                <th class="py-3 text-center">Quantity</th>
-                                <th class="px-4 py-3 text-right">Subtotal</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-50">
-                            <tr class="group">
-                                <td class="px-4 py-5">
-                                    <div class="flex items-center gap-4">
+<div class="max-w-6xl mx-auto px-4 py-8 md:px-6 my-8">
+
+    <div class="mb-6">
+        <h1 class="text-2xl md:text-3xl font-bold text-gray-800">Your Shopping Cart</h1>
+        <nav class="flex mt-1 text-xs text-gray-400 font-medium">
+            <a href="{% url 'home' %}" class="hover:text-orange-600 transition-colors">Home</a>
+            <span class="mx-2">/</span>
+            <span class="text-gray-700">Shopping Cart</span>
+        </nav>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+        <div class="lg:col-span-8">
+            <div class="overflow-x-auto border border-gray-100 rounded-xl">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr
+                            class="bg-gray-50 text-[12px] uppercase text-gray-500 font-semibold border-b border-gray-100">
+                            <th class="px-4 py-3 w-[45%]">Product</th>
+                            <th class="py-3 text-center">Price</th>
+                            <th class="py-3 text-center">Quantity</th>
+                            <th class="px-4 py-3 text-right">Subtotal</th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="divide-y divide-gray-50">
+                        {% if order and order.items.all %}
+                        {% for cart_item in order.items.all %}
+                        <tr class="group">
+                            <td class="px-4 py-5">
+                                <div class="flex items-center gap-4">
+                                    <a href="{% url 'product-details' cart_item.item.id %}"
+                                        class="w-16 h-16 shrink-0 bg-gray-50 rounded-lg overflow-hidden border border-gray-100 block">
+                                        {% if cart_item.item.image %}
+                                        <img src="{{ cart_item.item.image.url }}" alt="{{ cart_item.item.title }}"
+                                            class="w-full h-full object-cover">
+                                        {% else %}
                                         <div
-                                            class="w-16 h-16 shrink-0 bg-gray-50 rounded-lg overflow-hidden border border-gray-100">
-                                            <img src="https://nageenprakashan.in/cdn/shop/files/Nootan_UP_Board_Hindi_Text_Book_For_Class_12th_-_Academic_Year_2025-26_By_Survesh_Kant_Verma_-_Nageen_Prakashan_8.webp?v=1744361938" alt="Product"
-                                                class="w-full h-full object-cover">
+                                            class="w-full h-full flex items-center justify-center text-[10px] text-gray-400">
+                                            No Image
                                         </div>
-                                        <div>
-                                            <h3 class="font-semibold text-gray-800 text-base leading-tight">Godan (Hindi)
-                                            </h3>
-                                            <p class="text-xs text-gray-400 mt-1">Munshi Premchand • <span
-                                                    class="text-orange-600">Paperback</span></p>
-                                        </div>
+                                        {% endif %}
+                                    </a>
+
+                                    <div>
+                                        <a href="{% url 'product-details' cart_item.item.id %}"
+                                            class="font-semibold text-gray-800 text-base leading-tight hover:text-orange-600 transition-colors">
+                                            {{ cart_item.item.title }}
+                                        </a>
+
+                                        <p class="text-xs text-gray-400 mt-1">
+                                            {% if cart_item.item.author %}
+                                            {{ cart_item.item.author }}
+                                            {% endif %}
+                                            {% if cart_item.item.book_type %}
+                                            • <span class="text-orange-600">{{ cart_item.item.book_type }}</span>
+                                            {% endif %}
+                                        </p>
                                     </div>
-                                </td>
-                                <td class="py-5 text-center font-semibold text-gray-700 text-sm">₹218.00</td>
-                                <td class="py-5">
-                                    <div class="flex items-center justify-center">
-                                        <div
-                                            class="flex items-center border border-gray-200 rounded-lg bg-white overflow-hidden">
-                                            <button
-                                                class="w-7 h-7 flex items-center justify-center text-gray-500 hover:bg-gray-50 transition-colors">−</button>
-                                            <span
-                                                class="px-3 text-xs font-bold text-gray-800 border-x border-gray-100">1</span>
-                                            <button
-                                                class="w-7 h-7 flex items-center justify-center text-gray-500 hover:bg-gray-50 transition-colors">+</button>
-                                        </div>
+                                </div>
+                            </td>
+
+                            <td class="py-5 text-center font-semibold text-gray-700 text-sm">
+                                ₹{{ cart_item.item.price|floatformat:2 }}
+                            </td>
+
+                            <td class="py-5">
+                                <div class="flex items-center justify-center">
+                                    <div
+                                        class="flex items-center border border-gray-200 rounded-lg bg-white overflow-hidden">
+                                        <a href="{% url 'minus-from-cart' cart_item.item.slug %}"
+                                            class="w-7 h-7 flex items-center justify-center text-gray-500 hover:bg-gray-50 transition-colors">
+                                            −
+                                        </a>
+
+                                        <span class="px-3 text-xs font-bold text-gray-800 border-x border-gray-100">
+                                            {{ cart_item.qty }}
+                                        </span>
+
+                                        <a href="{% url 'add-to-cart' cart_item.item.slug %}"
+                                            class="w-7 h-7 flex items-center justify-center text-gray-500 hover:bg-gray-50 transition-colors">
+                                            +
+                                        </a>
                                     </div>
-                                </td>
-                                <td class="px-4 py-5">
-                                    <div class="flex items-center justify-end gap-2 font-bold text-gray-800 text-sm">
-                                        <span>₹218.00</span>
-                                        <button class="text-gray-300 hover:text-red-500 ml-1">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M6 18L18 6M6 6l12 12"></path>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-    
-                <a href="#"
-                    class="inline-flex items-center gap-2 mt-6 text-orange-600 text-sm font-bold hover:gap-3 transition-all">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                    </svg>
-                    Continue Shopping
-                </a>
+                                </div>
+                            </td>
+
+                            <td class="px-4 py-5">
+                                <div class="flex items-center justify-end gap-2 font-bold text-gray-800 text-sm">
+                                    <span>₹{{ cart_item.get_total_price|floatformat:2 }}</span>
+                                    <a href="{% url 'remove-from-cart' cart_item.item.slug %}" class="text-gray-300 hover:text-red-500 ml-1">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="4" class="px-4 py-12 text-center">
+                                <div class="flex flex-col items-center justify-center">
+                                    <h3 class="text-lg font-bold text-gray-700">Your cart is empty</h3>
+                                    <p class="text-sm text-gray-400 mt-1">Looks like you haven’t added any books yet.
+                                    </p>
+                                    <a href="{% url 'filter' %}"
+                                        class="inline-flex items-center gap-2 mt-5 bg-orange-500 text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-orange-600 transition-all">
+                                        Continue Shopping
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
             </div>
-    
-            <div class="lg:col-span-4 sticky top-6">
-                <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-md">
-                    <h2 class="text-lg font-bold text-gray-800 mb-5">Price Details</h2>
-    
-                    <div class="space-y-3 mb-5">
-                        <div class="flex justify-between text-sm text-gray-500 font-medium">
-                            <span>Subtotal</span>
-                            <span class="text-gray-800 font-semibold">₹218.00</span>
-                        </div>
-                        <div class="flex justify-between text-sm text-gray-500 font-medium">
-                            <span>Shipping</span>
-                            <span class="text-gray-800 font-semibold">₹49.00</span>
-                        </div>
-                        <div class="flex justify-between text-sm text-gray-500 font-medium border-b border-gray-50 pb-3">
-                            <span>Tax (5% GST)</span>
-                            <span class="text-gray-800 font-semibold">₹10.90</span>
-                        </div>
-                        <div
-                            class="flex justify-between text-xs font-bold text-green-600 bg-green-50 p-2.5 rounded-lg border border-dashed border-green-200">
-                            <span>Total Discount</span>
-                            <span>-₹20.00</span>
-                        </div>
+
+            <a href="{% url 'filter' %}"
+                class="inline-flex items-center gap-2 mt-6 text-orange-600 text-sm font-bold hover:gap-3 transition-all">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                Continue Shopping
+            </a>
+        </div>
+
+        <div class="lg:col-span-4 sticky top-6">
+            <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-md">
+                <h2 class="text-lg font-bold text-gray-800 mb-5">Price Details</h2>
+
+                <div class="space-y-3 mb-5">
+                    <div class="flex justify-between text-sm text-gray-500 font-medium">
+                        <span>Subtotal</span>
+                        <span class="text-gray-800 font-semibold">
+                            ₹{% if order %}{{ order.get_subtotal|floatformat:2 }}{% else %}0.00{% endif %}
+                        </span>
                     </div>
-    
-                    <div class="flex justify-between items-center mb-6">
-                        <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Order Total</span>
-                        <span class="text-2xl font-bold text-gray-900">₹257.90</span>
+
+                    <div class="flex justify-between text-sm text-gray-500 font-medium">
+                        <span>Shipping</span>
+                        <span class="text-gray-800 font-semibold">
+                            {% if order %}
+                            {% if order.get_shipping == 0 %}
+                            <span class="text-green-600">Free</span>
+                            {% else %}
+                            ₹{{ order.get_shipping|floatformat:2 }}
+                            {% endif %}
+                            {% else %}
+                            ₹0.00
+                            {% endif %}
+                        </span>
                     </div>
-    
-                    <div class="mb-5">
-                        <label class="block text-[10px] font-bold text-gray-400 uppercase mb-2">Apply Coupon</label>
-                        <div class="flex gap-1.5 p-1 bg-gray-50 rounded-xl border border-gray-100">
-                            <input type="text" placeholder="BOOK20"
-                                class="flex-1 bg-transparent px-2 text-xs font-bold uppercase outline-none">
-                            <button
-                                class="bg-gray-800 text-white px-4 py-2 rounded-lg text-[10px] font-bold uppercase hover:bg-orange-600 transition-all">Apply</button>
-                        </div>
+
+                    <div class="flex justify-between text-sm text-gray-500 font-medium border-b border-gray-50 pb-3">
+                        <span>Tax (18% GST)</span>
+                        <span class="text-gray-800 font-semibold">
+                            ₹{% if order %}{{ order.get_tax|floatformat:2 }}{% else %}0.00{% endif %}
+                        </span>
                     </div>
-    
-                    <button
-                        class="w-full bg-orange-500 text-white py-3.5 rounded-xl font-bold text-sm uppercase tracking-wide shadow-md hover:bg-orange-600 active:scale-[0.98] transition-all">
-                        Proceed to Checkout
-                    </button>
-    
-                    <div class="mt-5 flex items-center justify-center gap-3 opacity-30 grayscale scale-90">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
-                        </svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
-                            </path>
-                        </svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"></path>
-                        </svg>
+
+                    <div
+                        class="flex justify-between text-xs font-bold text-green-600 bg-green-50 p-2.5 rounded-lg border border-dashed border-green-200">
+                        <span>Total Discount</span>
+                        <span>
+                            {% if order and order.coupon %}
+                            -₹{{ order.get_discount|floatformat:2 }}
+                            {% else %}
+                            -₹0.00
+                            {% endif %}
+                        </span>
                     </div>
+                </div>
+
+                <div class="flex justify-between items-center mb-6">
+                    <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Order Total</span>
+                    <span class="text-2xl font-bold text-gray-900">
+                        ₹{% if order %}{{ order.get_total|floatformat:2 }}{% else %}0.00{% endif %}
+                    </span>
+                </div>
+
+                <div class="mb-5">
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase mb-2">Apply Coupon</label>
+                    <div class="flex gap-1.5 p-1 bg-gray-50 rounded-xl border border-gray-100">
+                        <input type="text" placeholder="BOOK20"
+                            class="flex-1 bg-transparent px-2 text-xs font-bold uppercase outline-none">
+                        <button
+                            class="bg-gray-800 text-white px-4 py-2 rounded-lg text-[10px] font-bold uppercase hover:bg-orange-600 transition-all">
+                            Apply
+                        </button>
+                    </div>
+                </div>
+
+                <a href="{% url 'delivery_address' %}"
+                    class="w-full inline-flex items-center justify-center bg-orange-500 text-white py-3.5 rounded-xl font-bold text-sm uppercase tracking-wide shadow-md hover:bg-orange-600 active:scale-[0.98] transition-all">
+                    Proceed to Checkout
+                </a>
+
+                <div class="mt-5 flex items-center justify-center gap-3 opacity-30 grayscale scale-90">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a2 2 0 00-2 2v8a3 3 0 003 3z">
+                        </path>
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
+                        </path>
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z">
+                        </path>
+                    </svg>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    {% include 'includes/footer.html' %}
+{% include 'includes/footer.html' %}
 
 {% endblock %}

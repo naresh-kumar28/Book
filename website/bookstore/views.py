@@ -171,9 +171,96 @@ def productDetails(req, id):
     return render(req, 'shop/product-details.html', data)
 
 
+@login_required
+def addToCart(request, slug):
+    product = get_object_or_404(Product, slug=slug)
 
+    order_item, created = OrderItem.objects.get_or_create(
+        user=request.user,
+        ordered=False,
+        item=product
+    )
+
+    order_qs = Order.objects.filter(user=request.user, ordered=False)
+
+    if order_qs.exists():
+        order = order_qs[0]
+
+        if order.items.filter(item=product).exists():
+            order_item.qty += 1
+            order_item.save()
+        else:
+            order.items.add(order_item)
+    else:
+        order = Order.objects.create(user=request.user, ordered=False)
+        order.items.add(order_item)
+
+    return redirect('cart')
+
+
+@login_required
+def minusToCart(request, slug):
+    product = get_object_or_404(Product, slug=slug)
+
+    order_item = OrderItem.objects.filter(
+        user=request.user,
+        ordered=False,
+        item=product
+    ).first()
+
+    if not order_item:
+        return redirect('cart')
+
+    order_qs = Order.objects.filter(user=request.user, ordered=False)
+
+    if order_qs.exists():
+        order = order_qs[0]
+
+        if order.items.filter(item=product).exists():
+            if order_item.qty > 1:
+                order_item.qty -= 1
+                order_item.save()
+            else:
+                return removeFromCart(request, slug)
+
+    return redirect('cart')
+
+
+@login_required
+def removeFromCart(request, slug):
+    product = get_object_or_404(Product, slug=slug)
+
+    order_qs = Order.objects.filter(user=request.user, ordered=False)
+
+    if order_qs.exists():
+        order = order_qs[0]
+
+        if order.items.filter(item=product).exists():
+            order_item = OrderItem.objects.get(
+                user=request.user,
+                ordered=False,
+                item=product
+            )
+
+            order.items.remove(order_item)
+            order_item.delete()
+
+    return redirect('cart')
+
+
+@login_required
 def cart(req):
-    return render(req, 'shop/cart.html')
+    data = {}
+    data['categories'] = Category.objects.all()
+    
+    order_qs = Order.objects.filter(user=req.user, ordered=False)
+
+    if order_qs.exists():
+        data['order'] = order_qs[0]
+    else:
+        data['order'] = None
+
+    return render(req, 'shop/cart.html', data)
 
 @login_required
 def deliveryAddress(req):

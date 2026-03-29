@@ -72,14 +72,15 @@
                         </div>
 
                         <div class="flex gap-2">
-                            <button
-                                class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-xl text-[12px] font-bold transition-all transform active:scale-95 shadow-sm">
+                            <a href="{% url 'delivery_address' %}"
+                                class="w-full flex items-center justify-center bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-xl text-[12px] font-bold transition-all transform active:scale-95 shadow-sm text-center">
                                 Buy Now
-                            </button>
-                            <button
-                                class="w-full bg-teal-600 hover:bg-teal-700 text-white py-2.5 rounded-xl text-[12px] font-semibold flex items-center justify-center transition-colors">
+                            </a>
+                        
+                            <a href="{% url 'add-to-cart' book.slug %}"
+                                class="w-full flex items-center justify-center bg-teal-600 hover:bg-teal-700 text-white py-2.5 rounded-xl text-[12px] font-bold transition-colors text-center">
                                 Add to Cart
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </a>
@@ -166,14 +167,15 @@
                             </div>
         
                             <div class="flex gap-2">
-                                <button
-                                    class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-xl text-[12px] font-bold transition-all transform active:scale-95 shadow-sm">
+                                <a href="{% url 'delivery_address' %}"
+                                    class="w-full flex items-center justify-center bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-xl text-[12px] font-bold transition-all transform active:scale-95 shadow-sm text-center">
                                     Buy Now
-                                </button>
-                                <button
-                                    class="w-full bg-teal-600 hover:bg-teal-700 text-white py-2.5 rounded-xl text-[12px] font-semibold flex items-center justify-center transition-colors">
+                                </a>
+                            
+                                <a href="{% url 'add-to-cart' book.slug %}"
+                                    class="w-full flex items-center justify-center bg-teal-600 hover:bg-teal-700 text-white py-2.5 rounded-xl text-[12px] font-bold transition-colors text-center">
                                     Add to Cart
-                                </button>
+                                </a>
                             </div>
                         </div>
                         </a>
@@ -344,14 +346,15 @@
                         </div>
         
                         <div class="flex gap-2">
-                            <button
-                                class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-xl text-[12px] font-bold transition-all transform active:scale-95 shadow-sm">
+                            <a href="{% url 'delivery_address' %}"
+                                class="w-full flex items-center justify-center bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-xl text-[12px] font-bold transition-all transform active:scale-95 shadow-sm text-center">
                                 Buy Now
-                            </button>
-                            <button
-                                class="w-full bg-teal-600 hover:bg-teal-700 text-white py-2.5 rounded-xl text-[12px] font-semibold flex items-center justify-center transition-colors">
+                            </a>
+                        
+                            <a href="{% url 'add-to-cart' book.slug %}"
+                                class="w-full flex items-center justify-center bg-teal-600 hover:bg-teal-700 text-white py-2.5 rounded-xl text-[12px] font-bold transition-colors text-center">
                                 Add to Cart
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </a>
@@ -363,6 +366,7 @@
 </section>
 
 <!-- Recently Added -->
+{% if recent_books|length > 0 %}
 <section class="bg-gray-50 py-12 border-b border-gray-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {% url 'book.recently' as book_recently_url %}
@@ -435,14 +439,15 @@
                             </div>
         
                             <div class="flex gap-2">
-                                <button
-                                    class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-xl text-[12px] font-bold transition-all transform active:scale-95 shadow-sm">
+                                <a href="{% url 'delivery_address' %}"
+                                    class="w-full flex items-center justify-center bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-xl text-[12px] font-bold transition-all transform active:scale-95 shadow-sm text-center">
                                     Buy Now
-                                </button>
-                                <button
-                                    class="w-full bg-teal-600 hover:bg-teal-700 text-white py-2.5 rounded-xl text-[12px] font-semibold flex items-center justify-center transition-colors">
+                                </a>
+                            
+                                <a href="{% url 'add-to-cart' book.slug %}"
+                                    class="w-full flex items-center justify-center bg-teal-600 hover:bg-teal-700 text-white py-2.5 rounded-xl text-[12px] font-bold transition-colors text-center">
                                     Add to Cart
-                                </button>
+                                </a>
                             </div>
                         </div>
                     </a>
@@ -454,6 +459,7 @@
         </div>
     </div>
 </section>
+{% endif %}
 
 <!-- Old Book  -->
 <section class="bg-gray-50 py-12 border-b border-gray-200">
@@ -529,14 +535,15 @@
                             </div>
         
                             <div class="flex gap-2">
-                                <button
-                                    class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-xl text-[12px] font-bold transition-all transform active:scale-95 shadow-sm">
+                                <a href="{% url 'delivery_address' %}"
+                                    class="w-full flex items-center justify-center bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-xl text-[12px] font-bold transition-all transform active:scale-95 shadow-sm text-center">
                                     Buy Now
-                                </button>
-                                <button
-                                    class="w-full bg-teal-600 hover:bg-teal-700 text-white py-2.5 rounded-xl text-[12px] font-semibold flex items-center justify-center transition-colors">
+                                </a>
+                            
+                                <a href="{% url 'add-to-cart' book.slug %}"
+                                    class="w-full flex items-center justify-center bg-teal-600 hover:bg-teal-700 text-white py-2.5 rounded-xl text-[12px] font-bold transition-colors text-center">
                                     Add to Cart
-                                </button>
+                                </a>
                             </div>
                         </div>
                     </a>

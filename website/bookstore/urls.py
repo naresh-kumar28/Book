@@ -21,6 +21,9 @@ urlpatterns = [
     #Shop Section
     path('shop/product-details/<int:id>/', productDetails, name='product-details'),
     path('shop/cart/', cart, name='cart'),
+    path('shop/add-to-cart/<slug:slug>/', addToCart, name='add-to-cart'),
+    path('shop/minus-from-cart/<slug:slug>/', minusToCart, name='minus-from-cart'),
+    path('shop/remove-from-cart/<slug:slug>/', removeFromCart, name='remove-from-cart'),
     path('shop/payment/', payment, name='payment'),
     path('shop/summary/', summary, name='summary'),
     path('shop/delivery_address/', deliveryAddress, name='delivery_address'),
