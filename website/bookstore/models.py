@@ -141,8 +141,11 @@ class OrderItem(models.Model):
 
 
 class Coupon(models.Model):
-    code = models.CharField(max_length=15)
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    code = models.CharField(max_length=50, unique=True)
+    discount_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    valid_from = models.DateTimeField(null=True, blank=True)
+    valid_to = models.DateTimeField(null=True, blank=True)
+    active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.code
@@ -182,27 +185,59 @@ class Order(models.Model):
     def __str__(self):
         return f"{self.user.username} - Order #{self.id}"
     
-
     def get_subtotal(self):
         total = Decimal('0.00')
         for order_item in self.items.all():
-            total += order_item.item.price * order_item.qty
+            total += order_item.get_total_price() # Using your OrderItem method
         return total
 
     def get_shipping(self):
         subtotal = self.get_subtotal()
+        if subtotal == Decimal('0.00'):
+            return Decimal('0.00') # Agar cart empty hai to no shipping
         if subtotal >= Decimal('500.00'):
             return Decimal('0.00')
         return Decimal('49.00')
 
-    def get_tax(self):
-        subtotal = self.get_subtotal()
-        return subtotal * Decimal('0.18')
-
     def get_discount(self):
-        if self.coupon:
-            return self.coupon.amount
+        if self.coupon and self.coupon.active:
+            # Agar discount subtotal se zyada hai, toh maximum discount subtotal ke barabar hi milega
+            # (Taaki order total negative na ho jaye)
+            subtotal = self.get_subtotal()
+            if self.coupon.discount_amount > subtotal:
+                return subtotal
+            return self.coupon.discount_amount
         return Decimal('0.00')
 
+    def get_tax(self):
+        # Tax calculation logic (Subtotal - Discount) par 18% GST
+        taxable_amount = self.get_subtotal() - self.get_discount()
+        if taxable_amount < Decimal('0.00'):
+            taxable_amount = Decimal('0.00')
+        return taxable_amount * Decimal('0.18')
+
     def get_total(self):
-        return self.get_subtotal() + self.get_shipping() + self.get_tax() - self.get_discount()
+        # Calculate the final total
+        total = self.get_subtotal() + self.get_shipping() + self.get_tax() - self.get_discount()
+        
+        # Ek final check taaki total kabhi zero se kam na ho
+        if total < Decimal('0.00'):
+            return Decimal('0.00')
+            
+        return total
+    
+    def get_mrp_total(self):
+        # Ye sabhi items ka original price (MRP) calculate karega
+        total = Decimal('0.00')
+        for order_item in self.items.all():
+            # Check if discount_price exists and is greater than price (MRP check)
+            if order_item.item.discount_price and order_item.item.discount_price > order_item.item.price:
+                mrp = order_item.item.discount_price
+            else:
+                mrp = order_item.item.price
+            total += mrp * order_item.qty
+        return total
+
+    def get_product_discount(self):
+        # Ye calculate karega ki product par kitna discount mila hai (MRP Total - Subtotal)
+        return self.get_mrp_total() - self.get_subtotal()

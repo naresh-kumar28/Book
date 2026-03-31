@@ -1,4 +1,5 @@
 from django.forms import ModelForm, DateInput
+from django import forms
 
 from .models import *
 
@@ -62,3 +63,14 @@ class SubjectInsertForm(ModelForm):
     class Meta:
         model = Subject
         exclude = ['subject_slug']
+
+
+class CouponInsertForm(ModelForm):
+    class Meta:
+        model = Coupon
+        fields = ["code", "discount_amount", "valid_from", "valid_to"]
+        widgets = {
+            "code": forms.TextInput(attrs={"placeholder": "Enter Coupon Code"}),
+            "valid_from": forms.DateTimeInput(attrs={"type": "datetime-local"}),
+            "valid_to": forms.DateTimeInput(attrs={"type": "datetime-local"}),
+        }

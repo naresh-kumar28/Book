@@ -436,3 +436,100 @@ def changeUserRole(req, id):
         messages.success(req, f"{user_to_update.first_name} ka role successfully '{new_role}' update ho gaya hai!")
 
     return redirect(manageUser)
+
+
+@admin_required
+def manageCoupons(req):
+    context = {}
+    coupons = Coupon.objects.all()
+    form = CouponInsertForm(req.POST or None)
+
+    if req.method == 'POST':
+        if form.is_valid():
+            form.save()
+            return redirect(manageCoupons)
+
+    #pagination
+    paginator = Paginator(coupons, 3)
+    page_number = req.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context['coupons'] = page_obj
+    context['form'] = form
+
+    return render(req, 'admin/manage_coupons.html', context)
+
+
+
+@admin_required
+def editCoupon(req, id):
+    coupon = Coupon.objects.get(id=id)
+    form = CouponInsertForm(req.POST or None, instance=coupon)
+    if req.method=='POST':
+        if form.is_valid():
+            form.save()
+            return redirect(manageCoupons)
+    return render(req, 'admin/edit_coupons.html', {"form": form})
+
+
+@admin_required
+def deleteCoupon(req, id):
+    coupon = Coupon.objects.get(id=id)
+    coupon.delete()
+    return redirect(manageCoupons)
+
+
+from django.shortcuts import redirect, get_object_or_404
+from django.contrib import messages
+from django.utils import timezone  # Timezone import karna zaroori hai
+from .models import Coupon, Order
+
+def apply_coupon(request):
+    if request.method == 'POST':
+        # Form se code nikalna
+        code = request.POST.get('coupon_code')
+        
+        try:
+            # Code ko database me check karna (iexact se case-insensitive check hoga)
+            coupon = Coupon.objects.get(code__iexact=code)
+            
+            # 1. Check if active
+            if not coupon.active:
+                messages.warning(request, "This coupon is no longer active.")
+                return redirect('cart') # Apne cart url ka naam yahan likhein (e.g., 'cart_view')
+
+            now = timezone.now()
+            
+            # 2. Check Valid From date
+            if coupon.valid_from and now < coupon.valid_from:
+                messages.warning(request, "This coupon is not valid yet.")
+                return redirect('cart')
+
+            # 3. Check Valid To date
+            if coupon.valid_to and now > coupon.valid_to:
+                messages.warning(request, "This coupon has expired.")
+                return redirect('cart')
+
+            # 4. Apply to User's Order
+            order = Order.objects.get(user=request.user, ordered=False)
+            order.coupon = coupon
+            order.save()
+            messages.success(request, f"Coupon {code} applied successfully!")
+            
+        except Coupon.DoesNotExist:
+            messages.error(request, "Invalid coupon code.")
+        except Order.DoesNotExist:
+            messages.error(request, "You don't have an active order.")
+            
+    return redirect('cart') 
+
+def remove_coupon(request):
+    try:
+        # Order se coupon hata dena
+        order = Order.objects.get(user=request.user, ordered=False)
+        order.coupon = None
+        order.save()
+        messages.success(request, "Coupon removed successfully.")
+    except Order.DoesNotExist:
+        pass
+    return redirect('cart') # Apne cart url ka naam yahan likhein

@@ -80,6 +80,14 @@ urlpatterns = [
     path('admin/user/<int:id>/delete/', deleteUser, name='admin.user.delete'), 
     path('admin/user/role/<int:id>/', changeUserRole, name='admin.change_role'),
 
+    #coupon
+    path('admin/coupon/', manageCoupons, name='admin.coupon'),
+    path('admin/coupon/<int:id>/edit/', editCoupon, name='admin.coupon.edit'),
+    path('admin/coupon/<int:id>/delete/', deleteCoupon, name='admin.coupon.delete'),
+    
+    path('admin/apply-coupon/', apply_coupon, name='admin.apply.coupon'),
+    path('admin/remove-coupon/', remove_coupon, name='admin.remove.coupon'),
+
     #book_list
     path('book/newely/', newelyRelase, name='book.newely'),
     path('book/old/', oldBooks, name='book.old'),

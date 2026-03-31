@@ -6,6 +6,17 @@
 
 {% include 'includes/sticky-button.html' %}
 
+{% if messages %}
+<div class="mb-4">
+    {% for message in messages %}
+    <div
+        class="p-4 mb-2 rounded-lg text-sm font-bold {% if message.tags == 'error' %}bg-red-100 text-red-700{% elif message.tags == 'success' %}bg-green-100 text-green-700{% else %}bg-yellow-100 text-yellow-700{% endif %}">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
 <div class="max-w-6xl mx-auto px-4 py-8 md:px-6 my-8">
 
     <div class="mb-6">
@@ -19,21 +30,22 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
-        <div class="lg:col-span-8">
-            <!-- Desktop Table View -->
+        <div class="{% if order and order.items.all %}lg:col-span-8{% else %}lg:col-span-12{% endif %}">
+
+            {% if order and order.items.all %}
             <div class="hidden md:block overflow-x-auto border border-gray-100 rounded-xl">
                 <table class="w-full text-left border-collapse">
                     <thead>
-                        <tr class="bg-gray-50 text-[12px] uppercase text-gray-500 font-semibold border-b border-gray-100">
+                        <tr
+                            class="bg-gray-50 text-[12px] uppercase text-gray-500 font-semibold border-b border-gray-100">
                             <th class="px-4 py-3 w-[45%]">Product</th>
                             <th class="py-3 text-center">Price</th>
                             <th class="py-3 text-center">Quantity</th>
                             <th class="px-4 py-3 text-right">Subtotal</th>
                         </tr>
                     </thead>
-            
+
                     <tbody class="divide-y divide-gray-50">
-                        {% if order and order.items.all %}
                         {% for cart_item in order.items.all %}
                         <tr class="group">
                             <td class="px-4 py-5">
@@ -44,18 +56,19 @@
                                         <img src="{{ cart_item.item.image.url }}" alt="{{ cart_item.item.title }}"
                                             class="w-full h-full object-cover">
                                         {% else %}
-                                        <div class="w-full h-full flex items-center justify-center text-[10px] text-gray-400">
+                                        <div
+                                            class="w-full h-full flex items-center justify-center text-[10px] text-gray-400">
                                             No Image
                                         </div>
                                         {% endif %}
                                     </a>
-            
+
                                     <div>
                                         <a href="{% url 'product-details' cart_item.item.id %}"
                                             class="font-semibold text-gray-800 text-base leading-tight hover:text-orange-600 transition-colors">
                                             {{ cart_item.item.title }}
                                         </a>
-            
+
                                         <p class="text-xs text-gray-400 mt-1">
                                             {% if cart_item.item.author %}
                                             {{ cart_item.item.author }}
@@ -67,23 +80,24 @@
                                     </div>
                                 </div>
                             </td>
-            
+
                             <td class="py-5 text-center font-semibold text-gray-700 text-sm">
                                 ₹{{ cart_item.item.price|floatformat:2 }}
                             </td>
-            
+
                             <td class="py-5">
                                 <div class="flex items-center justify-center">
-                                    <div class="flex items-center border border-gray-200 rounded-lg bg-white overflow-hidden">
+                                    <div
+                                        class="flex items-center border border-gray-200 rounded-lg bg-white overflow-hidden">
                                         <a href="{% url 'minus-from-cart' cart_item.item.slug %}"
                                             class="w-7 h-7 flex items-center justify-center text-gray-500 hover:bg-gray-50 transition-colors">
                                             −
                                         </a>
-            
+
                                         <span class="px-3 text-xs font-bold text-gray-800 border-x border-gray-100">
                                             {{ cart_item.qty }}
                                         </span>
-            
+
                                         <a href="{% url 'add-to-cart' cart_item.item.slug %}"
                                             class="w-7 h-7 flex items-center justify-center text-gray-500 hover:bg-gray-50 transition-colors">
                                             +
@@ -91,7 +105,7 @@
                                     </div>
                                 </div>
                             </td>
-            
+
                             <td class="px-4 py-5">
                                 <div class="flex items-center justify-end gap-2 font-bold text-gray-800 text-sm">
                                     <span>₹{{ cart_item.get_total_price|floatformat:2 }}</span>
@@ -106,37 +120,11 @@
                             </td>
                         </tr>
                         {% endfor %}
-                        {% else %}
-                        <tr>
-                            <td colspan="4" class="px-4 py-12 text-center">
-                                
-                                <div class="flex flex-col items-center justify-center">
-                            
-                                    <svg class="w-16 h-16 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
-                                        </path>
-                                    </svg>
-                            
-                                    <h3 class="text-lg font-bold text-gray-700">Your cart is empty</h3>
-                                    <p class="text-sm text-gray-400 mt-1">Looks like you haven’t added any books yet.</p>
-                                    <a href="{% url 'filter' %}"
-                                        class="inline-flex items-center gap-2 mt-5 bg-orange-500 text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-orange-600 transition-all">
-                                        Continue Shopping
-                                    </a>
-                                </div>
-                                
-                            </td>
-                        </tr>
-                        {% endif %}
                     </tbody>
                 </table>
             </div>
-            
-            <!-- Mobile Card View -->
+
             <div class="md:hidden space-y-4">
-                {% if order and order.items.all %}
                 {% for cart_item in order.items.all %}
                 <div class="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm">
                     <div class="flex gap-3">
@@ -151,13 +139,13 @@
                             </div>
                             {% endif %}
                         </a>
-            
+
                         <div class="min-w-0 flex-1">
                             <a href="{% url 'product-details' cart_item.item.id %}"
                                 class="font-semibold text-gray-800 text-sm leading-5 hover:text-orange-600 transition-colors line-clamp-2">
                                 {{ cart_item.item.title }}
                             </a>
-            
+
                             <p class="text-[11px] text-gray-400 mt-1">
                                 {% if cart_item.item.author %}
                                 {{ cart_item.item.author }}
@@ -166,67 +154,48 @@
                                 • <span class="text-orange-600">{{ cart_item.item.book_type }}</span>
                                 {% endif %}
                             </p>
-            
+
                             <div class="mt-2 text-sm font-bold text-gray-800">
                                 ₹{{ cart_item.item.price|floatformat:2 }}
                             </div>
                         </div>
                     </div>
-            
+
                     <div class="mt-4 flex items-center justify-between gap-3">
                         <div class="flex items-center border border-gray-200 rounded-lg bg-white overflow-hidden">
                             <a href="{% url 'minus-from-cart' cart_item.item.slug %}"
                                 class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-50 transition-colors">
                                 −
                             </a>
-            
+
                             <span class="px-3 text-xs font-bold text-gray-800 border-x border-gray-100">
                                 {{ cart_item.qty }}
                             </span>
-            
+
                             <a href="{% url 'add-to-cart' cart_item.item.slug %}"
                                 class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-50 transition-colors">
                                 +
                             </a>
                         </div>
-            
+
                         <div class="text-right">
                             <div class="text-[11px] text-gray-400">Subtotal</div>
                             <div class="font-bold text-gray-800 text-sm">
                                 ₹{{ cart_item.get_total_price|floatformat:2 }}
                             </div>
                         </div>
-            
+
                         <a href="{% url 'remove-from-cart' cart_item.item.slug %}"
                             class="w-8 h-8 shrink-0 flex items-center justify-center text-gray-300 hover:text-red-500 transition-colors">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12">
                                 </path>
                             </svg>
                         </a>
                     </div>
                 </div>
                 {% endfor %}
-                {% else %}
-                <div class="border border-gray-100 rounded-xl bg-white px-4 py-12 text-center">
-                    <div class="flex flex-col items-center justify-center">
-                
-                        <svg class="w-16 h-16 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
-                            </path>
-                        </svg>
-                
-                        <h3 class="text-lg font-bold text-gray-700">Your cart is empty</h3>
-                        <p class="text-sm text-gray-400 mt-1">Looks like you haven’t added any books yet.</p>
-                        <a href="{% url 'filter' %}"
-                            class="inline-flex items-center gap-2 mt-5 bg-orange-500 text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-orange-600 transition-all">
-                            Continue Shopping
-                        </a>
-                    </div>
-                </div>
-                {% endif %}
             </div>
 
             <a href="{% url 'filter' %}"
@@ -237,26 +206,66 @@
                 </svg>
                 Continue Shopping
             </a>
+
+            {% else %}
+            <div class="border border-gray-100 rounded-2xl bg-white px-4 py-16 md:py-24 text-center shadow-sm">
+                <div class="flex flex-col items-center justify-center">
+                    <svg class="w-20 h-20 text-gray-300 mb-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
+                        </path>
+                    </svg>
+
+                    <h3 class="text-xl font-bold text-gray-700">Your cart is empty</h3>
+                    <p class="text-base text-gray-400 mt-2">Looks like you haven’t added any books yet.</p>
+
+                    <a href="{% url 'filter' %}"
+                        class="inline-flex items-center gap-2 mt-6 bg-orange-500 text-white px-6 py-3 rounded-xl text-sm font-bold shadow-md hover:bg-orange-600 hover:shadow-lg transition-all active:scale-[0.98]">
+                        Continue Shopping
+                    </a>
+                </div>
+            </div>
+            {% endif %}
         </div>
 
+        {% if order and order.items.all %}
         <div class="lg:col-span-4 sticky top-6">
             <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-md">
-                <h2 class="text-lg font-bold text-gray-800 mb-5">Price Details</h2>
-
-                <div class="space-y-3 mb-5">
-                    <div class="flex justify-between text-sm text-gray-500 font-medium">
-                        <span>Subtotal</span>
+                <h2 class="text-lg font-bold text-gray-800 border-b border-gray-100 pb-4 mb-4">Price Details</h2>
+        
+                <div class="space-y-4 mb-5">
+                    <div class="flex justify-between text-sm text-gray-600 font-medium">
+                        <span>Price ({{ order.items.count }} item{% if order.items.count > 1 %}s{% endif %})</span>
                         <span class="text-gray-800 font-semibold">
-                            ₹{% if order %}{{ order.get_subtotal|floatformat:2 }}{% else %}0.00{% endif %}
+                            ₹{% if order %}{{ order.get_mrp_total|floatformat:2 }}{% else %}0.00{% endif %}
                         </span>
                     </div>
-
-                    <div class="flex justify-between text-sm text-gray-500 font-medium">
-                        <span>Shipping</span>
+        
+                    {% if order and order.get_product_discount > 0 %}
+                    <div class="flex justify-between text-sm text-green-600 font-medium">
+                        <span>Discount</span>
+                        <span class="font-bold">
+                            - ₹{{ order.get_product_discount|floatformat:2 }}
+                        </span>
+                    </div>
+                    {% endif %}
+        
+                    {% if order and order.coupon %}
+                    <div class="flex justify-between text-sm text-green-600 font-medium">
+                        <span>Coupon ({{ order.coupon.code }})</span>
+                        <span class="font-bold">
+                            - ₹{{ order.get_discount|floatformat:2 }}
+                        </span>
+                    </div>
+                    {% endif %}
+        
+                    <div class="flex justify-between text-sm text-gray-600 font-medium">
+                        <span>Delivery Charges</span>
                         <span class="text-gray-800 font-semibold">
                             {% if order %}
                             {% if order.get_shipping == 0 %}
-                            <span class="text-green-600">Free</span>
+                            <span class="text-green-600 font-bold">Free</span>
                             {% else %}
                             ₹{{ order.get_shipping|floatformat:2 }}
                             {% endif %}
@@ -265,66 +274,82 @@
                             {% endif %}
                         </span>
                     </div>
-
-                    <div class="flex justify-between text-sm text-gray-500 font-medium border-b border-gray-50 pb-3">
+        
+                    <div class="flex justify-between text-sm text-gray-600 font-medium pb-2">
                         <span>Tax (18% GST)</span>
                         <span class="text-gray-800 font-semibold">
                             ₹{% if order %}{{ order.get_tax|floatformat:2 }}{% else %}0.00{% endif %}
                         </span>
                     </div>
-
-                    <div
-                        class="flex justify-between text-xs font-bold text-green-600 bg-green-50 p-2.5 rounded-lg border border-dashed border-green-200">
-                        <span>Total Discount</span>
-                        <span>
-                            {% if order and order.coupon %}
-                            -₹{{ order.get_discount|floatformat:2 }}
-                            {% else %}
-                            -₹0.00
-                            {% endif %}
-                        </span>
-                    </div>
                 </div>
-
-                <div class="flex justify-between items-center mb-6">
-                    <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Order Total</span>
+        
+                <div class="flex justify-between items-center py-4 border-t border-dashed border-gray-200 mb-4">
+                    <span class="text-base font-bold text-gray-800">Total Amount</span>
                     <span class="text-2xl font-bold text-gray-900">
                         ₹{% if order %}{{ order.get_total|floatformat:2 }}{% else %}0.00{% endif %}
                     </span>
                 </div>
-
+        
+                {% if order and order.get_product_discount > 0 or order.coupon %}
+                <div
+                    class="mb-6 text-sm font-bold text-green-600 bg-green-50 p-3 rounded-lg border border-dashed border-green-200 text-center">
+                    You will save ₹{{ order.get_product_discount|add:order.get_discount|floatformat:2 }} on this order
+                </div>
+                {% endif %}
+        
+                {% if not order.coupon %}
                 <div class="mb-5">
                     <label class="block text-[10px] font-bold text-gray-400 uppercase mb-2">Apply Coupon</label>
-                    <div class="flex gap-1.5 p-1 bg-gray-50 rounded-xl border border-gray-100">
-                        <input type="text" placeholder="BOOK20"
-                            class="flex-1 bg-transparent px-2 text-xs font-bold uppercase outline-none">
-                        <button
-                            class="bg-gray-800 text-white px-4 py-2 rounded-lg text-[10px] font-bold uppercase hover:bg-orange-600 transition-all">
+                    <form action="{% url 'admin.apply.coupon' %}" method="POST"
+                        class="flex gap-1.5 p-1 bg-gray-50 rounded-xl border border-gray-100">
+                        {% csrf_token %}
+                        <input type="text" name="coupon_code" placeholder="BOOK20" required
+                            class="flex-1 bg-transparent px-3 text-xs font-bold uppercase outline-none">
+                        <button type="submit"
+                            class="bg-gray-800 text-white px-5 py-2 rounded-lg text-xs font-bold uppercase hover:bg-orange-600 transition-all">
                             Apply
                         </button>
+                    </form>
+                </div>
+                {% else %}
+                <div class="mb-5">
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase mb-2">Coupon Applied</label>
+                    <div class="flex items-center justify-between p-3 bg-green-50 rounded-xl border border-green-200">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span class="text-sm font-bold text-green-700 uppercase tracking-wide">
+                                {{ order.coupon.code }}
+                            </span>
+                        </div>
+        
+                        <a href="{% url 'admin.remove.coupon' %}"
+                            class="text-red-400 hover:text-red-600 transition-colors flex items-center gap-1 text-xs font-bold uppercase"
+                            title="Remove Coupon">
+                            Remove
+                        </a>
                     </div>
                 </div>
-
+                {% endif %}
+        
                 <a href="{% url 'delivery_address' %}"
                     class="w-full inline-flex items-center justify-center bg-orange-500 text-white py-3.5 rounded-xl font-bold text-sm uppercase tracking-wide shadow-md hover:bg-orange-600 active:scale-[0.98] transition-all">
                     Proceed to Checkout
                 </a>
-
+                
                 <div class="mt-5 flex items-center justify-center gap-3 opacity-30 grayscale scale-90">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a2 2 0 00-2 2v8a3 3 0 003 3z">
                         </path>
                     </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
                         </path>
                     </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z">
                         </path>
@@ -332,6 +357,7 @@
                 </div>
             </div>
         </div>
+        {% endif %}
     </div>
 </div>
 
