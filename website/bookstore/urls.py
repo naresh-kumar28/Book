@@ -38,7 +38,12 @@ urlpatterns = [
     path('account/profile/', profile, name='profile'),
     path('account/dashboard/', dashboard, name='dashboard'),
     path('account/my-order/', myOrder, name='my-order'),
+
+
     path('account/wishlist/', wishlist, name='wishlist'),
+    path('account/add-to-wishlist/<slug:slug>/', addToWishlist, name='add-to-wishlist'),
+    path('account/remove-from-wishlist/<slug:slug>/', removeFromWishlist, name='remove-from-wishlist'),
+
 
     #admin section
     path('admin/', adminDashboard, name='admin.dashboard'),

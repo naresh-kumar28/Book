@@ -241,3 +241,16 @@ class Order(models.Model):
     def get_product_discount(self):
         # Ye calculate karega ki product par kitna discount mila hai (MRP Total - Subtotal)
         return self.get_mrp_total() - self.get_subtotal()
+    
+
+
+class Wishlist(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey('Product', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ['user', 'product']
+
+    def __str__(self):
+        return f"{self.user.username} - {self.product.title}"

@@ -52,6 +52,13 @@ def home(req):
 
     data['recent_viewed_books'] = recent_books_list
 
+    wishlist_products = []
+
+    if req.user.is_authenticated:
+        wishlist_products = Wishlist.objects.filter(user=req.user).values_list('product_id', flat=True)
+
+    data['wishlist_products'] = wishlist_products
+
     return render(req, 'home.html', data)
 
 
@@ -100,7 +107,6 @@ def returnRefund(req):
 
 
 #Shop Section
-
 
 def productDetails(req, id):
     data = {}
@@ -161,7 +167,12 @@ def productDetails(req, id):
 
     data['recent_viewed_books'] = recent_books
 
-    
+    wishlist_products = []
+
+    if req.user.is_authenticated:
+        wishlist_products = Wishlist.objects.filter(user=req.user).values_list('product_id', flat=True)
+
+    data['wishlist_products'] = wishlist_products
     
     data['oldbooks'] = Product.objects.filter(book_type__name__iexact="Old Books", status='published')
     data['newbooks'] = Product.objects.filter(book_type__name__iexact="Newely Relase", status='published')
@@ -169,111 +180,6 @@ def productDetails(req, id):
     data['recent_books'] = Product.objects.filter(created_at__gte=last_24_hours).order_by('-created_at')
 
     return render(req, 'shop/product-details.html', data)
-
-
-@login_required
-def addToCart(request, slug):
-    product = get_object_or_404(Product, slug=slug)
-
-    order_item, created = OrderItem.objects.get_or_create(
-        user=request.user,
-        ordered=False,
-        item=product
-    )
-
-    order_qs = Order.objects.filter(user=request.user, ordered=False)
-
-    if order_qs.exists():
-        order = order_qs[0]
-
-        if order.items.filter(item=product).exists():
-            order_item.qty += 1
-            order_item.save()
-        else:
-            order.items.add(order_item)
-    else:
-        order = Order.objects.create(user=request.user, ordered=False)
-        order.items.add(order_item)
-
-    return redirect('cart')
-
-
-@login_required
-def minusToCart(request, slug):
-    product = get_object_or_404(Product, slug=slug)
-
-    order_item = OrderItem.objects.filter(
-        user=request.user,
-        ordered=False,
-        item=product
-    ).first()
-
-    if not order_item:
-        return redirect('cart')
-
-    order_qs = Order.objects.filter(user=request.user, ordered=False)
-
-    if order_qs.exists():
-        order = order_qs[0]
-
-        if order.items.filter(item=product).exists():
-            if order_item.qty > 1:
-                order_item.qty -= 1
-                order_item.save()
-            else:
-                return removeFromCart(request, slug)
-
-    return redirect('cart')
-
-
-@login_required
-def removeFromCart(request, slug):
-    product = get_object_or_404(Product, slug=slug)
-
-    order_qs = Order.objects.filter(user=request.user, ordered=False)
-
-    if order_qs.exists():
-        order = order_qs[0]
-
-        if order.items.filter(item=product).exists():
-            order_item = OrderItem.objects.get(
-                user=request.user,
-                ordered=False,
-                item=product
-            )
-
-            order.items.remove(order_item)
-            order_item.delete()
-
-    return redirect('cart')
-
-
-@login_required
-def cart(req):
-    data = {}
-    data['categories'] = Category.objects.all()
-    
-    order_qs = Order.objects.filter(user=req.user, ordered=False)
-
-    if order_qs.exists():
-        data['order'] = order_qs[0]
-    else:
-        data['order'] = None
-
-    return render(req, 'shop/cart.html', data)
-
-@login_required
-def deliveryAddress(req):
-    return render(req, 'shop/delivery_address.html')
-
-@login_required
-def payment(req):
-    return render(req, 'shop/payment.html')
-
-@login_required
-def summary(req):
-    return render(req, 'shop/summary.html')
-
 
 
 def filter(req, slug=None, author_slug=None, publisher_slug=None):
@@ -310,6 +216,13 @@ def filter(req, slug=None, author_slug=None, publisher_slug=None):
     else:
         data['books'] = Product.objects.all()
 
+    wishlist_products = []
+
+    if req.user.is_authenticated:
+        wishlist_products = Wishlist.objects.filter(user=req.user).values_list('product_id', flat=True)
+
+    data['wishlist_products'] = wishlist_products
+
     return render(req, 'shop/filter.html', data)
 
 
@@ -321,12 +234,28 @@ def newelyRelase(req):
     data['newbooks'] = Product.objects.filter(book_type__name__iexact='Newely Relase', status='published')
     data['categories'] = Category.objects.all()
 
+    wishlist_products = []
+
+    if req.user.is_authenticated:
+        wishlist_products = Wishlist.objects.filter(user=req.user).values_list('product_id', flat=True)
+
+    data['wishlist_products'] = wishlist_products
+
     return render(req, 'book_list/newely_relase.html', data)
+
+
 
 def oldBooks(req):
     data = {}
     data['oldbooks'] = Product.objects.filter(book_type__name__iexact='Old Books', status='published')
     data['categories'] = Category.objects.all()
+
+    wishlist_products = []
+
+    if req.user.is_authenticated:
+        wishlist_products = Wishlist.objects.filter(user=req.user).values_list('product_id', flat=True)
+
+    data['wishlist_products'] = wishlist_products
 
     return render(req, 'book_list/old_books.html', data)
 
@@ -337,14 +266,31 @@ def recentlyAdded(req):
     data['recent_books'] = Product.objects.filter(created_at__gte=last_24_hours).order_by('-created_at')
     data['categories'] = Category.objects.all()
 
+    wishlist_products = []
+
+    if req.user.is_authenticated:
+        wishlist_products = Wishlist.objects.filter(user=req.user).values_list('product_id', flat=True)
+
+    data['wishlist_products'] = wishlist_products
+
     return render(req, 'book_list/recently_added.html', data)
+
+
 
 def comboBooks(req):
     data = {}
     data['combobooks'] = Product.objects.filter(book_type__name__iexact='Value Combo Packs', status='published')
     data['categories'] = Category.objects.all()
 
+    wishlist_products = []
+
+    if req.user.is_authenticated:
+        wishlist_products = Wishlist.objects.filter(user=req.user).values_list('product_id', flat=True)
+
+    data['wishlist_products'] = wishlist_products
+
     return render(req, 'book_list/combo_books.html', data)
+
 
 
 def recentViewedBooks(req):
@@ -369,5 +315,12 @@ def recentViewedBooks(req):
 
     data['books'] = books
     data['title'] = "Your Recent Viewed Books"
+
+    wishlist_products = []
+
+    if req.user.is_authenticated:
+        wishlist_products = Wishlist.objects.filter(user=req.user).values_list('product_id', flat=True)
+
+    data['wishlist_products'] = wishlist_products
 
     return render(req, 'shop/filter.html', data)
