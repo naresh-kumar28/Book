@@ -35,6 +35,8 @@ urlpatterns = [
 
     # User Section
     path('account/address/', address, name='address'),
+    path('account/address/delete/<int:id>/', delete_address, name='delete-address'),
+
     path('account/profile/', profile, name='profile'),
     path('account/dashboard/', dashboard, name='dashboard'),
     path('account/my-order/', myOrder, name='my-order'),

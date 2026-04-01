@@ -74,3 +74,20 @@ class CouponInsertForm(ModelForm):
             "valid_from": forms.DateTimeInput(attrs={"type": "datetime-local"}),
             "valid_to": forms.DateTimeInput(attrs={"type": "datetime-local"}),
         }
+
+
+class AddressForm(ModelForm):
+    class Meta:
+        model = Address
+        exclude = ['user']
+        widgets = {
+            "name": forms.TextInput(attrs={"placeholder": "Full Name"}),
+            "contact": forms.TextInput(attrs={"placeholder": "Contact Number"}),
+            "alt_contact": forms.TextInput(attrs={"placeholder": "Alternate Contact Number (optional)"}),
+            "street": forms.TextInput(attrs={"placeholder": "Road Name / Area / Colony"}),
+            "landmark": forms.TextInput(attrs={"placeholder": "House No. / Building Name"}),
+            "near_by": forms.TextInput(attrs={"placeholder": "Nearby Location (optional)"}),
+            "city": forms.TextInput(attrs={"placeholder": "City"}),
+            "state": forms.TextInput(attrs={"placeholder": "State"}),
+            "pincode": forms.TextInput(attrs={"placeholder": "Pincode"}),
+        }

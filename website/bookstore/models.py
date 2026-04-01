@@ -154,9 +154,11 @@ class Coupon(models.Model):
 class Address(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
-    alt_contact = models.CharField(max_length=200)
-    street = models.CharField(max_length=200)
+    contact = models.CharField(max_length=20)
+    alt_contact = models.CharField(max_length=20, blank=True, null=True)
     landmark = models.CharField(max_length=200)
+    street = models.CharField(max_length=200)
+    near_by = models.CharField(max_length=200, blank=True, null=True)
     city = models.CharField(max_length=200)
     state = models.CharField(max_length=200)
     pincode = models.CharField(max_length=10)

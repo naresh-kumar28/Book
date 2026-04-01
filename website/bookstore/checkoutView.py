@@ -151,7 +151,71 @@ def removeFromCart(request, slug):
 
 @login_required
 def deliveryAddress(req):
-    return render(req, 'shop/delivery_address.html')
+    context = {}
+
+    addresses = Address.objects.filter(user=req.user).order_by('-id')
+    selected_id = req.GET.get('selected')
+
+    selected_address = None
+    if selected_id:
+        selected_address = addresses.filter(id=selected_id).first()
+
+    if not selected_address and addresses.exists():
+        selected_address = addresses.first()
+
+    order = Order.objects.filter(user=req.user, ordered=False).first()
+
+    context['addresses'] = addresses
+    context['selected_address'] = selected_address
+    context['order'] = order
+
+    return render(req, 'shop/delivery_address.html', context)
+
+
+@login_required
+def address(req):
+    context = {}
+
+    edit_id = req.GET.get('edit')
+    add_new = req.GET.get('add')
+    edit_address = None
+
+    if edit_id:
+        edit_address = get_object_or_404(Address, id=edit_id, user=req.user)
+
+    form = AddressForm(req.POST or None, instance=edit_address)
+
+    if req.method == 'POST':
+        if form.is_valid():
+            address = form.save(commit=False)
+            address.user = req.user
+            address.save()
+
+            if edit_address:
+                messages.success(req, 'Address updated successfully!')
+            else:
+                messages.success(req, 'Address added successfully!')
+
+            return redirect('address')
+        else:
+            messages.error(req, 'Please correct the errors below.')
+
+    context['form'] = form
+    context['addresses'] = Address.objects.filter(user=req.user).order_by('-id')
+    context['edit_address'] = edit_address
+    context['show_form'] = True if edit_address or add_new or req.method == 'POST' else False
+
+    return render(req, 'account/address.html', context)
+
+@login_required
+def delete_address(req, id):
+    address = get_object_or_404(Address, id=id, user=req.user)
+    address.delete()
+    messages.success(req, 'Address deleted successfully!')
+    return redirect('address')
+
+
+
 
 @login_required
 def payment(req):
@@ -161,13 +225,13 @@ def payment(req):
 def summary(req):
     return render(req, 'shop/summary.html')
 
-@login_required
-def address(req):
-    return render(req, 'account/address.html')
+
 
 @login_required
 def dashboard(req):
-    return render(req, 'account/dashboard.html')
+    context = {}
+    context['addresses'] = Address.objects.filter(user=req.user).order_by('-id')
+    return render(req, 'account/dashboard.html', context)
 
 
 @login_required

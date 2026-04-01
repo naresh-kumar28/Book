@@ -4,123 +4,230 @@
 
 {% block content %}
 
-    <div class="max-w-6xl mx-auto px-4 py-8 md:px-6 my-8">
+<div class="max-w-6xl mx-auto px-4 py-8 md:px-6 my-8">
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
-            <div class="lg:col-span-8">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-lg font-bold text-gray-800">Select Delivery Address</h2>
-                    <button
-                        class="flex items-center gap-1 text-orange-600 font-bold text-sm uppercase hover:text-orange-700 transition-colors">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                        </svg>
-                        Add New Address
-                    </button>
-                </div>
+        <div class="lg:col-span-8">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-lg font-bold text-gray-800">Select Delivery Address</h2>
 
-                <div class="space-y-4">
+                <a href="{% url 'address' %}?add=1"
+                    class="flex items-center gap-1 text-orange-600 font-bold text-sm uppercase hover:text-orange-700 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6v6m0 0v6m0-6h6m-6 0H6">
+                        </path>
+                    </svg>
+                    Add New Address
+                </a>
+            </div>
 
-                    <div class="bg-orange-50/80 border-2 border-orange-200 p-5 rounded-xl shadow-sm transition-all">
-                        <div class="flex justify-between items-start mb-4">
-                            <div class="flex gap-4">
-                                <div class="mt-1 shrink-0">
+            <div class="space-y-4">
+
+                {% if addresses %}
+                {% for address in addresses %}
+                {% if selected_address and selected_address.id == address.id %}
+                <div class="bg-orange-50/80 border-2 border-orange-200 p-5 rounded-xl shadow-sm transition-all">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="flex gap-4">
+                            <div class="mt-1 shrink-0">
+                                <span
+                                    class="block w-5 h-5 bg-orange-500 border-[3px] border-orange-200 rounded-full flex items-center justify-center shadow-sm">
+                                    <span class="block w-2 h-2 bg-white rounded-full"></span>
+                                </span>
+                            </div>
+
+                            <div>
+                                <h3 class="font-bold text-gray-900 text-base flex items-center gap-2">
+                                    {{ address.name }}
                                     <span
-                                        class="block w-5 h-5 bg-orange-500 border-[3px] border-orange-200 rounded-full flex items-center justify-center shadow-sm">
-                                        <span class="block w-2 h-2 bg-white rounded-full"></span>
+                                        class="text-[10px] font-bold bg-white border border-orange-100 text-orange-600 px-2 py-0.5 rounded uppercase tracking-wider">
+                                        {{ address.type }}
                                     </span>
-                                </div>
-                                <div>
-                                    <h3 class="font-bold text-gray-900 text-base flex items-center gap-2">
-                                        Naresh Kumar
-                                        <span
-                                            class="text-[10px] font-bold bg-white border border-orange-100 text-orange-600 px-2 py-0.5 rounded uppercase tracking-wider">Home</span>
-                                    </h3>
-                                    <p class="text-sm text-gray-600 mt-2 leading-relaxed font-medium">
-                                        00, Sarna Chowk, Maharajganj, Near- Lalu General Store, Purnea, Bihar, 854301
-                                    </p>
-                                    <p class="text-sm font-bold text-gray-800 mt-3">Phone: 9304197423</p>
-                                </div>
+                                </h3>
+
+                                <p class="text-sm text-gray-600 mt-2 leading-relaxed font-medium">
+                                    {{ address.street }}{% if address.landmark %}, {{ address.landmark }}{% endif %}{% if address.near_by %}, {{ address.near_by }}{% endif %}, {{ address.city }}, {{ address.state }}, {{ address.pincode }}
+                                </p>
+
+                                <p class="text-sm font-bold text-gray-800 mt-3">
+                                    Phone: {{ address.contact }}{% if address.alt_contact %} / {{ address.alt_contact }}{% endif %}
+                                </p>
                             </div>
-                            <button
-                                class="text-orange-600 font-bold text-xs uppercase hover:text-orange-700 tracking-wider shrink-0">Edit</button>
                         </div>
 
-                        <button
-                            class="w-full bg-orange-500 text-white py-3.5 rounded-lg font-bold text-sm uppercase tracking-wide shadow-md hover:bg-orange-600 active:scale-[0.98] transition-all">
-                            Deliver to this Address
-                        </button>
+                        <a href="{% url 'address' %}?edit={{ address.id }}"
+                            class="text-orange-600 font-bold text-xs uppercase hover:text-orange-700 tracking-wider shrink-0">
+                            Edit
+                        </a>
                     </div>
 
-                    <div
-                        class="bg-white border border-gray-100 p-5 rounded-xl shadow-sm hover:border-orange-200 transition-all cursor-pointer group">
-                        <div class="flex justify-between items-start">
-                            <div class="flex gap-4">
-                                <div class="mt-1 shrink-0">
+                    <a href="{% url 'payment' %}?address={{ address.id }}"
+                        class="w-full inline-flex items-center justify-center bg-orange-500 text-white py-3.5 rounded-lg font-bold text-sm uppercase tracking-wide shadow-md hover:bg-orange-600 active:scale-[0.98] transition-all">
+                        Deliver to this Address
+                    </a>
+                </div>
+                {% else %}
+                <a href="{% url 'delivery_address' %}?selected={{ address.id }}"
+                    class="block bg-white border border-gray-100 p-5 rounded-xl shadow-sm hover:border-orange-200 transition-all cursor-pointer group">
+                    <div class="flex justify-between items-start">
+                        <div class="flex gap-4">
+                            <div class="mt-1 shrink-0">
+                                <span
+                                    class="block w-5 h-5 bg-white border-2 border-gray-300 rounded-full group-hover:border-orange-400 transition-colors"></span>
+                            </div>
+
+                            <div>
+                                <h3 class="font-bold text-gray-900 text-base flex items-center gap-2">
+                                    {{ address.name }}
                                     <span
-                                        class="block w-5 h-5 bg-white border-2 border-gray-300 rounded-full group-hover:border-orange-400 transition-colors"></span>
-                                </div>
-                                <div>
-                                    <h3 class="font-bold text-gray-900 text-base flex items-center gap-2">
-                                        Office Address
-                                        <span
-                                            class="text-[10px] font-bold bg-gray-50 border border-gray-100 text-gray-500 px-2 py-0.5 rounded uppercase tracking-wider">Work</span>
-                                    </h3>
-                                    <p class="text-sm text-gray-600 mt-2 leading-relaxed font-medium">
-                                        Line Bazar, Near Hospital Chowk, Purnea, Bihar, 854301
-                                    </p>
-                                    <p class="text-sm font-bold text-gray-800 mt-3">Phone: 8877665544</p>
-                                </div>
+                                        class="text-[10px] font-bold bg-gray-50 border border-gray-100 text-gray-500 px-2 py-0.5 rounded uppercase tracking-wider">
+                                        {{ address.type }}
+                                    </span>
+                                </h3>
+
+                                <p class="text-sm text-gray-600 mt-2 leading-relaxed font-medium">
+                                    {{ address.street }}{% if address.landmark %}, {{ address.landmark }}{% endif %}{%if address.near_by %}, {{ address.near_by }}{% endif %}, {{ address.city }}, {{ address.state }}, {{ address.pincode }}
+                                </p>
+
+                                <p class="text-sm font-bold text-gray-800 mt-3">
+                                    Phone: {{ address.contact }}{% if address.alt_contact %} / {{ address.alt_contact}}{% endif %}
+                                </p>
                             </div>
-                            <button
-                                class="text-gray-400 font-bold text-xs uppercase hover:text-orange-600 tracking-wider shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">Edit</button>
                         </div>
-                    </div>
 
+                        <span
+                            class="text-gray-400 font-bold text-xs uppercase group-hover:text-orange-600 tracking-wider shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                            Edit
+                        </span>
+                    </div>
+                </a>
+                {% endif %}
+                {% endfor %}
+                {% else %}
+                <div class="bg-white border border-gray-100 p-8 rounded-xl shadow-sm text-center">
+                    <h3 class="text-lg font-bold text-gray-800">No address found</h3>
+                    <p class="text-sm text-gray-500 mt-2">Please add a new address to continue.</p>
+
+                    <a href="{% url 'address' %}?add=1"
+                        class="inline-flex items-center gap-2 mt-5 bg-orange-500 text-white px-5 py-3 rounded-lg font-bold text-sm uppercase tracking-wide shadow-md hover:bg-orange-600 transition-all">
+                        Add New Address
+                    </a>
                 </div>
+                {% endif %}
+
             </div>
-
-
-            <div class="lg:col-span-4 sticky top-6">
-                <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-md">
-                    <h2 class="text-lg font-bold text-gray-800 mb-5">Price Details</h2>
-
-                    <div class="space-y-3 mb-5">
-                        <div class="flex justify-between text-sm text-gray-500 font-medium">
-                            <span>Product Price (1 item)</span>
-                            <span class="text-gray-800 font-semibold">₹218.00</span>
-                        </div>
-                        <div class="flex justify-between text-sm text-gray-500 font-medium">
-                            <span>Shipping</span>
-                            <span class="text-gray-800 font-semibold">₹49.00</span>
-                        </div>
-                        <div class="flex justify-between text-sm text-gray-500 font-medium border-b border-gray-50 pb-3">
-                            <span>Tax (5% GST)</span>
-                            <span class="text-gray-800 font-semibold">₹10.90</span>
-                        </div>
-                        <div
-                            class="flex justify-between text-xs font-bold text-green-600 bg-green-50 p-2.5 rounded-lg border border-dashed border-green-200">
-                            <span>Total Discount</span>
-                            <span>-₹20.00</span>
-                        </div>
-                    </div>
-
-                    <div class="flex justify-between items-center pt-2 border-t border-dashed border-gray-100">
-                        <span class="text-sm font-bold text-gray-800">Order Total</span>
-                        <span class="text-xl font-black text-gray-900">₹257.90</span>
-                    </div>
-
-                    <p class="text-xs text-gray-400 mt-4 text-center font-medium">
-                        Proceed to payment on the next step.
-                    </p>
-                </div>
-            </div>
-
         </div>
-    </div>
 
-    {% include 'includes/footer.html' %}
+
+        {% if order and order.items.all %}
+        <div class="lg:col-span-4">
+            <div class="lg:sticky lg:top-6">
+                <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-md">
+                    <h2 class="text-lg font-bold text-gray-800 border-b border-gray-100 pb-4 mb-4">Price Details</h2>
+        
+                    <div class="space-y-4 mb-5">
+                        <div class="flex justify-between text-sm text-gray-600 font-medium">
+                            <span>Price ({{ order.items.count }} item{% if order.items.count > 1 %}s{% endif %})</span>
+                            <span class="text-gray-800 font-semibold">
+                                ₹{{ order.get_mrp_total|floatformat:2 }}
+                            </span>
+                        </div>
+        
+                        {% if order.get_product_discount > 0 %}
+                        <div class="flex justify-between text-sm text-green-600 font-medium">
+                            <span>Discount</span>
+                            <span class="font-bold">
+                                - ₹{{ order.get_product_discount|floatformat:2 }}
+                            </span>
+                        </div>
+                        {% endif %}
+        
+                        {% if order.coupon %}
+                        <div class="flex justify-between text-sm text-green-600 font-medium">
+                            <span>Coupon ({{ order.coupon.code }})</span>
+                            <span class="font-bold">
+                                - ₹{{ order.get_discount|floatformat:2 }}
+                            </span>
+                        </div>
+                        {% endif %}
+        
+                        <div class="flex justify-between text-sm text-gray-600 font-medium">
+                            <span>Delivery Charges</span>
+                            <span class="text-gray-800 font-semibold">
+                                {% if order.get_shipping == 0 %}
+                                <span class="text-green-600 font-bold">Free</span>
+                                {% else %}
+                                ₹{{ order.get_shipping|floatformat:2 }}
+                                {% endif %}
+                            </span>
+                        </div>
+        
+                        <div class="flex justify-between text-sm text-gray-600 font-medium pb-2">
+                            <span>Tax (18% GST)</span>
+                            <span class="text-gray-800 font-semibold">
+                                ₹{{ order.get_tax|floatformat:2 }}
+                            </span>
+                        </div>
+                    </div>
+        
+                    <div class="flex justify-between items-center py-4 border-t border-dashed border-gray-200 mb-4">
+                        <span class="text-base font-bold text-gray-800">Total Amount</span>
+                        <span class="text-2xl font-bold text-gray-900">
+                            ₹{{ order.get_total|floatformat:2 }}
+                        </span>
+                    </div>
+        
+                    {% if order.get_product_discount > 0 or order.coupon %}
+                    <div
+                        class="mb-6 text-sm font-bold text-green-600 bg-green-50 p-3 rounded-lg border border-dashed border-green-200 text-center">
+                        You will save
+                        ₹{{ order.get_product_discount|add:order.get_discount|floatformat:2 }}
+                        on this order
+                    </div>
+                    {% endif %}
+        
+                    {% if selected_address %}
+                    <a href="{% url 'payment' %}?address={{ selected_address.id }}"
+                        class="w-full inline-flex items-center justify-center bg-orange-500 text-white py-3.5 rounded-xl font-bold text-sm uppercase tracking-wide shadow-md hover:bg-orange-600 active:scale-[0.98] transition-all">
+                        Proceed to Pay
+                    </a>
+                    {% else %}
+                    <a href="{% url 'address' %}?add=1"
+                        class="w-full inline-flex items-center justify-center bg-orange-500 text-white py-3.5 rounded-xl font-bold text-sm uppercase tracking-wide shadow-md hover:bg-orange-600 active:scale-[0.98] transition-all">
+                        Add Address to Continue
+                    </a>
+                    {% endif %}
+        
+                    <div class="mt-5 flex items-center justify-center gap-3 opacity-30 grayscale scale-90">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a2 2 0 00-2 2v8a3 3 0 003 3z">
+                            </path>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
+                            </path>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z">
+                            </path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+
+{% include 'includes/footer.html' %}
 
 {% endblock %}

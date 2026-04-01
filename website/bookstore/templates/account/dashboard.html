@@ -68,10 +68,11 @@
                         class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow group">
                         <div class="flex justify-between items-start">
                             <div>
-                                <p class="text-sm font-semibold text-gray-600">Wishlist</p>
-                                <h3 class="text-2xl font-bold text-gray-900 mt-1">{{ wishlist_count|default:0 }}</h3>
-                                <p class="text-[10px] text-gray-400 mt-1 uppercase tracking-wider font-medium">Saved
-                                    items</p>
+                                <a href="{% url 'wishlist' %}">
+                                    <p class="text-sm font-semibold text-gray-600">Wishlist</p>
+                                    <h3 class="text-2xl font-bold text-gray-900 mt-1">{{ wishlist_count|default:0 }}</h3>
+                                    <p class="text-[10px] text-gray-400 mt-1 uppercase tracking-wider font-medium">Saved items</p>
+                                </a>
                             </div>
                             <div
                                 class="p-2.5 bg-red-50 text-red-500 rounded-xl group-hover:scale-110 transition-transform">
@@ -87,10 +88,11 @@
                         class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow group">
                         <div class="flex justify-between items-start">
                             <div>
-                                <p class="text-sm font-semibold text-gray-600">Addresses</p>
-                                <h3 class="text-2xl font-bold text-gray-900 mt-1">1</h3>
-                                <p class="text-[10px] text-gray-400 mt-1 uppercase tracking-wider font-medium">Saved
-                                    locations</p>
+                                <a href="{% url 'address' %}">
+                                    <p class="text-sm font-semibold text-gray-600">Addresses</p>
+                                    <h3 class="text-2xl font-bold text-gray-900 mt-1">{{ addresses|length }}</h3>
+                                    <p class="text-[10px] text-gray-400 mt-1 uppercase tracking-wider font-medium">Saved locations</p>
+                                </a>
                             </div>
                             <div
                                 class="p-2.5 bg-purple-50 text-purple-500 rounded-xl group-hover:scale-110 transition-transform">
