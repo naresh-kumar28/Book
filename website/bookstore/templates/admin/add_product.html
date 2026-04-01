@@ -19,6 +19,13 @@
                     {{ form|crispy }}
 
                     <div class="pt-4 col-span-2 mt-6 border-t border-slate-700/50">
+
+                        <!-- Multiple gallery images -->
+                        <div class="mb-4">
+                            <label class="block font-bold mb-2">Upload Gallery Images</label>
+                            <input type="file" name="gallery_images" multiple class="border p-2 w-full">
+                        </div>
+
                         <button type="submit"
                             class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-lg shadow-indigo-600/20">
                             Upload Product

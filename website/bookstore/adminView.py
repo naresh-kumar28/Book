@@ -59,6 +59,15 @@ def addProduct(req):
         data = form.save(commit=False)
         data.slug = slugify(data.title)
         data.save()
+
+        # multiple gallery images save karne ka logic
+        gallery_images = req.FILES.getlist('gallery_images')
+        for img in gallery_images:
+            ProductImage.objects.create(
+                product=data,
+                image=img
+            )
+
         return redirect(manageProduct)
     return render(req, 'admin/add_product.html', {"form" : form})
 
@@ -70,16 +79,36 @@ def deleteProduct(req, id):
 
 @admin_required
 def editProduct(req, id):
-    product = Product.objects.get(id=id)
+    product = get_object_or_404(Product, id=id)
     form = ProductInsertForm(req.POST or None, req.FILES or None, instance=product)
-    
-    if req.method=='POST':
+
+    if req.method == 'POST':
         if form.is_valid():
             data = form.save(commit=False)
             data.slug = slugify(data.title)
             data.save()
+
+            # old gallery images delete
+            delete_image_ids = req.POST.getlist('delete_images')
+            if delete_image_ids:
+                images_to_delete = ProductImage.objects.filter(id__in=delete_image_ids, product=data)
+                for image_obj in images_to_delete:
+                    if image_obj.image:
+                        image_obj.image.delete(save=False)
+                    image_obj.delete()
+
+            # new gallery images add
+            gallery_images = req.FILES.getlist('gallery_images')
+            for img in gallery_images:
+                ProductImage.objects.create(product=data, image=img)
+
             return redirect(manageProduct)
-    return render(req, 'admin/edit_product.html', {"form" : form})
+
+    return render(req, 'admin/edit_product.html', {
+        "form": form,
+        "product": product,
+        "gallery_images": product.gallery_images.all(),
+    })
 
 
 @admin_required

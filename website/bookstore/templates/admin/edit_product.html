@@ -15,9 +15,44 @@
         <div class="dark-form-container">
             <form action="" method="post" enctype="multipart/form-data" class="overflow-hidden grid grid-cols-2 gap-5">
                 {% csrf_token %}
-
+        
                 {{ form|crispy }}
-
+        
+                <!-- Existing uploaded gallery images -->
+                {% if gallery_images %}
+                <div class="col-span-2">
+                    <label class="block text-sm font-bold text-slate-200 mb-3">Uploaded Gallery Images</label>
+        
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                        {% for img in gallery_images %}
+                        <div class="rounded-2xl border border-slate-700 bg-slate-900/60 p-3">
+                            <div class="h-32 rounded-xl overflow-hidden border border-slate-700 bg-slate-800">
+                                <img src="{{ img.image.url }}" alt="Gallery Image" class="w-full h-full object-cover">
+                            </div>
+        
+                            <label class="flex items-center gap-2 mt-3 text-sm font-medium text-red-400 cursor-pointer">
+                                <input type="checkbox" name="delete_images" value="{{ img.id }}"
+                                    class="rounded border-slate-600 bg-slate-800 text-red-500 focus:ring-red-500">
+                                Delete
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+        
+                <!-- Add more gallery images -->
+                <div class="col-span-2">
+                    <label for="gallery_images" class="block text-sm font-bold text-slate-200 mb-2">
+                        Add More Gallery Images
+                    </label>
+                    <input type="file" name="gallery_images" id="gallery_images" multiple
+                        class="block w-full rounded-xl border border-slate-700 bg-slate-900/60 text-slate-300 file:mr-4 file:py-3 file:px-4 file:rounded-l-xl file:border-0 file:bg-indigo-600 file:text-white file:font-bold hover:file:bg-indigo-700">
+                    <p class="text-xs text-slate-400 mt-2">
+                        You can upload multiple images at once.
+                    </p>
+                </div>
+        
                 <div class="pt-4 col-span-2 mt-6 border-t border-slate-700/50">
                     <div class="flex items-center gap-4">
                         <button type="submit"

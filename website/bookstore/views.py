@@ -115,6 +115,7 @@ def productDetails(req, id):
 
     data['product'] = product
     data['categories'] = Category.objects.all()
+    data['product_images'] = product.gallery_images.all()
 
     data['same_author_books'] = Product.objects.filter(
         author=product.author,

@@ -32,43 +32,55 @@
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
                 <div class="lg:col-span-5 flex flex-col md:flex-row gap-6">
-                    <!-- side image  -->
-                    <div class="flex md:flex-col gap-3 order-2 md:order-1 overflow-x-auto no-scrollbar py-2">
-                        {% for i in "1234" %}
-                        <div
-                            class="w-20 h-28 flex-shrink-0 rounded-xl overflow-hidden cursor-pointer border-2 border-white shadow-sm hover:shadow-md hover:border-orange-500 transition-all">
-                            <img src="https://nageenprakashan.in/cdn/shop/files/Nootan_UP_Board_Hindi_Text_Book_For_Class_12th_-_Academic_Year_2025-26_By_Survesh_Kant_Verma_-_Nageen_Prakashan_8.webp?v=1744361938"
+                
+                    <div
+                        class="flex md:flex-col gap-3 order-2 md:order-1 overflow-x-auto md:overflow-y-auto md:max-h-[500px] no-scrollbar py-2 pr-1">
+                
+                        <div data-image="{{ product.image.url }}" onclick="changeMainImage(this)"
+                            class="product-thumb active-thumb w-20 h-28 flex-shrink-0 rounded-xl overflow-hidden cursor-pointer border-2 border-orange-500 ring-2 ring-orange-100 shadow-sm hover:shadow-md hover:border-orange-500 transition-all">
+                            <img src="{{ product.image.url }}" alt="{{ product.title }}" class="w-full h-full object-cover">
+                        </div>
+                
+                        {% for img in product_images %}
+                        <div data-image="{{ img.image.url }}" onclick="changeMainImage(this)"
+                            class="product-thumb w-20 h-28 flex-shrink-0 rounded-xl overflow-hidden cursor-pointer border-2 border-white shadow-sm hover:shadow-md hover:border-orange-500 transition-all">
+                            <img src="{{ img.image.url }}" alt="{{ img.alt_text|default:product.title }}"
                                 class="w-full h-full object-cover">
                         </div>
                         {% endfor %}
                     </div>
-
-                    <!-- main image  -->
+                
                     <div
-                        class="flex-1 order-1 md:order-2 relative group rounded-3xl bg-white shadow-2xl shadow-gray-200/50 overflow-hidden border border-gray-100">
-                        <img src="{{ product.image.url }}"
-                            class="w-full h-full object-cover">
+                        class="flex-1 order-1 md:order-2 relative group rounded-3xl bg-white shadow-2xl shadow-gray-200/50 overflow-hidden border border-gray-100 h-[400px] md:h-[500px]">
+                
+                        {% if product.image %}
+                        <img id="mainProductImage" src="{{ product.image.url }}" alt="{{ product.title }}"
+                            class="w-full h-full object-contain p-4">
+                        {% else %}
+                        <div id="mainProductImage" class="w-full h-full flex items-center justify-center text-gray-400 bg-gray-50">
+                            No Image
+                        </div>
+                        {% endif %}
+                
                         <div class="absolute top-6 left-6 flex flex-col gap-2">
-                            
                             <span
                                 class="bg-orange-500 text-white text-[10px] font-bold px-3 py-1 rounded-full tracking-wider uppercase">
                                 BESTDEAL
                             </span>
-                            
                         </div>
-
+                
                         <a href="{% if product.id in wishlist_products %}{% url 'remove-from-wishlist' product.slug %}{% else %}{% url 'add-to-wishlist' product.slug %}{% endif %}"
-                            class="absolute top-6 right-6 bg-white p-1.5 rounded-full shadow-md transition-colors z-20
-                                {% if product.id in wishlist_products %} text-red-500 {% else %} text-gray-400 hover:text-red-500 {% endif %}">
-                        
+                            class="absolute top-6 right-6 bg-white p-1.5 rounded-full shadow-md transition-colors z-20 {% if product.id in wishlist_products %} text-red-500 {% else %} text-gray-400 hover:text-red-500 {% endif %}">
+                
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24"
-                                fill="{% if product.id in wishlist_products %}currentColor{% else %}none{% endif %}" stroke="currentColor">
-                        
+                                fill="{% if product.id in wishlist_products %}currentColor{% else %}none{% endif %}"
+                                stroke="currentColor">
+                
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                             </svg>
                         </a>
-                        
+                
                     </div>
                 </div>
 
@@ -429,5 +441,26 @@
         </main>
 
     </div>
+
+    <script>
+        function changeMainImage(element) {
+            const newImage = element.getAttribute("data-image");
+            const mainImage = document.getElementById("mainProductImage");
+
+            if (mainImage && mainImage.tagName.toLowerCase() === "img") {
+                mainImage.src = newImage;
+            }
+
+            // remove active state from all thumbnails
+            document.querySelectorAll(".product-thumb").forEach(thumb => {
+                thumb.classList.remove("border-orange-500", "ring-2", "ring-orange-100", "active-thumb");
+                thumb.classList.add("border-white");
+            });
+
+            // add active state to clicked thumbnail
+            element.classList.remove("border-white");
+            element.classList.add("border-orange-500", "ring-2", "ring-orange-100", "active-thumb");
+        }
+    </script>
 
 {% endblock %}
