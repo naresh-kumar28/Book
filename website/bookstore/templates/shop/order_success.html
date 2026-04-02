@@ -1,0 +1,121 @@
+{% extends 'shop/shopbase.html' %}
+
+{% block title %}Book Warm | Order Success{% endblock %}
+
+{% block content %}
+<div
+    class="min-h-[80vh] bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+
+    <div
+        class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-64 bg-orange-100/50 rounded-full blur-[100px] pointer-events-none">
+    </div>
+
+    <div class="max-w-md w-full relative">
+
+        <div
+            class="bg-white rounded-[2rem] shadow-2xl shadow-gray-200/50 border border-gray-100 p-8 sm:p-10 text-center relative overflow-hidden z-10">
+
+            <div
+                class="absolute -top-24 -right-24 w-48 h-48 bg-orange-50 rounded-full blur-3xl opacity-60 pointer-events-none">
+            </div>
+            <div
+                class="absolute -bottom-24 -left-24 w-48 h-48 bg-green-50 rounded-full blur-3xl opacity-60 pointer-events-none">
+            </div>
+
+            <div
+                class="relative mx-auto flex items-center justify-center w-20 h-20 bg-gradient-to-tr from-green-400 to-green-500 rounded-full shadow-lg shadow-green-200 mb-8">
+                <div class="absolute inset-1 border-2 border-white/30 rounded-full"></div>
+                <svg class="w-10 h-10 text-white relative z-10" fill="none" stroke="currentColor" stroke-width="2.5"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+
+            <h1 class="relative text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight mb-3">
+                Order Confirmed!
+            </h1>
+            <p class="relative text-gray-500 text-sm sm:text-base leading-relaxed font-medium mb-8 px-2">
+                Yay! Your order has been successfully placed. We're getting your books ready for a journey to your
+                doorstep.
+            </p>
+
+            <div class="relative bg-gray-50/80 rounded-2xl p-5 mb-8 border border-gray-100">
+            
+                <!-- Order ID -->
+                <div class="flex justify-between items-center mb-3">
+                    <span class="text-sm font-semibold text-gray-500 tracking-wide">Order ID</span>
+                    <span class="text-sm font-extrabold text-gray-900">
+                        #BK-{{ order.id|stringformat:"06d" }}
+                    </span>
+                </div>
+            
+                <!-- Date -->
+                <div class="flex justify-between items-center mb-3">
+                    <span class="text-sm font-semibold text-gray-500 tracking-wide">Date</span>
+                    <span class="text-sm font-bold text-gray-900">
+                        {{ order.ordered_date|date:"d M Y, h:i A" }}
+                    </span>
+                </div>
+            
+                <!-- Payment Method -->
+                <div class="flex justify-between items-center mb-3">
+                    <span class="text-sm font-semibold text-gray-500 tracking-wide">Payment</span>
+                    <span class="text-sm font-bold text-gray-900 uppercase">
+                        {% if order.payment_method == 'cod' %}
+                        Cash on Delivery
+                        {% elif order.payment_method == 'card' %}
+                        Card
+                        {% else %}
+                        UPI
+                        {% endif %}
+                    </span>
+                </div>
+            
+                <!-- Amount -->
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-sm font-semibold text-gray-500 tracking-wide">Amount</span>
+                    <span class="text-sm font-extrabold text-gray-900">
+                        ₹{{ order.get_total|floatformat:2 }}
+                    </span>
+                </div>
+            
+                <!-- dashed line -->
+                <div class="w-full border-t-2 border-dashed border-gray-200 my-4 relative">
+                    <div class="absolute -left-7 -top-2.5 w-5 h-5 bg-white rounded-full border border-gray-100"></div>
+                    <div class="absolute -right-7 -top-2.5 w-5 h-5 bg-white rounded-full border border-gray-100"></div>
+                </div>
+            
+                <!-- Delivery -->
+                <div class="flex justify-between items-center mt-4">
+                    <span class="text-sm font-semibold text-gray-500 tracking-wide">Est. Delivery</span>
+                    <span class="text-sm font-extrabold text-orange-500">
+                        {{ estimated_delivery_start|date:"d M" }} - {{ estimated_delivery_end|date:"d M" }}
+                    </span>
+                </div>
+            
+            </div>
+
+            <div class="relative flex flex-col gap-3">
+                <a href="{% url 'home' %}"
+                    class="w-full inline-flex items-center justify-center px-6 py-4 border border-transparent text-sm font-extrabold rounded-xl text-white bg-orange-500 hover:bg-orange-600 shadow-xl shadow-orange-500/25 transition-all active:scale-[0.98] tracking-wide">
+                    Continue Shopping
+                </a>
+
+                <a href="{% url 'order_details' order.id %}"
+                    class="w-full inline-flex items-center justify-center px-6 py-4 border-2 border-gray-100 text-sm font-bold rounded-xl text-gray-600 bg-white hover:bg-gray-50 hover:border-gray-200 transition-all active:scale-[0.98]">
+                    Track Order
+                </a>
+            </div>
+
+        </div>
+
+        <div class="text-center mt-6">
+            <p class="text-sm font-medium text-gray-500">
+                Need help with your order?
+                <a href="{% url 'contact-us' %}" class="text-orange-500 font-bold hover:underline">Contact Support</a>
+            </p>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

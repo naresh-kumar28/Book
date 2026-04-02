@@ -185,11 +185,11 @@ class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     items = models.ManyToManyField(OrderItem)
     ordered = models.BooleanField(default=False)
+    payment_method = models.CharField(max_length=20, blank=True, null=True)
+    address = models.ForeignKey(Address, on_delete=models.SET_NULL, null=True, blank=True)
     ordered_date = models.DateTimeField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-
     coupon = models.ForeignKey(Coupon, on_delete=models.SET_NULL, null=True, blank=True)
-    address = models.ForeignKey(Address, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return f"{self.user.username} - Order #{self.id}"

@@ -216,14 +216,88 @@ def delete_address(req, id):
 
 
 
-
 @login_required
 def payment(req):
-    return render(req, 'shop/payment.html')
+    context = {}
+
+    order = Order.objects.filter(user=req.user, ordered=False).first()
+    addresses = Address.objects.filter(user=req.user).order_by('-id')
+
+    address_id = req.GET.get('address')
+    payment_method = req.GET.get('method', 'upi')
+
+    selected_address = None
+
+    if address_id:
+        selected_address = addresses.filter(id=address_id).first()
+
+    if not selected_address and addresses.exists():
+        selected_address = addresses.first()
+
+    context['order'] = order
+    context['addresses'] = addresses
+    context['selected_address'] = selected_address
+    context['payment_method'] = payment_method
+
+    return render(req, 'shop/payment.html', context)
+
+
+
+@login_required
+def placeOrder(req):
+    if req.method == "POST":
+        order = Order.objects.filter(user=req.user, ordered=False).first()
+
+        if not order or not order.items.exists():
+            messages.error(req, "Your cart is empty.")
+            return redirect('cart')
+
+        address_id = req.POST.get('address_id')
+        payment_method = req.POST.get('payment_method')
+
+        address = Address.objects.filter(id=address_id, user=req.user).first()
+
+        if not address:
+            messages.error(req, "Please select a valid address.")
+            return redirect('delivery_address')
+
+        order.address = address
+        order.payment_method = payment_method
+        order.ordered = True
+        order.ordered_date = timezone.now()
+        order.save()
+
+        order.items.update(ordered=True)
+
+        messages.success(req, "Your order has been placed successfully!")
+        return redirect('order_success', order_id=order.id)
+
+    return redirect('home')
+
 
 @login_required
 def summary(req):
-    return render(req, 'shop/summary.html')
+    context = {}
+
+    order = Order.objects.filter(user=req.user, ordered=False).first()
+    addresses = Address.objects.filter(user=req.user).order_by('-id')
+
+    address_id = req.GET.get('address')
+    payment_method = req.GET.get('method', 'cod')
+
+    selected_address = None
+
+    if address_id:
+        selected_address = addresses.filter(id=address_id).first()
+
+    if not selected_address and addresses.exists():
+        selected_address = addresses.first()
+
+    context['order'] = order
+    context['selected_address'] = selected_address
+    context['payment_method'] = payment_method
+
+    return render(req, 'shop/summary.html', context)
 
 
 
@@ -237,3 +311,23 @@ def dashboard(req):
 @login_required
 def myOrder(req):
     return render(req, 'account/my-order.html')
+
+@login_required
+def orderDetails(req):
+    return render(req, 'account/my-order.html')
+
+
+@login_required
+def orderSuccess(req, order_id):
+    order = get_object_or_404(Order, id=order_id, user=req.user, ordered=True)
+
+    estimated_delivery_start = order.ordered_date + timedelta(days=3)
+    estimated_delivery_end = order.ordered_date + timedelta(days=5)
+
+    context = {
+        'order': order,
+        'estimated_delivery_start': estimated_delivery_start,
+        'estimated_delivery_end': estimated_delivery_end,
+    }
+
+    return render(req, 'shop/order_success.html', context)

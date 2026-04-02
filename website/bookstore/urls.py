@@ -25,6 +25,9 @@ urlpatterns = [
     path('shop/minus-from-cart/<slug:slug>/', minusToCart, name='minus-from-cart'),
     path('shop/remove-from-cart/<slug:slug>/', removeFromCart, name='remove-from-cart'),
     path('shop/payment/', payment, name='payment'),
+    path('place-order/', placeOrder, name='place_order'),
+    path('shop/order-success/<int:order_id>/', orderSuccess, name='order_success'),
+
     path('shop/summary/', summary, name='summary'),
     path('shop/delivery_address/', deliveryAddress, name='delivery_address'),
     path('shop/filter/', filter, name='filter'),
@@ -40,6 +43,7 @@ urlpatterns = [
     path('account/profile/', profile, name='profile'),
     path('account/dashboard/', dashboard, name='dashboard'),
     path('account/my-order/', myOrder, name='my-order'),
+    path('account/order-details/<int:order_id>/', orderDetails, name='order_details'),
 
 
     path('account/wishlist/', wishlist, name='wishlist'),

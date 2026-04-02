@@ -143,7 +143,7 @@
                         </div>
         
                         {% if order.get_product_discount > 0 %}
-                        <div class="flex justify-between text-sm text-green-600 font-medium">
+                        <div class="flex justify-between text-sm text-green-600 font-bold">
                             <span>Discount</span>
                             <span class="font-bold">
                                 - ₹{{ order.get_product_discount|floatformat:2 }}
@@ -152,7 +152,7 @@
                         {% endif %}
         
                         {% if order.coupon %}
-                        <div class="flex justify-between text-sm text-green-600 font-medium">
+                        <div class="flex justify-between text-sm text-green-600 font-bold">
                             <span>Coupon ({{ order.coupon.code }})</span>
                             <span class="font-bold">
                                 - ₹{{ order.get_discount|floatformat:2 }}
@@ -187,46 +187,16 @@
                     </div>
         
                     {% if order.get_product_discount > 0 or order.coupon %}
-                    <div
-                        class="mb-6 text-sm font-bold text-green-600 bg-green-50 p-3 rounded-lg border border-dashed border-green-200 text-center">
-                        You will save
-                        ₹{{ order.get_product_discount|add:order.get_discount|floatformat:2 }}
-                        on this order
+                    <div class="mb-6 flex items-center justify-center gap-2 bg-green-50 border border-green-100 py-2.5 rounded-lg">
+                        <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                        <span class="text-xs font-bold text-green-700">Yay! Your total discount is ₹{{order.get_product_discount|add:order.get_discount|floatformat:2 }}</span>
                     </div>
                     {% endif %}
         
-                    {% if selected_address %}
-                    <a href="{% url 'payment' %}?address={{ selected_address.id }}"
-                        class="w-full inline-flex items-center justify-center bg-orange-500 text-white py-3.5 rounded-xl font-bold text-sm uppercase tracking-wide shadow-md hover:bg-orange-600 active:scale-[0.98] transition-all">
-                        Proceed to Pay
-                    </a>
-                    {% else %}
-                    <a href="{% url 'address' %}?add=1"
-                        class="w-full inline-flex items-center justify-center bg-orange-500 text-white py-3.5 rounded-xl font-bold text-sm uppercase tracking-wide shadow-md hover:bg-orange-600 active:scale-[0.98] transition-all">
-                        Add Address to Continue
-                    </a>
-                    {% endif %}
-        
-                    <div class="mt-5 flex items-center justify-center gap-3 opacity-30 grayscale scale-90">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a2 2 0 00-2 2v8a3 3 0 003 3z">
-                            </path>
-                        </svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
-                            </path>
-                        </svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z">
-                            </path>
-                        </svg>
-                    </div>
                 </div>
             </div>
         </div>

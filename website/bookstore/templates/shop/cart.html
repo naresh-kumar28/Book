@@ -243,7 +243,7 @@
                     </div>
         
                     {% if order and order.get_product_discount > 0 %}
-                    <div class="flex justify-between text-sm text-green-600 font-medium">
+                    <div class="flex justify-between text-sm text-green-600 font-bold">
                         <span>Discount</span>
                         <span class="font-bold">
                             - ₹{{ order.get_product_discount|floatformat:2 }}
@@ -252,7 +252,7 @@
                     {% endif %}
         
                     {% if order and order.coupon %}
-                    <div class="flex justify-between text-sm text-green-600 font-medium">
+                    <div class="flex justify-between text-sm text-green-600 font-bold">
                         <span>Coupon ({{ order.coupon.code }})</span>
                         <span class="font-bold">
                             - ₹{{ order.get_discount|floatformat:2 }}
@@ -290,10 +290,14 @@
                     </span>
                 </div>
         
-                {% if order and order.get_product_discount > 0 or order.coupon %}
-                <div
-                    class="mb-6 text-sm font-bold text-green-600 bg-green-50 p-3 rounded-lg border border-dashed border-green-200 text-center">
-                    You will save ₹{{ order.get_product_discount|add:order.get_discount|floatformat:2 }} on this order
+                {% if order.get_product_discount > 0 or order.coupon %}
+                <div class="mb-6 flex items-center justify-center gap-2 bg-green-50 border border-green-100 py-2.5 rounded-lg">
+                    <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                            clip-rule="evenodd"></path>
+                    </svg>
+                    <span class="text-xs font-bold text-green-700">Yay! Your total discount is ₹{{order.get_product_discount|add:order.get_discount|floatformat:2 }}</span>
                 </div>
                 {% endif %}
         
