@@ -265,11 +265,12 @@ def placeOrder(req):
         order.payment_method = payment_method
         order.ordered = True
         order.ordered_date = timezone.now()
+        # TOTAL PRICE SAVE KARO
+        order.total_price = order.get_total()
         order.save()
 
         order.items.update(ordered=True)
 
-        messages.success(req, "Your order has been placed successfully!")
         return redirect('order_success', order_id=order.id)
 
     return redirect('home')
@@ -311,6 +312,7 @@ def dashboard(req):
 @login_required
 def myOrder(req):
     return render(req, 'account/my-order.html')
+
 
 @login_required
 def orderDetails(req):

@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from decimal import Decimal
+from django.utils import timezone
+from django.core.exceptions import ValidationError
 
 # Create your models here.
 
@@ -148,14 +150,40 @@ class OrderItem(models.Model):
 
 
 class Coupon(models.Model):
-    code = models.CharField(max_length=50, unique=True)
-    discount_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    code = models.CharField(max_length=20, unique=True)
+    discount_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, help_text="Leave blank if using percentage discount")
+    min_order_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, help_text="Minimum order amount required")
+    discount_percent = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, help_text="Leave blank if using flat discount")
+    max_discount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, help_text="Maximum discount limit")
+
     valid_from = models.DateTimeField(null=True, blank=True)
     valid_to = models.DateTimeField(null=True, blank=True)
+
     active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.code
+
+    def clean(self):
+        # Sirf ek type ka discount allowed ho
+        if self.discount_amount and self.discount_percent:
+            raise ValidationError("Coupon me ya to flat discount rakhiye ya percentage discount, dono nahi.")
+
+        if not self.discount_amount and not self.discount_percent:
+            raise ValidationError("Coupon me flat ya percentage me se koi ek discount dena zaruri hai.")
+
+        if self.discount_percent and self.discount_percent > 100:
+            raise ValidationError("Discount percent 100 se zyada nahi ho sakta.")
+
+        if self.min_order_amount < 0:
+            raise ValidationError("Minimum order amount negative nahi ho sakta.")
+
+        if self.max_discount is not None and self.max_discount < 0:
+            raise ValidationError("Max discount negative nahi ho sakta.")
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
 
 
 class Address(models.Model):
@@ -191,6 +219,8 @@ class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     coupon = models.ForeignKey(Coupon, on_delete=models.SET_NULL, null=True, blank=True)
 
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+
     def __str__(self):
         return f"{self.user.username} - Order #{self.id}"
     
@@ -208,15 +238,42 @@ class Order(models.Model):
             return Decimal('0.00')
         return Decimal('49.00')
 
+
     def get_discount(self):
-        if self.coupon and self.coupon.active:
-            # Agar discount subtotal se zyada hai, toh maximum discount subtotal ke barabar hi milega
-            # (Taaki order total negative na ho jaye)
-            subtotal = self.get_subtotal()
-            if self.coupon.discount_amount > subtotal:
-                return subtotal
-            return self.coupon.discount_amount
-        return Decimal('0.00')
+        if not self.coupon or not self.coupon.active:
+            return Decimal('0.00')
+
+        coupon = self.coupon
+        subtotal = self.get_subtotal()
+        now = timezone.now()
+
+        # Date validity check
+        if coupon.valid_from and now < coupon.valid_from:
+            return Decimal('0.00')
+
+        if coupon.valid_to and now > coupon.valid_to:
+            return Decimal('0.00')
+
+        # Minimum order value check
+        if subtotal < coupon.min_order_amount:
+            return Decimal('0.00')
+
+        discount = Decimal('0.00')
+
+        # Percentage coupon
+        if coupon.discount_percent:
+            discount = (subtotal * coupon.discount_percent) / Decimal('100')
+
+            # Max cap apply
+            if coupon.max_discount:
+                discount = min(discount, coupon.max_discount)
+
+        # Flat coupon
+        elif coupon.discount_amount:
+            discount = coupon.discount_amount
+
+        # Final safety
+        return min(discount, subtotal)
 
     def get_tax(self):
         # Tax calculation logic (Subtotal - Discount) par 18% GST

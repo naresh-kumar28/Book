@@ -65,16 +65,20 @@ class SubjectInsertForm(ModelForm):
         exclude = ['subject_slug']
 
 
+
+
 class CouponInsertForm(ModelForm):
     class Meta:
         model = Coupon
-        fields = ["code", "discount_amount", "valid_from", "valid_to"]
+        exclude = ['active']
+
         widgets = {
-            "code": forms.TextInput(attrs={"placeholder": "Enter Coupon Code"}),
+            "code": forms.TextInput(attrs={"placeholder": "e.g. SAVE100"}),
+            "discount_amount": forms.NumberInput(attrs={"placeholder": "e.g. ₹100 OFF"}),
+            "discount_percent": forms.NumberInput(attrs={"placeholder": "e.g. 20% OFF"}),
             "valid_from": forms.DateTimeInput(attrs={"type": "datetime-local"}),
             "valid_to": forms.DateTimeInput(attrs={"type": "datetime-local"}),
         }
-
 
 class AddressForm(ModelForm):
     class Meta:
