@@ -22,28 +22,35 @@ def home(req):
     data['oldbooks'] = Product.objects.filter(book_type__name__iexact="Old Books", status='published')
     data['newbooks'] = Product.objects.filter(book_type__name__iexact="Newely Relase", status='published')
     data['combo'] = Product.objects.filter(book_type__name__iexact="Value Combo Packs", status='published')
-    data['recent_books'] = Product.objects.filter(created_at__gte=last_24_hours).order_by('-created_at')
+    data['recent_books'] = Product.objects.filter(created_at__gte=last_24_hours, status='published').order_by('-created_at')
 
-    # recent viewed books logic
     recent_viewed = req.session.get('recent_viewed', [])
     filtered_recent = []
 
     for item in recent_viewed:
+        # 🔹 Agar purana format sirf int me saved hai
         if isinstance(item, int):
             filtered_recent.append({
                 'id': item,
                 'viewed_at': timezone.now().isoformat()
             })
+
+        # 🔹 Agar naya format dict hai aur viewed_at bhi hai
         elif isinstance(item, dict) and 'id' in item and 'viewed_at' in item:
             viewed_at = timezone.datetime.fromisoformat(item['viewed_at'])
+
+            # 🔹 Agar datetime naive hai to aware banao
             if timezone.is_naive(viewed_at):
                 viewed_at = timezone.make_aware(viewed_at)
 
+            # 🔹 Sirf last 7 days wale items rakho
             if viewed_at >= one_week_ago:
                 filtered_recent.append(item)
 
+    # 🔹 Session me cleaned recent_viewed dobara save kar diya
     req.session['recent_viewed'] = filtered_recent
 
+    # 🔹 Recent viewed ids se actual published books nikalo
     recent_books_list = []
     for item in filtered_recent:
         book = Product.objects.filter(id=item['id'], status='published').first()
@@ -52,12 +59,32 @@ def home(req):
 
     data['recent_viewed_books'] = recent_books_list
 
+    # ==============================
+    # Wishlist + Cart logic
+    # ==============================
     wishlist_products = []
+    cart_product_ids = []
 
     if req.user.is_authenticated:
-        wishlist_products = Wishlist.objects.filter(user=req.user).values_list('product_id', flat=True)
+        # 🔹 Wishlist me jo products hain unki ids nikalo
+        wishlist_products = list(
+            Wishlist.objects.filter(user=req.user).values_list('product_id', flat=True)
+        )
 
+        # 🔹 User ka active cart nikalo
+        order = Order.objects.filter(user=req.user, ordered=False).first()
+
+        if order:
+            # 🔹 Cart ke andar jo OrderItems hain,
+            # unse related product ki ids nikalo
+            cart_product_ids = list(order.items.values_list('item_id', flat=True))
+
+    # 🔹 Template ko wishlist ids bhejo
     data['wishlist_products'] = wishlist_products
+
+    # 🔹 Template ko cart product ids bhejo
+    # Isse har product ke liye check kar sakte ho ki wo cart me hai ya nahi
+    data['cart_product_ids'] = cart_product_ids
 
     return render(req, 'home.html', data)
 
@@ -111,7 +138,7 @@ def returnRefund(req):
 def productDetails(req, id):
     data = {}
     last_24_hours = timezone.now() - timedelta(hours=24)
-    product = Product.objects.get(id=id)
+    product = get_object_or_404(Product, id=id, status='published')
 
     data['product'] = product
     data['categories'] = Category.objects.all()
@@ -168,12 +195,23 @@ def productDetails(req, id):
 
     data['recent_viewed_books'] = recent_books
 
+    
     wishlist_products = []
+    cart_product_ids = []
 
     if req.user.is_authenticated:
-        wishlist_products = Wishlist.objects.filter(user=req.user).values_list('product_id', flat=True)
+        wishlist_products = list(
+            Wishlist.objects.filter(user=req.user).values_list('product_id', flat=True)
+        )
+
+        order = Order.objects.filter(user=req.user, ordered=False).first()
+
+        if order:
+            cart_product_ids = list(order.items.values_list('item_id', flat=True))
 
     data['wishlist_products'] = wishlist_products
+    data['cart_product_ids'] = cart_product_ids
+
     
     data['oldbooks'] = Product.objects.filter(book_type__name__iexact="Old Books", status='published')
     data['newbooks'] = Product.objects.filter(book_type__name__iexact="Newely Relase", status='published')
@@ -218,13 +256,65 @@ def filter(req, slug=None, author_slug=None, publisher_slug=None):
         data['books'] = Product.objects.all()
 
     wishlist_products = []
+    cart_product_ids = []
 
     if req.user.is_authenticated:
-        wishlist_products = Wishlist.objects.filter(user=req.user).values_list('product_id', flat=True)
+        wishlist_products = list(
+            Wishlist.objects.filter(user=req.user).values_list('product_id', flat=True)
+        )
+
+        order = Order.objects.filter(user=req.user, ordered=False).first()
+
+        if order:
+            cart_product_ids = list(order.items.values_list('item_id', flat=True))
 
     data['wishlist_products'] = wishlist_products
+    data['cart_product_ids'] = cart_product_ids
 
     return render(req, 'shop/filter.html', data)
+
+
+@login_required
+def apply_coupon(request):
+    if request.method == "POST":
+        code = request.POST.get('coupon_code')
+
+        order = Order.objects.filter(user=request.user, ordered=False).first()
+
+        if not order:
+            messages.error(request, "No active order found.")
+            return redirect('cart')
+
+        try:
+            coupon = Coupon.objects.get(code__iexact=code, active=True)
+        except Coupon.DoesNotExist:
+            messages.error(request, "Invalid coupon code.")
+            return redirect('cart')
+
+        now = timezone.now()
+        subtotal = order.get_subtotal()
+
+        # Date validation
+        if coupon.valid_from and now < coupon.valid_from:
+            messages.error(request, "Coupon is not active yet.")
+            return redirect('cart')
+
+        if coupon.valid_to and now > coupon.valid_to:
+            messages.error(request, "Coupon has expired.")
+            return redirect('cart')
+
+        # Minimum order check
+        if subtotal < coupon.min_order_amount:
+            messages.error(request, f"Minimum order should be ₹{coupon.min_order_amount}.")
+            return redirect('cart')
+
+        # Apply coupon
+        order.coupon = coupon
+        order.save()
+
+        messages.success(request, "Coupon applied successfully!")
+
+        return redirect('cart')
 
 
 
@@ -236,14 +326,22 @@ def newelyRelase(req):
     data['categories'] = Category.objects.all()
 
     wishlist_products = []
+    cart_product_ids = []
 
     if req.user.is_authenticated:
-        wishlist_products = Wishlist.objects.filter(user=req.user).values_list('product_id', flat=True)
+        wishlist_products = list(
+            Wishlist.objects.filter(user=req.user).values_list('product_id', flat=True)
+        )
+
+        order = Order.objects.filter(user=req.user, ordered=False).first()
+
+        if order:
+            cart_product_ids = list(order.items.values_list('item_id', flat=True))
 
     data['wishlist_products'] = wishlist_products
+    data['cart_product_ids'] = cart_product_ids
 
     return render(req, 'book_list/newely_relase.html', data)
-
 
 
 def oldBooks(req):
@@ -251,12 +349,22 @@ def oldBooks(req):
     data['oldbooks'] = Product.objects.filter(book_type__name__iexact='Old Books', status='published')
     data['categories'] = Category.objects.all()
 
+    
     wishlist_products = []
+    cart_product_ids = []
 
     if req.user.is_authenticated:
-        wishlist_products = Wishlist.objects.filter(user=req.user).values_list('product_id', flat=True)
+        wishlist_products = list(
+            Wishlist.objects.filter(user=req.user).values_list('product_id', flat=True)
+        )
+
+        order = Order.objects.filter(user=req.user, ordered=False).first()
+
+        if order:
+            cart_product_ids = list(order.items.values_list('item_id', flat=True))
 
     data['wishlist_products'] = wishlist_products
+    data['cart_product_ids'] = cart_product_ids
 
     return render(req, 'book_list/old_books.html', data)
 
@@ -268,11 +376,20 @@ def recentlyAdded(req):
     data['categories'] = Category.objects.all()
 
     wishlist_products = []
+    cart_product_ids = []
 
     if req.user.is_authenticated:
-        wishlist_products = Wishlist.objects.filter(user=req.user).values_list('product_id', flat=True)
+        wishlist_products = list(
+            Wishlist.objects.filter(user=req.user).values_list('product_id', flat=True)
+        )
+
+        order = Order.objects.filter(user=req.user, ordered=False).first()
+
+        if order:
+            cart_product_ids = list(order.items.values_list('item_id', flat=True))
 
     data['wishlist_products'] = wishlist_products
+    data['cart_product_ids'] = cart_product_ids
 
     return render(req, 'book_list/recently_added.html', data)
 
@@ -283,12 +400,22 @@ def comboBooks(req):
     data['combobooks'] = Product.objects.filter(book_type__name__iexact='Value Combo Packs', status='published')
     data['categories'] = Category.objects.all()
 
+    
     wishlist_products = []
+    cart_product_ids = []
 
     if req.user.is_authenticated:
-        wishlist_products = Wishlist.objects.filter(user=req.user).values_list('product_id', flat=True)
+        wishlist_products = list(
+            Wishlist.objects.filter(user=req.user).values_list('product_id', flat=True)
+        )
+
+        order = Order.objects.filter(user=req.user, ordered=False).first()
+
+        if order:
+            cart_product_ids = list(order.items.values_list('item_id', flat=True))
 
     data['wishlist_products'] = wishlist_products
+    data['cart_product_ids'] = cart_product_ids
 
     return render(req, 'book_list/combo_books.html', data)
 
@@ -317,11 +444,21 @@ def recentViewedBooks(req):
     data['books'] = books
     data['title'] = "Your Recent Viewed Books"
 
+    
     wishlist_products = []
+    cart_product_ids = []
 
     if req.user.is_authenticated:
-        wishlist_products = Wishlist.objects.filter(user=req.user).values_list('product_id', flat=True)
+        wishlist_products = list(
+            Wishlist.objects.filter(user=req.user).values_list('product_id', flat=True)
+        )
+
+        order = Order.objects.filter(user=req.user, ordered=False).first()
+
+        if order:
+            cart_product_ids = list(order.items.values_list('item_id', flat=True))
 
     data['wishlist_products'] = wishlist_products
+    data['cart_product_ids'] = cart_product_ids
 
     return render(req, 'shop/filter.html', data)

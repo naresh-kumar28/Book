@@ -508,50 +508,6 @@ def deleteCoupon(req, id):
     return redirect(manageCoupons)
 
 
-
-
-def apply_coupon(request):
-    if request.method == "POST":
-        code = request.POST.get('coupon_code')
-
-        order = Order.objects.filter(user=request.user, ordered=False).first()
-
-        if not order:
-            messages.error(request, "No active order found.")
-            return redirect('cart')
-
-        try:
-            coupon = Coupon.objects.get(code__iexact=code, active=True)
-        except Coupon.DoesNotExist:
-            messages.error(request, "Invalid coupon code.")
-            return redirect('cart')
-
-        now = timezone.now()
-        subtotal = order.get_subtotal()
-
-        # Date validation
-        if coupon.valid_from and now < coupon.valid_from:
-            messages.error(request, "Coupon is not active yet.")
-            return redirect('cart')
-
-        if coupon.valid_to and now > coupon.valid_to:
-            messages.error(request, "Coupon has expired.")
-            return redirect('cart')
-
-        # Minimum order check
-        if subtotal < coupon.min_order_amount:
-            messages.error(request, f"Minimum order should be ₹{coupon.min_order_amount}.")
-            return redirect('cart')
-
-        # Apply coupon
-        order.coupon = coupon
-        order.save()
-
-        messages.success(request, "Coupon applied successfully!")
-
-        return redirect('cart')
-
-
 def remove_coupon(request):
     try:
         # Order se coupon hata dena

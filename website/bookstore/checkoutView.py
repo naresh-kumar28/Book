@@ -92,11 +92,13 @@ def addToCart(request, slug):
             order_item.save()
         else:
             order.items.add(order_item)
+            messages.success(request, f"Product is added to cart")
     else:
         order = Order.objects.create(user=request.user, ordered=False)
         order.items.add(order_item)
+        messages.success(request, f"Product is added to cart.")
 
-    return redirect('cart')
+    return redirect(request.META.get('HTTP_REFERER', 'home'))
 
 
 @login_required
@@ -147,7 +149,6 @@ def removeFromCart(request, slug):
             order_item.delete()
 
     return redirect('cart')
-
 
 
 

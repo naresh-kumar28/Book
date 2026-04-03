@@ -96,15 +96,22 @@
                     </a>
     
                     <div class="flex gap-2">
-                        <a href="{% url 'delivery_address' %}"
-                            class="w-full flex items-center justify-center bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-xl text-[12px] font-bold transition-all transform active:scale-95 shadow-sm text-center">
-                            Buy Now
+                        {% if book.id in cart_product_ids %}
+                        <a href="{% url 'cart' %}"
+                            class="w-full flex items-center justify-center bg-white border-2 border-slate-700 text-slate-800 hover:bg-slate-50 hover:text-black py-2 rounded-xl text-[12px] font-bold transition-all text-center whitespace-nowrap shadow-sm">
+                            Go to Cart
                         </a>
-    
+                        {% else %}
                         <a href="{% url 'add-to-cart' book.slug %}"
-                            class="w-full flex items-center justify-center bg-teal-600 hover:bg-teal-700 text-white py-2.5 rounded-xl text-[12px] font-bold transition-colors text-center">
+                            class="w-full flex items-center justify-center bg-teal-600 hover:bg-teal-700 text-white py-2.5 rounded-xl text-[12px] font-bold transition-colors text-center whitespace-nowrap shadow-sm">
                             Add to Cart
                         </a>
+                        {% endif %}
+                        
+                        <a href="{% url 'delivery_address' %}"
+                            class="w-full flex items-center justify-center bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-xl text-[12px] font-bold transition-all transform active:scale-95 shadow-sm text-center whitespace-nowrap">
+                            Buy Now
+                        </a>                                                        
                     </div>
                 </div>
                 
@@ -214,14 +221,21 @@
                         </a>
 
                         <div class="flex gap-2">
-                            <a href="{% url 'delivery_address' %}"
-                                class="w-full flex items-center justify-center bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-xl text-[12px] font-bold transition-all transform active:scale-95 shadow-sm text-center">
-                                Buy Now
+                            {% if book.id in cart_product_ids %}
+                            <a href="{% url 'cart' %}"
+                                class="w-full flex items-center justify-center bg-white border-2 border-slate-700 text-slate-800 hover:bg-slate-50 hover:text-black py-2 rounded-xl text-[12px] font-bold transition-all text-center whitespace-nowrap shadow-sm">
+                                Go to Cart
                             </a>
-                        
+                            {% else %}
                             <a href="{% url 'add-to-cart' book.slug %}"
-                                class="w-full flex items-center justify-center bg-teal-600 hover:bg-teal-700 text-white py-2.5 rounded-xl text-[12px] font-bold transition-colors text-center">
+                                class="w-full flex items-center justify-center bg-teal-600 hover:bg-teal-700 text-white py-2.5 rounded-xl text-[12px] font-bold transition-colors text-center whitespace-nowrap shadow-sm">
                                 Add to Cart
+                            </a>
+                            {% endif %}
+                            
+                            <a href="{% url 'delivery_address' %}"
+                                class="w-full flex items-center justify-center bg-orange-500 hover:bg-orange-600 text-white py-2.5 rounded-xl text-[12px] font-bold transition-all transform active:scale-95 shadow-sm text-center whitespace-nowrap">
+                                Buy Now
                             </a>
                         </div>
                     </div>
