@@ -562,3 +562,16 @@ def remove_coupon(request):
     except Order.DoesNotExist:
         pass
     return redirect('cart') # Apne cart url ka naam yahan likhein
+
+
+@admin_required
+def manageOrders(req):
+    context = {}
+    orders = Order.objects.all()
+    paginator = Paginator(orders, 3)
+    page_number = req.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context['orders'] = page_obj
+
+    return render(req, 'admin/manage_orders.html', context)

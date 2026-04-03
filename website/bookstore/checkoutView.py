@@ -7,6 +7,8 @@ from .models import *
 from .forms import *
 from django.utils import timezone
 from datetime import timedelta
+from django.db.models import Sum
+from django.db.models import Q
 
 
 
@@ -305,18 +307,90 @@ def summary(req):
 @login_required
 def dashboard(req):
     context = {}
-    context['addresses'] = Address.objects.filter(user=req.user).order_by('-id')
+
+    addresses = Address.objects.filter(user=req.user).order_by('-id')
+
+    user_orders = Order.objects.filter(user=req.user, ordered=True)
+
+    total_spent = user_orders.aggregate(total=Sum('total_price'))['total'] or 0
+
+    last_30_days = timezone.now() - timedelta(days=30)
+    recent_orders = user_orders.filter(
+        ordered_date__gte=last_30_days
+    ).count()
+
+    context['addresses'] = addresses
+    context['total_spent'] = total_spent
+    context['recent_orders'] = recent_orders
+
     return render(req, 'account/dashboard.html', context)
+
+
+
 
 
 @login_required
 def myOrder(req):
-    return render(req, 'account/my-order.html')
+    context = {}
+
+    search_query = req.GET.get('search', '').strip()
+    status_filter = req.GET.get('status', '').strip()
+
+    orders = Order.objects.filter(
+        user=req.user,
+        ordered=True
+    ).prefetch_related('items__item').select_related('address', 'coupon').order_by('-ordered_date', '-id')
+
+    if search_query:
+        if search_query.upper().startswith('ORD-'):
+            cleaned_search = search_query.upper().replace('ORD-', '').lstrip('0')
+            orders = orders.filter(
+                Q(id__icontains=cleaned_search) |
+                Q(id__icontains=search_query)
+            )
+        else:
+            orders = orders.filter(id__icontains=search_query)
+
+    # simple status logic
+    if status_filter == 'pending':
+        orders = orders.filter(delivered=False, cancelled=False)
+    elif status_filter == 'delivered':
+        orders = orders.filter(delivered=True, cancelled=False)
+    elif status_filter == 'cancelled':
+        orders = orders.filter(cancelled=True)
+
+    context['orders'] = orders
+    context['search_query'] = search_query
+    context['status_filter'] = status_filter
+
+    return render(req, 'account/my-order.html', context)
 
 
 @login_required
-def orderDetails(req):
-    return render(req, 'account/my-order.html')
+def cancelOrder(req, order_id):
+    order = get_object_or_404(Order, id=order_id, user=req.user, ordered=True)
+
+    if not order.delivered and not order.cancelled:
+        order.cancelled = True
+        order.save()
+        messages.success(req, 'Order cancelled successfully!')
+
+    return redirect('my-order')
+
+
+@login_required
+def orderDetails(req, order_id):
+    order = get_object_or_404(
+        Order.objects.prefetch_related('items__item').select_related('address', 'coupon'),
+        id=order_id,
+        user=req.user,
+        ordered=True
+    )
+
+    context = {
+        'order': order,
+    }
+    return render(req, 'account/order-details.html', context)
 
 
 @login_required

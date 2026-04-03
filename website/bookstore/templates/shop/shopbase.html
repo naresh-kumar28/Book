@@ -22,6 +22,7 @@
             scrollbar-width: none;
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -231,4 +232,56 @@
     {% block content %}
 
     {% endblock %}
+
+    <script>
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            background: '#ffffff',
+            color: '#334155',
+            customClass: {
+                popup: 'rounded-2xl border-l-4 shadow-xl',
+            }
+        });
+
+        // 1. Django Messages Framework ke liye (Login/Logout/Signup Success)
+        {% if messages %}
+        {% for message in messages %}
+        let iconTag = '{{ message.tags }}';
+        let bColor = iconTag === 'success' ? '#14b8a6' : '#f97316';
+
+        Toast.fire({
+            icon: iconTag === 'error' || iconTag === 'danger' ? 'error' : iconTag,
+            title: '{{ message|escapejs }}',
+            didOpen: (toast) => { toast.style.borderLeftColor = bColor; }
+        });
+        {% endfor %}
+        {% endif %}
+
+        // 2. Login/Invalid Credentials Error ke liye
+        // Agar page par form error hai (jaise login page par)
+        {% if form.errors %}
+        {% for field, errors in form.errors.items %}
+        {% for error in errors %}
+        Toast.fire({
+            icon: 'error',
+            title: '{{ error|escapejs }}',
+            didOpen: (toast) => { toast.style.borderLeftColor = '#ef4444'; }
+        });
+        {% endfor %}
+        {% endfor %}
+
+        // Non-field errors (Jaise: "Username and password did not match")
+        {% for error in form.non_field_errors %}
+        Toast.fire({
+            icon: 'error',
+            title: '{{ error|escapejs }}',
+            didOpen: (toast) => { toast.style.borderLeftColor = '#ef4444'; }
+        });
+        {% endfor %}
+        {% endif %}
+    </script>
 </body>

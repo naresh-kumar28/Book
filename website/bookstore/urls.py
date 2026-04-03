@@ -44,6 +44,8 @@ urlpatterns = [
     path('account/dashboard/', dashboard, name='dashboard'),
     path('account/my-order/', myOrder, name='my-order'),
     path('account/order-details/<int:order_id>/', orderDetails, name='order_details'),
+    path('account/cancel-order/<int:order_id>/', cancelOrder, name='cancel_order'),
+    # path('account/order-receipt/<int:order_id>/', orderReceipt, name='order_receipt'),
 
 
     path('account/wishlist/', wishlist, name='wishlist'),
@@ -98,6 +100,9 @@ urlpatterns = [
     
     path('admin/apply-coupon/', apply_coupon, name='admin.apply.coupon'),
     path('admin/remove-coupon/', remove_coupon, name='admin.remove.coupon'),
+
+    #order management
+    path('admin/orders/', manageOrders, name='admin.orders'),
 
     #book_list
     path('book/newely/', newelyRelase, name='book.newely'),

@@ -220,6 +220,8 @@ class Order(models.Model):
     coupon = models.ForeignKey(Coupon, on_delete=models.SET_NULL, null=True, blank=True)
 
     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    delivered = models.BooleanField(default=False)
+    cancelled = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.user.username} - Order #{self.id}"
