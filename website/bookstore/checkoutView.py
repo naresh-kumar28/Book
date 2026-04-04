@@ -151,11 +151,14 @@ def removeFromCart(request, slug):
     return redirect('cart')
 
 
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+# Make sure your models are imported
 
 @login_required
 def deliveryAddress(req):
     context = {}
-
+    
     addresses = Address.objects.filter(user=req.user).order_by('-id')
     selected_id = req.GET.get('selected')
 
@@ -167,6 +170,11 @@ def deliveryAddress(req):
         selected_address = addresses.first()
 
     order = Order.objects.filter(user=req.user, ordered=False).first()
+
+    if order and selected_address:
+        if order.address != selected_address: 
+            order.address = selected_address
+            order.save()
 
     context['addresses'] = addresses
     context['selected_address'] = selected_address

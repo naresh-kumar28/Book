@@ -123,21 +123,23 @@
                         </svg>
                         <h2 class="text-base font-bold text-gray-800">Delivery Address</h2>
                     </div>
-
-                    <a href="{% url 'delivery_address' %}{% if selected_address %}?selected={{ selected_address.id }}{% endif %}"
+            
+                    <a href="{% url 'delivery_address' %}{% if order.address %}?selected={{ order.address.id }}{% endif %}"
                         class="text-orange-600 font-bold text-xs uppercase hover:underline">
                         Edit
                     </a>
                 </div>
-
+            
                 <div class="p-6">
-                    {% if selected_address %}
-                    <h4 class="font-bold text-gray-900">{{ selected_address.name }}</h4>
+                    {% if order.address %}
+                    <h4 class="font-bold text-gray-900">{{ order.address.name }}</h4>
                     <p class="text-sm text-gray-500 mt-2 leading-relaxed">
-                        {{ selected_address.street }}{% if selected_address.landmark %}, {{ selected_address.landmark}}{% endif %}{% if selected_address.near_by %}, {{ selected_address.near_by }}{% endif %}, {{selected_address.city }}, {{ selected_address.state }}, {{ selected_address.pincode }}
+                        {{ order.address.street }}{% if order.address.landmark %}, {{ order.address.landmark}}{% endif %}
+                        {% if order.address.near_by %}, {{ order.address.near_by }}{% endif %}, {{ order.address.city }}, 
+                        {{order.address.state }}, {{ order.address.pincode }}
                     </p>
                     <p class="text-sm font-bold text-gray-800 mt-2">
-                        {{ selected_address.contact }}{% if selected_address.alt_contact %} / {{selected_address.alt_contact }}{% endif %}
+                        {{ order.address.contact }}{% if order.address.alt_contact %} / {{ order.address.alt_contact }}{% endif %}
                     </p>
                     {% else %}
                     <p class="text-sm text-gray-500">No address selected yet.</p>

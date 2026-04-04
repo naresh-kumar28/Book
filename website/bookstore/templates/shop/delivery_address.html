@@ -24,10 +24,12 @@
             </div>
 
             <div class="space-y-4">
-
+            
                 {% if addresses %}
                 {% for address in addresses %}
-                {% if selected_address and selected_address.id == address.id %}
+            
+                {% if selected_address and selected_address.id == address.id or selected_address|stringformat:"s" == address.id|stringformat:"s" or not selected_address and forloop.first %}
+            
                 <div class="bg-orange-50/80 border-2 border-orange-200 p-5 rounded-xl shadow-sm transition-all">
                     <div class="flex justify-between items-start mb-4">
                         <div class="flex gap-4">
@@ -37,7 +39,7 @@
                                     <span class="block w-2 h-2 bg-white rounded-full"></span>
                                 </span>
                             </div>
-
+            
                             <div>
                                 <h3 class="font-bold text-gray-900 text-base flex items-center gap-2">
                                     {{ address.name }}
@@ -46,29 +48,33 @@
                                         {{ address.type }}
                                     </span>
                                 </h3>
-
+            
                                 <p class="text-sm text-gray-600 mt-2 leading-relaxed font-medium">
-                                    {{ address.street }}{% if address.landmark %}, {{ address.landmark }}{% endif %}{% if address.near_by %}, {{ address.near_by }}{% endif %}, {{ address.city }}, {{ address.state }}, {{ address.pincode }}
+                                    {{ address.street }}{% if address.landmark %}, {{ address.landmark }}{% endif %}
+                                    {% if address.near_by %}, {{ address.near_by }}{% endif %}, {{ address.city }}, {{ address.state }},
+                                    {{ address.pincode }}
                                 </p>
-
+            
                                 <p class="text-sm font-bold text-gray-800 mt-3">
                                     Phone: {{ address.contact }}{% if address.alt_contact %} / {{ address.alt_contact }}{% endif %}
                                 </p>
                             </div>
                         </div>
-
+            
                         <a href="{% url 'address' %}?edit={{ address.id }}"
                             class="text-orange-600 font-bold text-xs uppercase hover:text-orange-700 tracking-wider shrink-0">
                             Edit
                         </a>
                     </div>
-
+            
                     <a href="{% url 'payment' %}?address={{ address.id }}"
                         class="w-full inline-flex items-center justify-center bg-orange-500 text-white py-3.5 rounded-lg font-bold text-sm uppercase tracking-wide shadow-md hover:bg-orange-600 active:scale-[0.98] transition-all">
                         Deliver to this Address
                     </a>
                 </div>
+            
                 {% else %}
+            
                 <a href="{% url 'delivery_address' %}?selected={{ address.id }}"
                     class="block bg-white border border-gray-100 p-5 rounded-xl shadow-sm hover:border-orange-200 transition-all cursor-pointer group">
                     <div class="flex justify-between items-start">
@@ -77,7 +83,7 @@
                                 <span
                                     class="block w-5 h-5 bg-white border-2 border-gray-300 rounded-full group-hover:border-orange-400 transition-colors"></span>
                             </div>
-
+            
                             <div>
                                 <h3 class="font-bold text-gray-900 text-base flex items-center gap-2">
                                     {{ address.name }}
@@ -86,37 +92,41 @@
                                         {{ address.type }}
                                     </span>
                                 </h3>
-
+            
                                 <p class="text-sm text-gray-600 mt-2 leading-relaxed font-medium">
-                                    {{ address.street }}{% if address.landmark %}, {{ address.landmark }}{% endif %}{%if address.near_by %}, {{ address.near_by }}{% endif %}, {{ address.city }}, {{ address.state }}, {{ address.pincode }}
+                                    {{ address.street }}{% if address.landmark %}, {{ address.landmark }}{% endif %}
+                                    {%if address.near_by %}, {{ address.near_by }}{% endif %}, {{ address.city }}, {{ address.state }},
+                                    {{ address.pincode }}
                                 </p>
-
+            
                                 <p class="text-sm font-bold text-gray-800 mt-3">
                                     Phone: {{ address.contact }}{% if address.alt_contact %} / {{ address.alt_contact}}{% endif %}
                                 </p>
                             </div>
                         </div>
-
+            
                         <span
                             class="text-gray-400 font-bold text-xs uppercase group-hover:text-orange-600 tracking-wider shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
                             Edit
                         </span>
                     </div>
                 </a>
+            
                 {% endif %}
                 {% endfor %}
+            
                 {% else %}
                 <div class="bg-white border border-gray-100 p-8 rounded-xl shadow-sm text-center">
                     <h3 class="text-lg font-bold text-gray-800">No address found</h3>
                     <p class="text-sm text-gray-500 mt-2">Please add a new address to continue.</p>
-
+            
                     <a href="{% url 'address' %}?add=1"
                         class="inline-flex items-center gap-2 mt-5 bg-orange-500 text-white px-5 py-3 rounded-lg font-bold text-sm uppercase tracking-wide shadow-md hover:bg-orange-600 transition-all">
                         Add New Address
                     </a>
                 </div>
                 {% endif %}
-
+            
             </div>
             <a href="{% url 'cart' %}"
                 class="inline-flex items-center gap-2 mt-6 text-orange-600 text-sm font-bold hover:gap-3 transition-all">
