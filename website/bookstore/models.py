@@ -143,7 +143,8 @@ class OrderItem(models.Model):
     qty = models.IntegerField(default=1)
 
     def __str__(self):
-        return self.item.title
+        name = self.user.first_name if self.user.first_name else self.user.username
+        return f"{name} - {self.item.title} ({self.qty})"
 
     def get_total_price(self):
         return self.item.price * self.qty
