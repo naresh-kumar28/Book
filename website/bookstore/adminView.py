@@ -5,6 +5,7 @@ from functools import wraps
 from django.contrib.auth.models import User
 from django.utils.text import slugify
 from django.core.paginator import Paginator
+from django.db.models import Q
 
 from django.core.mail import send_mail
 from django.contrib import messages
@@ -517,17 +518,63 @@ def remove_coupon(request):
         messages.success(request, "Coupon removed successfully.")
     except Order.DoesNotExist:
         pass
-    return redirect('cart') # Apne cart url ka naam yahan likhein
+    return redirect('cart') 
 
 
 @admin_required
 def manageOrders(req):
     context = {}
-    orders = Order.objects.all()
-    paginator = Paginator(orders, 3)
+    
+    # 1. BASE QUERY: Sabhi valid orders nikal lo
+    base_orders = Order.objects.filter(
+        Q(ordered=True) | Q(cancelled=True)
+    ).order_by('-ordered_date')
+    
+    # 2. CARDS DATA: Ye hamesha total dashboard ki summary dikhayega (Bina filter ke)
+    total_orders = base_orders.count()
+    completed_orders = base_orders.filter(delivered=True).count()
+    cancelled_orders = base_orders.filter(cancelled=True).count()
+    pending_orders = base_orders.filter(delivered=False, cancelled=False).count()
+
+    # 3. FILTER & SEARCH LOGIC: Table me kya dikhega uske liye alag variable
+    filtered_orders = base_orders
+    
+    # URL se parameters lo
+    search_query = req.GET.get('search', '').strip()
+    status_query = req.GET.get('status', '').strip()
+
+    # ---> A. Status Filter (Dropdown ke liye)
+    if status_query == 'pending':
+        filtered_orders = filtered_orders.filter(delivered=False, cancelled=False)
+    elif status_query == 'delivered':
+        filtered_orders = filtered_orders.filter(delivered=True)
+    elif status_query == 'cancelled':
+        filtered_orders = filtered_orders.filter(cancelled=True)
+
+    # ---> B. Search Filter (Text box ke liye)
+    if search_query:
+        # Agar customer "#ORD-15" search kare, to usme se "15" nikal lo database ke liye
+        clean_id = search_query.replace('#ORD-', '').replace('#', '').strip()
+        
+        # Q Object ka jadu: Agar ID match ho YA Name match ho YA Email match ho
+        filtered_orders = filtered_orders.filter(
+            Q(id__icontains=clean_id) | 
+            Q(address__name__icontains=search_query) | 
+            Q(user__username__icontains=search_query) | 
+            Q(user__email__icontains=search_query) |
+            Q(items__item__title__icontains=search_query)
+        )
+
+    # 4. PAGINATION: Ab base_orders ki jagah filtered_orders pe pagination chalega
+    paginator = Paginator(filtered_orders, 3) 
     page_number = req.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
+    # 5. CONTEXT BHEJO
     context['orders'] = page_obj
+    context['total_orders'] = total_orders
+    context['completed_orders'] = completed_orders
+    context['cancelled_orders'] = cancelled_orders
+    context['pending_orders'] = pending_orders
 
     return render(req, 'admin/manage_orders.html', context)
