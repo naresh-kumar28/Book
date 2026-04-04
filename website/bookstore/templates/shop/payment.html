@@ -10,14 +10,13 @@
 
         <div class="lg:col-span-8">
             <div class="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
-
+        
                 <div class="px-6 py-4 border-b border-gray-50 bg-gray-50/50">
                     <h2 class="text-lg font-bold text-gray-800">Select Payment Method</h2>
                 </div>
-
+        
                 <div class="divide-y divide-gray-50">
-
-                    <!-- UPI -->
+        
                     <div class="p-6 {% if payment_method == 'upi' %}bg-orange-50/30{% endif %}">
                         <a href="?address={% if selected_address %}{{ selected_address.id }}{% endif %}&method=upi"
                             class="block">
@@ -37,28 +36,28 @@
                                 </div>
                             </label>
                         </a>
-
+        
                         {% if payment_method == 'upi' %}
                         <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3">
-                            <button
+                            <button type="button"
                                 class="flex flex-col items-center gap-2 p-3 border-2 border-orange-500 rounded-xl bg-white shadow-sm transition-all">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/f/f2/Google_Pay_Logo.svg"
-                                    class="h-5" alt="GPay">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/f/f2/Google_Pay_Logo.svg" class="h-5"
+                                    alt="GPay">
                                 <span class="text-[10px] font-bold uppercase text-orange-600">Google Pay</span>
                             </button>
-                            <button
+                            <button type="button"
                                 class="flex flex-col items-center gap-2 p-3 border-2 border-gray-100 rounded-xl bg-white hover:border-orange-200 transition-all">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/7/71/PhonePe_Logo.svg"
-                                    class="h-5" alt="PhonePe">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/7/71/PhonePe_Logo.svg" class="h-5"
+                                    alt="PhonePe">
                                 <span class="text-[10px] font-bold uppercase text-gray-400">PhonePe</span>
                             </button>
-                            <button
+                            <button type="button"
                                 class="flex flex-col items-center gap-2 p-3 border-2 border-gray-100 rounded-xl bg-white hover:border-orange-200 transition-all">
                                 <img src="https://upload.wikimedia.org/wikipedia/commons/2/24/Paytm_Logo_%28standalone%29.svg"
                                     class="h-4 my-0.5" alt="Paytm">
                                 <span class="text-[10px] font-bold uppercase text-gray-400">Paytm</span>
                             </button>
-                            <button
+                            <button type="button"
                                 class="flex flex-col items-center gap-2 p-3 border-2 border-gray-100 rounded-xl bg-white hover:border-orange-200 transition-all">
                                 <span class="text-xs font-bold text-gray-500">Other UPI</span>
                                 <span class="text-[10px] font-bold uppercase text-gray-400">ID / Scan</span>
@@ -66,8 +65,7 @@
                         </div>
                         {% endif %}
                     </div>
-
-                    <!-- Card -->
+        
                     <div class="p-6 {% if payment_method == 'card' %}bg-orange-50/30{% endif %}">
                         <a href="?address={% if selected_address %}{{ selected_address.id }}{% endif %}&method=card"
                             class="block">
@@ -94,8 +92,7 @@
                             </label>
                         </a>
                     </div>
-
-                    <!-- COD -->
+        
                     <div class="p-6 {% if payment_method == 'cod' %}bg-orange-50/30{% endif %}">
                         <a href="?address={% if selected_address %}{{ selected_address.id }}{% endif %}&method=cod"
                             class="block">
@@ -115,8 +112,7 @@
                                         </p>
                                     </div>
                                 </div>
-                                <svg class="w-7 h-7 text-gray-300" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
+                                <svg class="w-7 h-7 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z">
                                     </path>
@@ -124,21 +120,24 @@
                             </label>
                         </a>
                     </div>
-
+        
                 </div>
-
-                
-
+        
             </div>
-
-            <a href="{% url 'delivery_address' %}{% if selected_address %}?selected={{ selected_address.id }}{% endif %}"
-                class="inline-flex items-center gap-2 mt-6 text-orange-600 text-sm font-bold hover:gap-3 transition-all">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                </svg>
-                Back To Checkout
-            </a>
+        
+            <div class="flex flex-col sm:flex-row items-center justify-between mt-6 gap-4">
+                <a href="{% url 'delivery_address' %}{% if selected_address %}?selected={{ selected_address.id }}{% endif %}"
+                    class="inline-flex items-center gap-2 text-orange-600 text-sm font-bold hover:gap-3 transition-all">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18">
+                        </path>
+                    </svg>
+                    Back To Checkout
+                </a>
+        
+                
+            </div>
+        
         </div>
 
         {% if order and order.items.all %}

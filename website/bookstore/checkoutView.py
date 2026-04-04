@@ -151,9 +151,6 @@ def removeFromCart(request, slug):
     return redirect('cart')
 
 
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-# Make sure your models are imported
 
 @login_required
 def deliveryAddress(req):
@@ -235,6 +232,7 @@ def payment(req):
     addresses = Address.objects.filter(user=req.user).order_by('-id')
 
     address_id = req.GET.get('address')
+    
     payment_method = req.GET.get('method', 'upi')
 
     selected_address = None
@@ -244,6 +242,21 @@ def payment(req):
 
     if not selected_address and addresses.exists():
         selected_address = addresses.first()
+
+    # ⭐ THE MAGIC FIX (Data Save Logic) ⭐
+    if order:
+        needs_save = False
+        
+        if selected_address and order.address != selected_address:
+            order.address = selected_address
+            needs_save = True
+            
+        if order.payment_method != payment_method:
+            order.payment_method = payment_method
+            needs_save = True
+            
+        if needs_save:
+            order.save()
 
     context['order'] = order
     context['addresses'] = addresses
@@ -263,20 +276,16 @@ def placeOrder(req):
             messages.error(req, "Your cart is empty.")
             return redirect('cart')
 
-        address_id = req.POST.get('address_id')
-        payment_method = req.POST.get('payment_method')
-
-        address = Address.objects.filter(id=address_id, user=req.user).first()
-
-        if not address:
+        if not order.address:
             messages.error(req, "Please select a valid address.")
             return redirect('delivery_address')
 
-        order.address = address
-        order.payment_method = payment_method
+        if not order.payment_method:
+            messages.error(req, "Please select a payment method.")
+            return redirect('payment')
+
         order.ordered = True
         order.ordered_date = timezone.now()
-        # TOTAL PRICE SAVE KARO
         order.total_price = order.get_total()
         order.save()
 

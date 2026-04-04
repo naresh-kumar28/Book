@@ -158,25 +158,28 @@
                         </svg>
                         <h2 class="text-base font-bold text-gray-800">Payment Mode</h2>
                     </div>
-
-                    <a href="{% url 'payment' %}{% if selected_address %}?address={{ selected_address.id }}{% endif %}{% if payment_method %}&method={{ payment_method }}{% endif %}"
+            
+                    <a href="{% url 'payment' %}{% if order.address %}?address={{ order.address.id }}{% endif %}{% if order.payment_method %}&method={{ order.payment_method }}{% endif %}"
                         class="text-orange-600 font-bold text-xs uppercase hover:underline">
                         Edit
                     </a>
                 </div>
-
+            
                 <div class="p-6">
                     <div
                         class="flex items-center gap-3 text-sm font-bold text-gray-700 bg-gray-50 p-4 rounded-xl border border-gray-100">
                         <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-
-                        {% if payment_method == 'cod' %}
+            
+                        {% if order.payment_method == 'cod' %}
                         Cash on Delivery
-                        {% elif payment_method == 'card' %}
+                        {% elif order.payment_method == 'card' %}
                         Credit / Debit / ATM Card
-                        {% else %}
+                        {% elif order.payment_method == 'upi' %}
                         UPI
+                        {% else %}
+                        Payment method not selected
                         {% endif %}
+            
                     </div>
                 </div>
             </div>
