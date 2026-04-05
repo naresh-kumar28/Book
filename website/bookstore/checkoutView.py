@@ -72,33 +72,76 @@ def cart(req):
     return render(req, 'shop/cart.html', data)
 
 
+
+
+# 1. UPDATED ADD TO CART (Taki ye Buy Now ke item ko chori na kare)
 @login_required
 def addToCart(request, slug):
     product = get_object_or_404(Product, slug=slug)
 
-    order_item, created = OrderItem.objects.get_or_create(
-        user=request.user,
-        ordered=False,
-        item=product
-    )
-
-    order_qs = Order.objects.filter(user=request.user, ordered=False)
-
+    # Sirf 'Cart' wala order nikalo (is_buy_now=False)
+    order_qs = Order.objects.filter(user=request.user, ordered=False, is_buy_now=False)
     if order_qs.exists():
         order = order_qs[0]
-
-        if order.items.filter(item=product).exists():
-            order_item.qty += 1
-            order_item.save()
-        else:
-            order.items.add(order_item)
-            messages.success(request, f"Product is added to cart")
     else:
-        order = Order.objects.create(user=request.user, ordered=False)
+        order = Order.objects.create(user=request.user, ordered=False, is_buy_now=False)
+
+    # Check karo ki item is order me hai ya nahi
+    order_item = order.items.filter(item=product).first()
+
+    if order_item:
+        order_item.qty += 1
+        order_item.save()
+        messages.success(request, "Product quantity updated in cart.")
+    else:
+        # Naya item bana ke sirf is cart me jodo
+        order_item = OrderItem.objects.create(
+            user=request.user,
+            ordered=False,
+            item=product,
+            qty=1
+        )
         order.items.add(order_item)
-        messages.success(request, f"Product is added to cart.")
+        messages.success(request, "Product is added to cart.")
 
     return redirect(request.META.get('HTTP_REFERER', 'home'))
+
+
+# 2. NEW BUY NOW FUNCTION
+@login_required
+def buyNow(request, slug):
+    product = get_object_or_404(Product, slug=slug)
+
+    # Purane pending 'Buy Now' orders ko clean kar do (taki kachra jama na ho)
+    old_orders = Order.objects.filter(user=request.user, ordered=False, is_buy_now=True)
+    for o in old_orders:
+        o.items.all().delete() # Uske andar ke items delete
+    old_orders.delete() # Order delete
+
+    # Fresh OrderItem banao
+    order_item = OrderItem.objects.create(
+        user=request.user,
+        ordered=False,
+        item=product,
+        qty=1
+    )
+
+    # Fresh 'Buy Now' Order banao
+    order = Order.objects.create(user=request.user, ordered=False, is_buy_now=True)
+    order.items.add(order_item)
+
+    # SESSION me flag laga do taki checkout page ko pata ho ki mode konsa hai
+    request.session['checkout_mode'] = 'buy_now'
+
+    return redirect('delivery_address') # Apne url ka naam likhna
+
+
+# 3. NEW CART CHECKOUT FUNCTION
+@login_required
+def cartCheckout(request):
+    # Jab user cart page se checkout pe jaye to session reset kar do
+    request.session['checkout_mode'] = 'cart'
+    return redirect('delivery_address')
 
 
 @login_required
@@ -166,7 +209,11 @@ def deliveryAddress(req):
     if not selected_address and addresses.exists():
         selected_address = addresses.first()
 
-    order = Order.objects.filter(user=req.user, ordered=False).first()
+    # Check if user is coming from Buy Now or normal Cart
+    if req.session.get('checkout_mode') == 'buy_now':
+        order = Order.objects.filter(user=req.user, ordered=False, is_buy_now=True).first()
+    else:
+        order = Order.objects.filter(user=req.user, ordered=False, is_buy_now=False).first()
 
     if order and selected_address:
         if order.address != selected_address: 
@@ -228,7 +275,12 @@ def delete_address(req, id):
 def payment(req):
     context = {}
 
-    order = Order.objects.filter(user=req.user, ordered=False).first()
+    # Check if user is coming from Buy Now or normal Cart
+    if req.session.get('checkout_mode') == 'buy_now':
+        order = Order.objects.filter(user=req.user, ordered=False, is_buy_now=True).first()
+    else:
+        order = Order.objects.filter(user=req.user, ordered=False, is_buy_now=False).first()
+
     addresses = Address.objects.filter(user=req.user).order_by('-id')
 
     address_id = req.GET.get('address')
@@ -270,7 +322,11 @@ def payment(req):
 @login_required
 def placeOrder(req):
     if req.method == "POST":
-        order = Order.objects.filter(user=req.user, ordered=False).first()
+        # Check if user is coming from Buy Now or normal Cart
+        if req.session.get('checkout_mode') == 'buy_now':
+            order = Order.objects.filter(user=req.user, ordered=False, is_buy_now=True).first()
+        else:
+            order = Order.objects.filter(user=req.user, ordered=False, is_buy_now=False).first()
 
         if not order or not order.items.exists():
             messages.error(req, "Your cart is empty.")
@@ -300,7 +356,12 @@ def placeOrder(req):
 def summary(req):
     context = {}
 
-    order = Order.objects.filter(user=req.user, ordered=False).first()
+    # Check if user is coming from Buy Now or normal Cart
+    if req.session.get('checkout_mode') == 'buy_now':
+        order = Order.objects.filter(user=req.user, ordered=False, is_buy_now=True).first()
+    else:
+        order = Order.objects.filter(user=req.user, ordered=False, is_buy_now=False).first()
+
     addresses = Address.objects.filter(user=req.user).order_by('-id')
 
     address_id = req.GET.get('address')

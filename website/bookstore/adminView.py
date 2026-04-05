@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.utils.text import slugify
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
 
 from django.core.mail import send_mail
 from django.contrib import messages
@@ -509,16 +510,27 @@ def deleteCoupon(req, id):
     return redirect(manageCoupons)
 
 
+
+@login_required
 def remove_coupon(request):
+    next_url = request.META.get('HTTP_REFERER', 'cart')
+    
     try:
-        # Order se coupon hata dena
-        order = Order.objects.get(user=request.user, ordered=False)
+        # 🚨 SMART FIX: Yahan bhi same logic
+        if 'cart' in next_url.lower():
+            is_buy_now = False
+        else:
+            is_buy_now = request.session.get('checkout_mode') == 'buy_now'
+            
+        order = Order.objects.get(user=request.user, ordered=False, is_buy_now=is_buy_now)
+        
         order.coupon = None
         order.save()
         messages.success(request, "Coupon removed successfully.")
     except Order.DoesNotExist:
         pass
-    return redirect('cart') 
+        
+    return redirect(next_url)
 
 
 @admin_required

@@ -213,7 +213,6 @@ class Address(models.Model):
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     items = models.ManyToManyField(OrderItem)
-    ordered = models.BooleanField(default=False)
     payment_method = models.CharField(max_length=20, blank=True, null=True)
     address = models.ForeignKey(Address, on_delete=models.SET_NULL, null=True, blank=True)
     ordered_date = models.DateTimeField(blank=True, null=True)
@@ -221,8 +220,10 @@ class Order(models.Model):
     coupon = models.ForeignKey(Coupon, on_delete=models.SET_NULL, null=True, blank=True)
 
     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    ordered = models.BooleanField(default=False)
     delivered = models.BooleanField(default=False)
     cancelled = models.BooleanField(default=False)
+    is_buy_now = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.user.username} - Order #{self.id}"

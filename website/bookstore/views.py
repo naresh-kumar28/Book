@@ -278,18 +278,27 @@ def filter(req, slug=None, author_slug=None, publisher_slug=None):
 def apply_coupon(request):
     if request.method == "POST":
         code = request.POST.get('coupon_code')
+        next_url = request.META.get('HTTP_REFERER', 'cart')
 
-        order = Order.objects.filter(user=request.user, ordered=False).first()
+        # 🚨 SMART FIX: Check karo user kis page par hai
+        if 'cart' in next_url.lower():
+            # Agar request Cart page se aayi hai, to hamesha normal order (is_buy_now=False) uthao
+            is_buy_now = False
+        else:
+            # Agar Checkout page se aayi hai, to session check karo
+            is_buy_now = request.session.get('checkout_mode') == 'buy_now'
+
+        order = Order.objects.filter(user=request.user, ordered=False, is_buy_now=is_buy_now).first()
 
         if not order:
             messages.error(request, "No active order found.")
-            return redirect('cart')
+            return redirect(next_url)
 
         try:
             coupon = Coupon.objects.get(code__iexact=code, active=True)
         except Coupon.DoesNotExist:
             messages.error(request, "Invalid coupon code.")
-            return redirect('cart')
+            return redirect(next_url)
 
         now = timezone.now()
         subtotal = order.get_subtotal()
@@ -297,25 +306,23 @@ def apply_coupon(request):
         # Date validation
         if coupon.valid_from and now < coupon.valid_from:
             messages.error(request, "Coupon is not active yet.")
-            return redirect('cart')
+            return redirect(next_url)
 
         if coupon.valid_to and now > coupon.valid_to:
             messages.error(request, "Coupon has expired.")
-            return redirect('cart')
+            return redirect(next_url)
 
         # Minimum order check
         if subtotal < coupon.min_order_amount:
             messages.error(request, f"Minimum order should be ₹{coupon.min_order_amount}.")
-            return redirect('cart')
+            return redirect(next_url)
 
         # Apply coupon
         order.coupon = coupon
         order.save()
 
         messages.success(request, "Coupon applied successfully!")
-
-        return redirect('cart')
-
+        return redirect(next_url)
 
 
 
