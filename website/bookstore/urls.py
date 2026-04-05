@@ -109,6 +109,7 @@ urlpatterns = [
     path('book/old/', oldBooks, name='book.old'),
     path('book/recently/', recentlyAdded, name='book.recently'),
     path('book/combo/', comboBooks, name='book.combo'),
+    path('book/top-selling/', topSellingBooks, name='book.top_selling'),
 
 
 ]+static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

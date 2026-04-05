@@ -7,6 +7,7 @@ from .models import *
 from .forms import *
 from django.utils import timezone
 from datetime import timedelta
+from django.db.models import Sum
     
 
 # Create your views here.
@@ -14,9 +15,19 @@ from datetime import timedelta
 def home(req):
     last_24_hours = timezone.now() - timedelta(hours=24)
     one_week_ago = timezone.now() - timedelta(days=7)
+    last_30_days = timezone.now() - timedelta(days=30)
 
     data = {}
+    # 🔥 TOP SELLING LOGIC 🔥
+    # Un products ko filter karo jo pichle 30 din mein successful orders mein gaye hain
+    # Phir unki total sold quantity calculate (annotate) karo, aur sabse zyada bikne wale ko top par rakho
+    top_selling_books = Product.objects.filter(
+        orderitem__order__ordered=True, # Sirf wo item jo order ho chuke hain
+        orderitem__order__ordered_date__gte=last_30_days, # Pichle 1 mahine mein
+        status='published'
+    ).annotate(total_sold=Sum('orderitem__qty')).order_by('-total_sold')[:10] # Top 10 nikal lo homepage ke liye
 
+    data['top_selling_books'] = top_selling_books
     data['categories'] = Category.objects.all()
     data['authors'] = Author.objects.all().order_by('-created_at')
     data['oldbooks'] = Product.objects.filter(book_type__name__iexact="Old Books", status='published')
@@ -138,6 +149,7 @@ def returnRefund(req):
 def productDetails(req, id):
     data = {}
     last_24_hours = timezone.now() - timedelta(hours=24)
+    last_30_days = timezone.now() - timedelta(days=30)
     product = get_object_or_404(Product, id=id, status='published')
 
     data['product'] = product
@@ -217,6 +229,13 @@ def productDetails(req, id):
     data['newbooks'] = Product.objects.filter(book_type__name__iexact="Newely Relase", status='published')
     data['combo'] = Product.objects.filter(book_type__name__iexact="Value Combo Packs", status='published')
     data['recent_books'] = Product.objects.filter(created_at__gte=last_24_hours).order_by('-created_at')
+    
+    data['top_selling_books'] = Product.objects.filter(
+        orderitem__order__ordered=True, # Sirf wo item jo order ho chuke hain
+        orderitem__order__ordered_date__gte=last_30_days, # Pichle 1 mahine mein
+        status='published'
+    ).annotate(total_sold=Sum('orderitem__qty')).order_by('-total_sold')[:10] # Top 10 nikal lo homepage ke liye
+
 
     return render(req, 'shop/product-details.html', data)
 
@@ -278,8 +297,10 @@ def filter(req, slug=None, author_slug=None, publisher_slug=None):
 # book_list
 def newelyRelase(req):
     data = {}
-    data['newbooks'] = Product.objects.filter(book_type__name__iexact='Newely Relase', status='published')
     data['categories'] = Category.objects.all()
+
+    data['books'] = Product.objects.filter(book_type__name__iexact='Newely Relase', status='published')
+    data['title'] = "Newly Released Books"
 
     wishlist_products = []
     cart_product_ids = []
@@ -297,15 +318,16 @@ def newelyRelase(req):
     data['wishlist_products'] = wishlist_products
     data['cart_product_ids'] = cart_product_ids
 
-    return render(req, 'book_list/newely_relase.html', data)
+    return render(req, 'shop/filter.html', data)
 
 
 def oldBooks(req):
     data = {}
-    data['oldbooks'] = Product.objects.filter(book_type__name__iexact='Old Books', status='published')
     data['categories'] = Category.objects.all()
 
-    
+    data['books'] = Product.objects.filter(book_type__name__iexact='Old Books', status='published')
+    data['title'] = "Old Books Collection"
+
     wishlist_products = []
     cart_product_ids = []
 
@@ -322,14 +344,16 @@ def oldBooks(req):
     data['wishlist_products'] = wishlist_products
     data['cart_product_ids'] = cart_product_ids
 
-    return render(req, 'book_list/old_books.html', data)
+    return render(req, 'shop/filter.html', data)
 
 
 def recentlyAdded(req):
     data = {}
     last_24_hours = timezone.now() - timedelta(hours=24)
-    data['recent_books'] = Product.objects.filter(created_at__gte=last_24_hours).order_by('-created_at')
     data['categories'] = Category.objects.all()
+
+    data['books'] = Product.objects.filter(created_at__gte=last_24_hours).order_by('-created_at')
+    data['title'] = "Recently Added Books"
 
     wishlist_products = []
     cart_product_ids = []
@@ -347,15 +371,15 @@ def recentlyAdded(req):
     data['wishlist_products'] = wishlist_products
     data['cart_product_ids'] = cart_product_ids
 
-    return render(req, 'book_list/recently_added.html', data)
-
+    return render(req, 'shop/filter.html', data)
 
 
 def comboBooks(req):
     data = {}
-    data['combobooks'] = Product.objects.filter(book_type__name__iexact='Value Combo Packs', status='published')
     data['categories'] = Category.objects.all()
 
+    data['books'] = Product.objects.filter(book_type__name__iexact='Value Combo Packs', status='published')
+    data['title'] = "Value Combo Packs"
     
     wishlist_products = []
     cart_product_ids = []
@@ -373,8 +397,7 @@ def comboBooks(req):
     data['wishlist_products'] = wishlist_products
     data['cart_product_ids'] = cart_product_ids
 
-    return render(req, 'book_list/combo_books.html', data)
-
+    return render(req, 'shop/filter.html', data)
 
 
 def recentViewedBooks(req):
@@ -414,6 +437,36 @@ def recentViewedBooks(req):
         if order:
             cart_product_ids = list(order.items.values_list('item_id', flat=True))
 
+    data['wishlist_products'] = wishlist_products
+    data['cart_product_ids'] = cart_product_ids
+
+    return render(req, 'shop/filter.html', data)
+
+
+def topSellingBooks(req):
+    data = {}
+    data['categories'] = Category.objects.all()
+    
+    last_30_days = timezone.now() - timedelta(days=30)
+    
+    # Yahan [:10] nahi lagayenge kyunki View All me sab dikhana hai
+    data['books'] = Product.objects.filter(
+        orderitem__order__ordered=True,
+        orderitem__order__ordered_date__gte=last_30_days,
+        status='published'
+    ).annotate(total_sold=Sum('orderitem__qty')).order_by('-total_sold')
+    
+    data['title'] = "Top Selling Books (This Month)"
+    
+    # Wishlist aur Cart items list 
+    wishlist_products = []
+    cart_product_ids = []
+    if req.user.is_authenticated:
+        wishlist_products = list(Wishlist.objects.filter(user=req.user).values_list('product_id', flat=True))
+        order = Order.objects.filter(user=req.user, ordered=False).first()
+        if order:
+            cart_product_ids = list(order.items.values_list('item_id', flat=True))
+            
     data['wishlist_products'] = wishlist_products
     data['cart_product_ids'] = cart_product_ids
 
