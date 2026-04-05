@@ -175,24 +175,36 @@ def minusToCart(request, slug):
 @login_required
 def removeFromCart(request, slug):
     product = get_object_or_404(Product, slug=slug)
-
-    order_qs = Order.objects.filter(user=request.user, ordered=False)
-
+    
+    # 1. Sirf normal 'Cart' wala order uthao (Buy Now wala nahi)
+    order_qs = Order.objects.filter(user=request.user, ordered=False, is_buy_now=False)
+    
     if order_qs.exists():
-        order = order_qs[0]
-
-        if order.items.filter(item=product).exists():
-            order_item = OrderItem.objects.get(
+        order = order_qs.first()
+        
+        # 2. Check karo ki ye item cart mein hai ya nahi
+        if order.items.filter(item__slug=product.slug).exists():
+            
+            # 🚨 THE FIX: .get() hata kar .filter().first() lagaya hai
+            # Taaki agar Buy Now ki wajah se 2 item ban bhi gaye hon, toh error na aaye
+            order_item = OrderItem.objects.filter(
+                item=product,
                 user=request.user,
-                ordered=False,
-                item=product
-            )
-
+                ordered=False
+            ).first()
+            
+            # Item ko order se hatao aur database se delete kar do
             order.items.remove(order_item)
             order_item.delete()
-
-    return redirect('cart')
-
+            
+            messages.success(request, "Item was removed from your cart.")
+            return redirect(request.META.get('HTTP_REFERER', 'cart'))
+        else:
+            messages.info(request, "This item was not in your cart.")
+            return redirect(request.META.get('HTTP_REFERER', 'cart'))
+    else:
+        messages.info(request, "You do not have an active order.")
+        return redirect('cart')
 
 
 @login_required
