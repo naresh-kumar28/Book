@@ -501,3 +501,79 @@ def orderSuccess(req, order_id):
     }
 
     return render(req, 'shop/order_success.html', context)
+
+
+
+@login_required
+def apply_coupon(request):
+    if request.method == "POST":
+        code = request.POST.get('coupon_code')
+        next_url = request.META.get('HTTP_REFERER', 'cart')
+
+        # 🚨 SMART FIX: Check karo user kis page par hai
+        if 'cart' in next_url.lower():
+            # Agar request Cart page se aayi hai, to hamesha normal order (is_buy_now=False) uthao
+            is_buy_now = False
+        else:
+            # Agar Checkout page se aayi hai, to session check karo
+            is_buy_now = request.session.get('checkout_mode') == 'buy_now'
+
+        order = Order.objects.filter(user=request.user, ordered=False, is_buy_now=is_buy_now).first()
+
+        if not order:
+            messages.error(request, "No active order found.")
+            return redirect(next_url)
+
+        try:
+            coupon = Coupon.objects.get(code__iexact=code, active=True)
+        except Coupon.DoesNotExist:
+            messages.error(request, "Invalid coupon code.")
+            return redirect(next_url)
+
+        now = timezone.now()
+        subtotal = order.get_subtotal()
+
+        # Date validation
+        if coupon.valid_from and now < coupon.valid_from:
+            messages.error(request, "Coupon is not active yet.")
+            return redirect(next_url)
+
+        if coupon.valid_to and now > coupon.valid_to:
+            messages.error(request, "Coupon has expired.")
+            return redirect(next_url)
+
+        # Minimum order check
+        if subtotal < coupon.min_order_amount:
+            messages.error(request, f"Minimum order should be ₹{coupon.min_order_amount}.")
+            return redirect(next_url)
+
+        # Apply coupon
+        order.coupon = coupon
+        order.save()
+
+        messages.success(request, "Coupon applied successfully!")
+        return redirect(next_url)
+
+
+
+@login_required
+def remove_coupon(request):
+    next_url = request.META.get('HTTP_REFERER', 'cart')
+    
+    try:
+        # 🚨 SMART FIX: Yahan bhi same logic
+        if 'cart' in next_url.lower():
+            is_buy_now = False
+        else:
+            is_buy_now = request.session.get('checkout_mode') == 'buy_now'
+            
+        order = Order.objects.get(user=request.user, ordered=False, is_buy_now=is_buy_now)
+        
+        order.coupon = None
+        order.save()
+        messages.success(request, "Coupon removed successfully.")
+    except Order.DoesNotExist:
+        pass
+        
+    return redirect(next_url)
+

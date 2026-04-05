@@ -511,28 +511,6 @@ def deleteCoupon(req, id):
 
 
 
-@login_required
-def remove_coupon(request):
-    next_url = request.META.get('HTTP_REFERER', 'cart')
-    
-    try:
-        # 🚨 SMART FIX: Yahan bhi same logic
-        if 'cart' in next_url.lower():
-            is_buy_now = False
-        else:
-            is_buy_now = request.session.get('checkout_mode') == 'buy_now'
-            
-        order = Order.objects.get(user=request.user, ordered=False, is_buy_now=is_buy_now)
-        
-        order.coupon = None
-        order.save()
-        messages.success(request, "Coupon removed successfully.")
-    except Order.DoesNotExist:
-        pass
-        
-    return redirect(next_url)
-
-
 @admin_required
 def manageOrders(req):
     context = {}
