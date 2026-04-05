@@ -578,3 +578,18 @@ def manageOrders(req):
     context['pending_orders'] = pending_orders
 
     return render(req, 'admin/manage_orders.html', context)
+
+@admin_required
+def editOrders(req, id):
+    orders = Order.objects.get(id=id)
+    form = OrdersForm(req.POST or None, instance=orders)
+    if req.method == 'POST':
+        if form.is_valid():
+            form.save()
+            return redirect(manageOrders)
+    return render(req, 'admin/edit_orders.html', {"form" : form})
+
+@admin_required
+def deleteOrders(req, id):
+    Order.objects.get(id=id).delete()
+    return redirect(manageOrders)

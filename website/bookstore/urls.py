@@ -103,6 +103,8 @@ urlpatterns = [
 
     #order management
     path('admin/orders/', manageOrders, name='admin.orders'),
+    path('admin/orders/<int:id>/edit/', editOrders, name='admin.orders.edit'),
+    path('admin/orders/<int:id>/delete/', deleteOrders, name='admin.orders.delete'),
 
     #book_list
     path('book/newely/', newelyRelase, name='book.newely'),

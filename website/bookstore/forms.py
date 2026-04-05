@@ -95,3 +95,9 @@ class AddressForm(ModelForm):
             "state": forms.TextInput(attrs={"placeholder": "State"}),
             "pincode": forms.TextInput(attrs={"placeholder": "Pincode"}),
         }
+
+
+class OrdersForm(ModelForm):
+    class Meta:
+        model = Order
+        fields = '__all__'
