@@ -20,36 +20,35 @@ urlpatterns = [
 
     #Shop Section
     path('shop/product-details/<int:id>/', productDetails, name='product-details'),
-    path('shop/cart/', cart, name='cart'),
-    path('shop/add-to-cart/<slug:slug>/', addToCart, name='add-to-cart'),
-    path('shop/buy-now/<slug:slug>/', buyNow, name='buyNow'),
-    path('shop/cartCheckout/', cartCheckout, name='cartCheckout'),
-    path('shop/minus-from-cart/<slug:slug>/', minusToCart, name='minus-from-cart'),
-    path('shop/remove-from-cart/<slug:slug>/', removeFromCart, name='remove-from-cart'),
-    path('shop/payment/', payment, name='payment'),
-    path('place-order/', placeOrder, name='place_order'),
-    path('shop/order-success/<int:order_id>/', orderSuccess, name='order_success'),
-
-    path('shop/summary/', summary, name='summary'),
-    path('shop/delivery_address/', deliveryAddress, name='delivery_address'),
     path('shop/filter/', filter, name='filter'),
     path('shop/filter/<slug:slug>/', filter, name='category_filter'),
     path('shop/filter/author/<slug:author_slug>/', filter, name='author_filter'),
     path('shop/filter/publisher/<slug:publisher_slug>/', filter, name='publisher_filter'),
     path('shop/recent-viewed/', recentViewedBooks, name='recent_viewed'),
 
-    # User Section
-    path('account/address/', address, name='address'),
-    path('account/address/delete/<int:id>/', delete_address, name='delete-address'),
+    #Checkout Page route
+    path('shop/cart/', cart, name='cart'),
+    path('shop/buy-now/<slug:slug>/', buyNow, name='buyNow'),
+    path('shop/cartCheckout/', cartCheckout, name='cartCheckout'),
+    path('shop/add-to-cart/<slug:slug>/', addToCart, name='add-to-cart'),
+    path('shop/minus-from-cart/<slug:slug>/', minusToCart, name='minus-from-cart'),
+    path('shop/remove-from-cart/<slug:slug>/', removeFromCart, name='remove-from-cart'),
+    path('shop/delivery_address/', deliveryAddress, name='delivery_address'),
+    path('shop/payment/', payment, name='payment'),
+    path('shop/summary/', summary, name='summary'),
+    path('place-order/', placeOrder, name='place_order'),
+    path('shop/order-success/<int:order_id>/', orderSuccess, name='order_success'),
+    path('admin/apply-coupon/', apply_coupon, name='admin.apply.coupon'),
+    path('admin/remove-coupon/', remove_coupon, name='admin.remove.coupon'),
 
+    # User Section
     path('account/profile/', profile, name='profile'),
     path('account/dashboard/', dashboard, name='dashboard'),
+    path('account/address/', address, name='address'),
+    path('account/address/delete/<int:id>/', delete_address, name='delete-address'),
     path('account/my-order/', myOrder, name='my-order'),
     path('account/order-details/<int:order_id>/', orderDetails, name='order_details'),
     path('account/cancel-order/<int:order_id>/', cancelOrder, name='cancel_order'),
-    # path('account/order-receipt/<int:order_id>/', orderReceipt, name='order_receipt'),
-
-
     path('account/wishlist/', wishlist, name='wishlist'),
     path('account/add-to-wishlist/<slug:slug>/', addToWishlist, name='add-to-wishlist'),
     path('account/remove-from-wishlist/<slug:slug>/', removeFromWishlist, name='remove-from-wishlist'),
@@ -99,9 +98,6 @@ urlpatterns = [
     path('admin/coupon/', manageCoupons, name='admin.coupon'),
     path('admin/coupon/<int:id>/edit/', editCoupon, name='admin.coupon.edit'),
     path('admin/coupon/<int:id>/delete/', deleteCoupon, name='admin.coupon.delete'),
-    
-    path('admin/apply-coupon/', apply_coupon, name='admin.apply.coupon'),
-    path('admin/remove-coupon/', remove_coupon, name='admin.remove.coupon'),
 
     #order management
     path('admin/orders/', manageOrders, name='admin.orders'),
