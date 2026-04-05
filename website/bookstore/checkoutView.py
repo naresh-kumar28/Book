@@ -345,8 +345,6 @@ def dashboard(req):
 
 
 
-
-
 @login_required
 def myOrder(req):
     context = {}
@@ -359,15 +357,20 @@ def myOrder(req):
         ordered=True
     ).prefetch_related('items__item').select_related('address', 'coupon').order_by('-ordered_date', '-id')
 
+    # 🚨 FIX: Search logic updated with Q objects and .distinct()
     if search_query:
         if search_query.upper().startswith('ORD-'):
             cleaned_search = search_query.upper().replace('ORD-', '').lstrip('0')
             orders = orders.filter(
                 Q(id__icontains=cleaned_search) |
-                Q(id__icontains=search_query)
-            )
+                Q(id__icontains=search_query) |
+                Q(items__item__title__icontains=search_query) # <-- Product Name Search
+            ).distinct() # <-- Duplicate rokne ke liye
         else:
-            orders = orders.filter(id__icontains=search_query)
+            orders = orders.filter(
+                Q(id__icontains=search_query) |
+                Q(items__item__title__icontains=search_query) # <-- Product Name Search
+            ).distinct() # <-- Duplicate rokne ke liye
 
     # simple status logic
     if status_filter == 'pending':
