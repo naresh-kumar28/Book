@@ -577,3 +577,30 @@ def remove_coupon(request):
         
     return redirect(next_url)
 
+
+
+
+@login_required
+def submit_review(request, product_id):
+    url = request.META.get('HTTP_REFERER', 'home')
+    if request.method == 'POST':
+        try:
+            # Agar user ne pehle se review diya hai toh update karo
+            reviews = ReviewRating.objects.get(user__id=request.user.id, product__id=product_id)
+            form = ReviewForm(request.POST, instance=reviews)
+            form.save()
+            messages.success(request, 'Review Updated')
+            return redirect(url)
+        except ReviewRating.DoesNotExist:
+            # Agar pehli baar review de raha hai toh naya banao
+            form = ReviewForm(request.POST)
+            if form.is_valid():
+                data = ReviewRating()
+                data.rating = form.cleaned_data['rating']
+                data.review = form.cleaned_data['review']
+                data.product_id = product_id
+                data.user_id = request.user.id
+                data.save()
+                messages.success(request, 'Review Submitted')
+                return redirect(url)
+    return redirect(url)

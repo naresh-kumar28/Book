@@ -25,6 +25,7 @@ urlpatterns = [
     path('shop/filter/author/<slug:author_slug>/', filter, name='author_filter'),
     path('shop/filter/publisher/<slug:publisher_slug>/', filter, name='publisher_filter'),
     path('shop/recent-viewed/', recentViewedBooks, name='recent_viewed'),
+    path('shop/submit_review/<int:product_id>/', submit_review, name='submit_review'),
 
     #Checkout Page route
     path('shop/cart/', cart, name='cart'),

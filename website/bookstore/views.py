@@ -236,6 +236,8 @@ def productDetails(req, id):
         status='published'
     ).annotate(total_sold=Sum('orderitem__qty')).order_by('-total_sold')[:10] # Top 10 nikal lo homepage ke liye
 
+    reviews = ReviewRating.objects.filter(product_id=product.id, status=True).order_by('-created_at')
+    data['reviews'] = reviews
 
     return render(req, 'shop/product-details.html', data)
 

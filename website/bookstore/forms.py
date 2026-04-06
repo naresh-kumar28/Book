@@ -101,3 +101,9 @@ class OrdersForm(ModelForm):
     class Meta:
         model = Order
         fields = '__all__'
+
+
+class ReviewForm(forms.ModelForm):
+    class Meta:
+        model = ReviewRating
+        fields = ['review', 'rating']

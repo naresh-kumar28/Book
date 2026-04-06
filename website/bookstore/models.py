@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from decimal import Decimal
 from django.utils import timezone
 from django.core.exceptions import ValidationError
+from django.db.models import Avg, Count
 
 # Create your models here.
 
@@ -124,6 +125,37 @@ class Product(models.Model):
             amount = self.discount_price - self.price
             return int(amount)
         return 0
+    
+    @property
+    def averageReview(self):
+        reviews = self.reviews.filter(status=True).aggregate(average=Avg('rating'))
+        avg = 0
+        if reviews['average'] is not None:
+            avg = float(reviews['average'])
+        return avg
+
+    @property
+    def countReview(self):
+        reviews = self.reviews.filter(status=True).aggregate(count=Count('id'))
+        count = 0
+        if reviews['count'] is not None:
+            count = int(reviews['count'])
+        return count
+    
+    @property
+    def rating_percentages(self):
+        reviews = self.reviews.filter(status=True)
+        total = reviews.count()
+        if total == 0:
+            return {'five': 0, 'four': 0, 'three': 0, 'two': 0, 'one': 0}
+        
+        return {
+            'five': (reviews.filter(rating=5).count() / total) * 100,
+            'four': (reviews.filter(rating=4).count() / total) * 100,
+            'three': (reviews.filter(rating=3).count() / total) * 100,
+            'two': (reviews.filter(rating=2).count() / total) * 100,
+            'one': (reviews.filter(rating=1).count() / total) * 100,
+        }
 
 
 class ProductImage(models.Model):
@@ -324,3 +356,17 @@ class Wishlist(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.product.title}"
+    
+
+
+class ReviewRating(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    review = models.TextField(max_length=500, blank=True)
+    rating = models.FloatField()
+    status = models.BooleanField(default=True) # Agar koi fake review kare to admin isko False karke hide kar sake
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.subject
