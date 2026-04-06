@@ -7,7 +7,6 @@
 
 {% include 'includes/sticky-button.html' %}
 
-
 <div class="min-h-screen bg-gray-50 py-10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex flex-col md:flex-row gap-8">
@@ -32,23 +31,23 @@
                             </svg>
                             Add New Address
                         </a>
-                        <button
+                        <button id="getLocationBtn" type="button"
                             class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-bold rounded-lg shadow-sm text-white bg-orange-500 hover:bg-orange-600 transition-all active:scale-95 w-full sm:w-auto">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                stroke="currentColor" class="w-4 h-4 mr-2">
+                                stroke="currentColor" class="w-4 h-4 mr-2 location-icon">
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
                             </svg>
-                            Use My Location
+                            <span class="btn-text">Use My Location</span>
                         </button>
                     </div>
 
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                
+
                     {% if addresses %}
                     {% for address in addresses %}
                     <div
@@ -61,29 +60,29 @@
                                         {% else %}
                                             bg-gray-100 text-gray-500 group-hover:bg-orange-100 group-hover:text-orange-500
                                         {% endif %} transition-colors">
-                
+
                                     {% if address.type == 'Home' %}
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                                        stroke="currentColor">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                                     </svg>
                                     {% else %}
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                                        stroke="currentColor">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                                     </svg>
                                     {% endif %}
                                 </span>
                             </div>
-                
+
                             <div class="flex-1">
                                 <div class="flex flex-wrap items-center justify-between mb-3 gap-2">
                                     <h3 class="text-lg font-bold text-gray-900">
                                         {{ address.type }} Address
                                     </h3>
-                
+
                                     <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider
                                             {% if address.type == 'Home' %}
                                                 bg-green-100 text-green-700
@@ -97,25 +96,25 @@
                                         {% endif %}
                                     </span>
                                 </div>
-                
+
                                 <div class="text-sm text-gray-600 space-y-1.5 leading-relaxed font-medium">
                                     <p class="font-bold text-gray-900 text-base">{{ address.name }}</p>
-                
+
                                     <p>
                                         {{ address.street }}
                                         {% if address.landmark %}, {{ address.landmark }}{% endif %}
                                     </p>
-                
+
                                     <p>
                                         {{ address.city }}, {{ address.state }} - {{ address.pincode }}
                                     </p>
-                
+
                                     <p>India</p>
-                
+
                                     {% if address.near_by %}
                                     <p>{{ address.near_by }}</p>
                                     {% endif %}
-                
+
                                     <p class="mt-3 pt-2 border-t border-gray-50">
                                         <span class="font-bold text-gray-900">Phone:</span>
                                         {{ address.contact }}
@@ -124,22 +123,22 @@
                                         {% endif %}
                                     </p>
                                 </div>
-                
+
                                 <div class="flex items-center space-x-5 mt-6">
                                     <a href="{% url 'address' %}?edit={{ address.id }}"
                                         class="flex items-center text-sm font-bold text-gray-600 hover:text-orange-500 transition-colors">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24"
-                                            stroke="currentColor">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                         </svg>
                                         Edit
                                     </a>
-                
+
                                     <a href="{% url 'delete-address' address.id %}"
                                         class="flex items-center text-sm font-bold text-red-500 hover:text-red-700 transition-colors">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24"
-                                            stroke="currentColor">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                 d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-3a1 1 0 00-1 1v3M4 7h16" />
                                         </svg>
@@ -150,9 +149,10 @@
                         </div>
                     </div>
                     {% endfor %}
-                
+
                     {% else %}
-                    <div class="md:col-span-2 border border-gray-100 rounded-2xl bg-white px-6 py-14 text-center shadow-sm">
+                    <div
+                        class="md:col-span-2 border border-gray-100 rounded-2xl bg-white px-6 py-14 text-center shadow-sm">
                         <div class="flex flex-col items-center justify-center">
                             <div
                                 class="mb-4 inline-flex items-center justify-center h-14 w-14 rounded-full bg-orange-50 text-orange-500">
@@ -164,27 +164,27 @@
                                         d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                                 </svg>
                             </div>
-                
+
                             <h3 class="text-lg font-bold text-gray-900">No address found</h3>
                             <p class="text-sm text-gray-500 mt-1">Add your address to continue faster checkout.</p>
                         </div>
                     </div>
                     {% endif %}
-                
+
                 </div>
 
                 {% if show_form %}
-                <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-6 lg:p-8">
-                
+                <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-6 lg:p-8" id="addressFormContainer">
+
                     <div>
                         <form action="" method="post" enctype="multipart/form-data"
                             class="grid grid-cols-1 md:grid-cols-2 gap-5 overflow-hidden">
                             {% csrf_token %}
-                
+
                             {{ form|crispy }}
-                
+
                             <div class="pt-2 flex flex-col sm:flex-row gap-3 sm:gap-4 col-span-1 md:col-span-2 mt-4">
-                            
+
                                 <button type="submit"
                                     class="w-full sm:w-auto px-8 py-3.5 bg-orange-500 hover:bg-orange-600 text-white font-bold text-sm rounded-xl uppercase tracking-wide transition-all shadow-md hover:shadow-lg active:scale-[0.98] flex items-center justify-center gap-2">
                                     {% if edit_address %}
@@ -193,16 +193,16 @@
                                     Save Address & Continue
                                     {% endif %}
                                 </button>
-                            
+
                                 <a href="{% url 'address' %}"
                                     class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 bg-white border-2 border-gray-200 text-gray-500 hover:text-gray-800 hover:border-gray-300 font-bold text-sm rounded-xl uppercase tracking-wide transition-all shadow-sm hover:shadow hover:bg-gray-50 active:scale-[0.98]">
                                     Cancel
                                 </a>
-                            
+
                             </div>
                         </form>
                     </div>
-                
+
                 </div>
                 {% endif %}
 
@@ -211,5 +211,127 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const locBtn = document.getElementById('getLocationBtn');
+        const btnText = locBtn.querySelector('.btn-text');
+
+        // Check if we need to auto-trigger after page reload
+        if (sessionStorage.getItem('triggerLocation') === 'true') {
+            sessionStorage.removeItem('triggerLocation');
+            if (document.getElementById('id_pincode')) {
+                fetchLocation();
+            }
+        }
+
+        if (locBtn) {
+            locBtn.addEventListener('click', function () {
+                // Agar form open nahi hai, toh pehle form open karo
+                if (!document.getElementById('id_pincode')) {
+                    sessionStorage.setItem('triggerLocation', 'true');
+                    window.location.href = "{% url 'address' %}?add=1";
+                    return;
+                }
+                fetchLocation();
+            });
+        }
+
+        function fetchLocation() {
+            if (!navigator.geolocation) {
+                alert("Geolocation is not supported by your browser");
+                return;
+            }
+
+            const originalText = btnText.innerText;
+            btnText.innerText = "Detecting...";
+            locBtn.classList.add('opacity-75', 'cursor-wait');
+
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+
+                    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.address) {
+                                const address = data.address;
+                                console.log("OSM Data:", address); // Console me check karne ke liye ki kya data aa raha hai
+
+                                // 1. Fill City
+                                const cityField = document.getElementById('id_city');
+                                if (cityField) cityField.value = address.city || address.town || address.village || address.state_district || '';
+
+                                // 2. Fill State
+                                const stateField = document.getElementById('id_state');
+                                if (stateField) stateField.value = address.state || '';
+
+                                // 3. Fill Pincode
+                                const pincodeField = document.getElementById('id_pincode');
+                                if (pincodeField) pincodeField.value = address.postcode || '';
+
+                                // 4. Fill Street (Super Enhanced)
+                                const streetField = document.getElementById('id_street');
+                                if (streetField) {
+                                    let roadArea = [];
+                                    if (address.road) roadArea.push(address.road);
+                                    if (address.residential) roadArea.push(address.residential);
+                                    if (address.neighbourhood) roadArea.push(address.neighbourhood);
+                                    if (address.suburb) roadArea.push(address.suburb);
+                                    if (address.city_district) roadArea.push(address.city_district);
+
+                                    // Duplicate hatane ke liye Set ka use
+                                    roadArea = [...new Set(roadArea)];
+                                    streetField.value = roadArea.join(', ');
+                                }
+
+                                // 5. Fill Landmark (Agar API koi building ya shop bata de)
+                                const landmarkField = document.getElementById('id_landmark');
+                                if (landmarkField) {
+                                    let landmark = [];
+                                    if (address.building) landmark.push(address.building);
+                                    if (address.amenity) landmark.push(address.amenity);
+                                    if (address.shop) landmark.push(address.shop);
+                                    if (address.historic) landmark.push(address.historic);
+                                    if (address.leisure) landmark.push(address.leisure);
+
+                                    landmarkField.value = landmark.join(', ');
+                                }
+
+                                // 6. Fill Near By (Fallback options)
+                                const nearbyField = document.getElementById('id_near_by');
+                                if (nearbyField) {
+                                    if (address.county && !address.city_district) {
+                                        nearbyField.value = address.county;
+                                    } else if (address.state_district && address.state_district !== address.city) {
+                                        nearbyField.value = address.state_district;
+                                    }
+                                }
+
+                                // Scroll to form smoothly
+                                document.getElementById('addressFormContainer').scrollIntoView({ behavior: 'smooth' });
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Error fetching location details:", error);
+                            alert("Could not fetch address details. Please fill manually.");
+                        })
+                        .finally(() => {
+                            btnText.innerText = originalText;
+                            locBtn.classList.remove('opacity-75', 'cursor-wait');
+                        });
+                },
+                (error) => {
+                    console.error("Error getting location:", error);
+                    alert("Please allow location access in your browser to use this feature.");
+                    btnText.innerText = originalText;
+                    locBtn.classList.remove('opacity-75', 'cursor-wait');
+                },
+                { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+            );
+        }
+    });
+</script>
 
 {% endblock %}
