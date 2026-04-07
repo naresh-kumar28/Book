@@ -79,7 +79,7 @@
                             <h3 class="font-bold text-gray-800 truncate" title="{{ book.title }}">{{ book.title }}</h3>
                             <p
                                 class="text-[10px] text-indigo-600 font-bold uppercase tracking-wider bg-indigo-50 w-max px-2 py-0.5 rounded">
-                                {{ book.brand }}
+                                {{ book.brand|default:book.student_class|default:book.author.author_name |default:"Standard"}}
                             </p>
                             <div class="flex items-center space-x-2 pt-1">
                                 <span class="text-lg font-bold text-green-600">₹{{ book.price|floatformat:0 }}</span>
@@ -204,7 +204,7 @@
                                 <h3 class="font-bold text-gray-800 truncate" title="{{ book.title }}">{{ book.title }}</h3>
                                 <p
                                     class="text-[10px] text-indigo-600 font-bold uppercase tracking-wider bg-indigo-50 w-max px-2 py-0.5 rounded">
-                                    {{ book.brand }}
+                                    {{ book.brand|default:book.student_class|default:book.author.author_name |default:"Standard"}}
                                 </p>
                                 <div class="flex items-center space-x-2 pt-1">
                                     <span class="text-lg font-bold text-green-600">₹{{ book.price|floatformat:0 }}</span>

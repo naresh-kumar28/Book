@@ -171,7 +171,7 @@
             
                             <p
                                 class="text-[8px] md:text-[10px] text-indigo-600 font-bold uppercase tracking-wider bg-indigo-50 w-max px-2 py-0.5 rounded">
-                                {{ book.brand }}
+                                {{ book.brand|default:book.student_class|default:book.author.author_name |default:"Standard"}}
                             </p>
             
                             <div class="flex flex-wrap items-center gap-1 pt-1">
