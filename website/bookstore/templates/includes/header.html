@@ -131,7 +131,7 @@
                     </a>
                     {% endif %}
                 
-                    <a href="{% url 'profile' %}" target="_blank"
+                    <a href="{% url 'profile' %}"
                         class="inline-flex items-center gap-2 bg-gray-900 text-white px-4 py-2.5 rounded-xl hover:bg-orange-600 transition-all duration-300 font-semibold shadow-sm group">
                         {% if user.first_name and user.last_name %}
                         <span>Hi, {{ user.first_name|truncatechars:9 }}</span>
