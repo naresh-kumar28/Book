@@ -90,9 +90,15 @@
                         <h1 class="text-2xl md:text-3xl font-extrabold text-gray-900 leading-tight">{{product.title}}</h1>
 
                         <div class="mt-2 flex flex-col md:flex-row md:items-center gap-1 md:gap-3">
+                            {% if product.author %}
                             <a href="{% url 'author_filter' product.author.author_slug %}" class="text-sm text-gray-500 font-medium">
                                 Author: <span class="text-orange-600 hover:underline cursor-pointer">{{product.author.author_name}}</span>
                             </a>
+                            {% else %}
+                            <a href="#" class="text-sm text-gray-500 font-medium">
+                                Author: <span class="text-orange-600 hover:underline cursor-pointer">NA</span>
+                            </a>
+                            {% endif %}
                             <span class="hidden md:inline text-gray-300">|</span>
                             <p class="text-sm text-gray-500">
                                 Binding: <span class="font-semibold text-gray-800">{{product.binding_type}}</span>
@@ -289,14 +295,14 @@
                         
                                 <div class="flex-1 space-y-2">
                                     <div class="flex items-center gap-2">
-                                        <span class="text-[10px] md:text-xs font-bold text-gray-600 w-12 md:w-16 shrink-0 whitespace-nowrap">Very
+                                        <span
+                                            class="text-[10px] md:text-xs font-bold text-gray-600 w-12 md:w-16 shrink-0 whitespace-nowrap">Very
                                             Good</span>
                                         <div class="flex-1 h-1.5 md:h-2 bg-gray-100 rounded-full overflow-hidden">
                                             <div class="bg-green-600 h-full rounded-full"
                                                 style="width: {{ product.rating_percentages.five|floatformat:0 }}%"></div>
                                         </div>
                                     </div>
-                                
                                     <div class="flex items-center gap-2">
                                         <span class="text-[10px] md:text-xs font-bold text-gray-600 w-12 md:w-16 shrink-0">Good</span>
                                         <div class="flex-1 h-1.5 md:h-2 bg-gray-100 rounded-full overflow-hidden">
@@ -304,7 +310,6 @@
                                                 style="width: {{ product.rating_percentages.four|floatformat:0 }}%"></div>
                                         </div>
                                     </div>
-                                
                                     <div class="flex items-center gap-2">
                                         <span class="text-[10px] md:text-xs font-bold text-gray-600 w-12 md:w-16 shrink-0">Ok-Ok</span>
                                         <div class="flex-1 h-1.5 md:h-2 bg-gray-100 rounded-full overflow-hidden">
@@ -312,7 +317,6 @@
                                                 style="width: {{ product.rating_percentages.three|floatformat:0 }}%"></div>
                                         </div>
                                     </div>
-                                
                                     <div class="flex items-center gap-2">
                                         <span class="text-[10px] md:text-xs font-bold text-gray-600 w-12 md:w-16 shrink-0">Bad</span>
                                         <div class="flex-1 h-1.5 md:h-2 bg-gray-100 rounded-full overflow-hidden">
@@ -320,7 +324,6 @@
                                                 style="width: {{ product.rating_percentages.two|floatformat:0 }}%"></div>
                                         </div>
                                     </div>
-                                
                                     <div class="flex items-center gap-2">
                                         <span class="text-[10px] md:text-xs font-bold text-gray-600 w-12 md:w-16 shrink-0">Very Bad</span>
                                         <div class="flex-1 h-1.5 md:h-2 bg-gray-100 rounded-full overflow-hidden">
@@ -331,14 +334,13 @@
                                 </div>
                             </div>
                         
-                            <div class="">
-                        
-                                <form action="{% url 'submit_review' product.id %}" method="POST" class="space-y-6 mb-9">
+                            <div class="mb-10">
+                                {% if user.is_authenticated %}
+                                <form action="{% url 'submit_review' product.id %}" method="POST" class="space-y-6">
                                     {% csrf_token %}
                         
                                     <div class="bg-gray-50/50 rounded-xl p-6 border border-gray-100 text-center">
                                         <h3 class="text-lg font-bold text-gray-800 mb-6">How was the product?</h3>
-                        
                                         <div class="flex justify-center gap-4 md:gap-8" id="star-rating-box">
                                             <label class="cursor-pointer group flex flex-col items-center star-item" data-value="1">
                                                 <input type="radio" name="rating" value="1" class="hidden" required>
@@ -349,7 +351,6 @@
                                                 </svg>
                                                 <span class="text-[11px] md:text-sm text-gray-500 mt-2 font-semibold star-text">Very Bad</span>
                                             </label>
-                        
                                             <label class="cursor-pointer group flex flex-col items-center star-item" data-value="2">
                                                 <input type="radio" name="rating" value="2" class="hidden" required>
                                                 <svg class="w-10 h-10 md:w-12 md:h-12 text-gray-400 group-hover:text-orange-500 transition-colors duration-200 star-icon"
@@ -359,7 +360,6 @@
                                                 </svg>
                                                 <span class="text-[11px] md:text-sm text-gray-500 mt-2 font-semibold star-text">Bad</span>
                                             </label>
-                        
                                             <label class="cursor-pointer group flex flex-col items-center star-item" data-value="3">
                                                 <input type="radio" name="rating" value="3" class="hidden" required>
                                                 <svg class="w-10 h-10 md:w-12 md:h-12 text-gray-400 group-hover:text-orange-500 transition-colors duration-200 star-icon"
@@ -369,7 +369,6 @@
                                                 </svg>
                                                 <span class="text-[11px] md:text-sm text-gray-500 mt-2 font-semibold star-text">Ok-Ok</span>
                                             </label>
-                        
                                             <label class="cursor-pointer group flex flex-col items-center star-item" data-value="4">
                                                 <input type="radio" name="rating" value="4" class="hidden" required>
                                                 <svg class="w-10 h-10 md:w-12 md:h-12 text-gray-400 group-hover:text-orange-500 transition-colors duration-200 star-icon"
@@ -379,7 +378,6 @@
                                                 </svg>
                                                 <span class="text-[11px] md:text-sm text-gray-500 mt-2 font-semibold star-text">Good</span>
                                             </label>
-                        
                                             <label class="cursor-pointer group flex flex-col items-center star-item" data-value="5">
                                                 <input type="radio" name="rating" value="5" class="hidden" required>
                                                 <svg class="w-10 h-10 md:w-12 md:h-12 text-gray-400 group-hover:text-orange-500 transition-colors duration-200 star-icon"
@@ -400,58 +398,55 @@
                                     </div>
                         
                                     <div class="pt-2">
-                                        {% if user.is_authenticated %}
                                         <button type="submit"
                                             class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-xl transition-colors shadow-sm transform active:scale-95">
                                             Submit Review
                                         </button>
-                                        {% else %}
-                                        <div class="p-4 bg-red-50 border border-red-100 rounded-xl">
-                                            <p class="text-sm text-red-600">You must be logged in to post a review. <a href="{% url 'login' %}"
-                                                    class="underline font-bold">Login Here</a></p>
-                                        </div>
-                                        {% endif %}
                                     </div>
                                 </form>
+                                
+                                {% endif %}
                             </div>
                         
-                        <div class="space-y-8">
-                            {% for review in reviews|slice:":2" %}
-                            <div class="border-b border-gray-100 pb-4">
-                                <div class="flex items-center gap-3 mb-3">
-                                    <div
-                                        class="w-10 h-10 bg-orange-100 text-orange-600 flex items-center justify-center rounded-full font-bold text-sm uppercase">
-                                        {{ review.user.first_name|first }}{{ review.user.last_name|first|default:"" }}
+                        
+                            <div class="space-y-8">
+                                {% for review in reviews|slice:":2" %}
+                                <div class="border-b border-gray-100 pb-4">
+                                    <div class="flex items-center gap-3 mb-3">
+                                        <div
+                                            class="w-10 h-10 bg-orange-100 text-orange-600 flex items-center justify-center rounded-full font-bold text-sm uppercase">
+                                            {{ review.user.first_name|first }}{{ review.user.last_name|first|default:"" }}
+                                        </div>
+                                        <div>
+                                            <h4 class="text-sm font-bold text-gray-900">{{ review.user.first_name }} {{ review.user.last_name }}
+                                            </h4>
+                                            <p class="text-[11px] text-gray-400">Posted on {{ review.created_at|date:"d M Y" }}</p>
+                                        </div>
+                                        <div
+                                            class="ml-auto flex items-center gap-1 bg-green-700 text-white px-2 py-0.5 rounded text-[12px] font-bold">
+                                            {{ review.rating|floatformat:0 }}
+                                            <svg class="w-2.5 h-2.5 fill-current" viewBox="0 0 20 20">
+                                                <path
+                                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                            </svg>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <h4 class="text-sm font-bold text-gray-900">{{ review.user.first_name }} {{ review.user.last_name }}
-                                        </h4>
-                                        <p class="text-[11px] text-gray-400">Posted on {{ review.created_at|date:"d M Y" }}</p>
-                                    </div>
-                                    <div
-                                        class="ml-auto flex items-center gap-1 bg-green-700 text-white px-2 py-0.5 rounded text-[12px] font-bold">
-                                        {{ review.rating|floatformat:0 }}
-                                        <svg class="w-2.5 h-2.5 fill-current" viewBox="0 0 20 20">
-                                            <path
-                                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                        </svg>
-                                    </div>
+                                    <p class="text-sm text-gray-700 leading-relaxed mb-4">
+                                        {{ review.review }}
+                                    </p>
                                 </div>
-                                <p class="text-sm text-gray-700 leading-relaxed mb-4">
-                                    {{ review.review }}
-                                </p>
+                                {% empty %}
+                                <p class="text-gray-500 text-center py-4 text-sm">No reviews yet. Be the first to review this book!</p>
+                                {% endfor %}
                             </div>
-                            {% empty %}
-                            <p class="text-gray-500 text-center py-4 text-sm">No reviews yet. Be the first to review this book!</p>
-                            {% endfor %}
-                        </div>
                         
-                        {% if product.countReview > 2 %}
-                        <a href="#"
-                            class="block text-center w-full mt-6 py-3 text-orange-600 font-bold text-sm border border-orange-200 rounded-xl hover:bg-orange-50 transition-all">
-                            View All {{ product.countReview }} Reviews
-                        </a>
-                        {% endif %}
+                            {% if product.countReview > 2 %}
+                            <a href="#"
+                                class="block text-center w-full mt-6 py-3 text-orange-600 font-bold text-sm border border-orange-200 rounded-xl hover:bg-orange-50 transition-all">
+                                View All {{ product.countReview }} Reviews
+                            </a>
+                            {% endif %}
+                        
                         </div>
                         
                         <script>
@@ -464,20 +459,15 @@
                                     const text = item.querySelector('.star-text');
 
                                     item.addEventListener('click', () => {
-                                        // Pehle sab reset kar do
                                         starItems.forEach(s => {
                                             s.querySelector('.star-icon').classList.remove('fill-orange-500', 'text-orange-500');
                                             s.querySelector('.star-icon').classList.add('text-gray-400');
                                             s.querySelector('.star-text').classList.remove('text-orange-600', 'font-black');
                                         });
-
-                                        // Jo click hua hai aur usse pehle wale sabhi stars ko fill kar do
                                         for (let i = 0; i <= index; i++) {
                                             starItems[i].querySelector('.star-icon').classList.remove('text-gray-400');
                                             starItems[i].querySelector('.star-icon').classList.add('fill-orange-500', 'text-orange-500');
                                         }
-
-                                        // Clicked wale ke text ko bold color de do
                                         text.classList.add('text-orange-600', 'font-black');
                                         radioBtn.checked = true;
                                     });

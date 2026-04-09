@@ -86,13 +86,13 @@ class Product(models.Model):
     # --- HIGHLIGHTS ---
     language = models.CharField(max_length=50, default='Hindi')
     pages = models.PositiveIntegerField(help_text="Total number of pages")
-    isbn = models.CharField(max_length=20, unique=True, verbose_name="ISBN Number")
+    isbn = models.CharField(max_length=20, unique=True, blank=True, default='NA', verbose_name="ISBN Number")
     binding_type = models.CharField(max_length=50, help_text="e.g., Spiral, Paperback, Hardcover")
     width = models.CharField(max_length=50, help_text="e.g., 13 MM", blank=True)
     height = models.CharField(max_length=50, help_text="e.g., 19 MM", blank=True)
     weight = models.CharField(max_length=50, help_text="e.g., 117 GRAM", blank=True)
     publish_date = models.DateField(blank=True, null=True)
-    quality_check = models.CharField(max_length=50, help_text="e.g., 32", blank=True)
+    quality_check = models.CharField(max_length=50, help_text="e.g., 32", blank=True, default='32')
 
     # --- STATUS ---
     STATUS_CHOICES = (
@@ -100,7 +100,7 @@ class Product(models.Model):
         ('published', 'Published (Visible)'),
         ('out_of_stock', 'Out of Stock'),
     )
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='draft')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='published')
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
