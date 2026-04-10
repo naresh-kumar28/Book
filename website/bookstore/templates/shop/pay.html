@@ -1,0 +1,110 @@
+{% extends 'shop/shopbase.html' %}
+
+{% block title %}Razorpay | Book Warm{% endblock %}
+
+{% block content %}
+
+<div class="max-w-3xl mx-auto px-4 py-16 md:px-6 my-8 text-center min-h-[50vh] flex flex-col justify-center items-center">
+    <div class="bg-white border border-gray-100 p-8 md:p-12 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 w-full relative overflow-hidden">
+        
+        <!-- Decorative background elements -->
+        <div class="absolute -top-10 -right-10 w-40 h-40 bg-orange-100 rounded-full blur-3xl opacity-50"></div>
+        <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-blue-100 rounded-full blur-3xl opacity-50"></div>
+
+        <div class="relative z-10">
+            <div class="w-20 h-20 bg-orange-50 text-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm border border-orange-100">
+                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                </svg>
+            </div>
+
+            <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-2 tracking-tight">Complete Payment</h2>
+            <p class="text-gray-500 mb-8 max-w-md mx-auto text-sm md:text-base">You are about to pay <span class="font-bold text-gray-800">₹{{ payment.amount }}</span>. Please do not refresh the page.</p>
+
+            <button id="rzp-button" class="group relative w-full sm:w-auto inline-flex items-center justify-center gap-3 bg-gradient-to-r from-gray-900 to-slate-800 text-white px-10 py-4 rounded-2xl font-bold text-base md:text-lg uppercase tracking-wider shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:scale-95 transition-all duration-300 overflow-hidden">
+                <span class="relative z-10">Pay Securely</span>
+                <svg class="w-5 h-5 relative z-10 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                </svg>
+                <!-- subtle shimmer effect -->
+                <div class="absolute inset-0 z-0 bg-white/20 translate-x-[-100%] group-hover:animate-[shimmer_1.5s_infinite] skew-x-12"></div>
+            </button>
+            
+            <div class="mt-8 flex items-center justify-center gap-2">
+                <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path>
+                </svg>
+                <span class="text-xs font-semibold tracking-wide text-gray-400 uppercase">Secured by Razorpay</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    @keyframes shimmer {
+        100% { transform: translateX(100%); }
+    }
+</style>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    var options = {
+        "key": "{{ razorpay_key_id }}",
+        "amount": "{{ amount_paise }}",
+        "currency": "INR",
+        "name": "Book Worm",
+        "description": "Secure Book Purchase",
+        "order_id": "{{ order_id }}",
+        "handler": function (response) {
+            // Automatically submit after a successful payment intercept
+            var form = document.createElement("form");
+            form.method = "POST";
+            form.action = "{% url 'payment_success' %}";
+
+            var csrf = document.createElement("input");
+            csrf.type = "hidden";
+            csrf.name = "csrfmiddlewaretoken";
+            csrf.value = "{{ csrf_token }}";
+            form.appendChild(csrf);
+
+            var payment_id = document.createElement("input");
+            payment_id.type = "hidden";
+            payment_id.name = "razorpay_payment_id";
+            payment_id.value = response.razorpay_payment_id;
+            form.appendChild(payment_id);
+
+            var order_id = document.createElement("input");
+            order_id.type = "hidden";
+            order_id.name = "razorpay_order_id";
+            order_id.value = response.razorpay_order_id;
+            form.appendChild(order_id);
+
+            var signature = document.createElement("input");
+            signature.type = "hidden";
+            signature.name = "razorpay_signature";
+            signature.value = response.razorpay_signature;
+            form.appendChild(signature);
+
+            document.body.appendChild(form);
+            form.submit();
+        },
+        "theme": {
+            "color": "#f97316"
+        }
+    };
+
+    var rzp1 = new Razorpay(options);
+    
+    // Automatically trigger Razorpay popup after load for convenience
+    window.addEventListener('load', function() {
+        setTimeout(function() {
+            rzp1.open();
+        }, 500); // 500ms delay for aesthetics
+    });
+
+    document.getElementById("rzp-button").onclick = function (e) {
+        rzp1.open();
+        e.preventDefault();
+    }
+</script>
+{% endblock %}

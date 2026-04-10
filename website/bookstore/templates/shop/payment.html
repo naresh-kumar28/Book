@@ -36,62 +36,9 @@
                                 </div>
                             </label>
                         </a>
-        
-                        {% if payment_method == 'upi' %}
-                        <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3">
-                            <button type="button"
-                                class="flex flex-col items-center gap-2 p-3 border-2 border-orange-500 rounded-xl bg-white shadow-sm transition-all">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/f/f2/Google_Pay_Logo.svg" class="h-5"
-                                    alt="GPay">
-                                <span class="text-[10px] font-bold uppercase text-orange-600">Google Pay</span>
-                            </button>
-                            <button type="button"
-                                class="flex flex-col items-center gap-2 p-3 border-2 border-gray-100 rounded-xl bg-white hover:border-orange-200 transition-all">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/7/71/PhonePe_Logo.svg" class="h-5"
-                                    alt="PhonePe">
-                                <span class="text-[10px] font-bold uppercase text-gray-400">PhonePe</span>
-                            </button>
-                            <button type="button"
-                                class="flex flex-col items-center gap-2 p-3 border-2 border-gray-100 rounded-xl bg-white hover:border-orange-200 transition-all">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/2/24/Paytm_Logo_%28standalone%29.svg"
-                                    class="h-4 my-0.5" alt="Paytm">
-                                <span class="text-[10px] font-bold uppercase text-gray-400">Paytm</span>
-                            </button>
-                            <button type="button"
-                                class="flex flex-col items-center gap-2 p-3 border-2 border-gray-100 rounded-xl bg-white hover:border-orange-200 transition-all">
-                                <span class="text-xs font-bold text-gray-500">Other UPI</span>
-                                <span class="text-[10px] font-bold uppercase text-gray-400">ID / Scan</span>
-                            </button>
-                        </div>
-                        {% endif %}
                     </div>
         
-                    <div class="p-6 {% if payment_method == 'card' %}bg-orange-50/30{% endif %}">
-                        <a href="?address={% if selected_address %}{{ selected_address.id }}{% endif %}&method=card"
-                            class="block">
-                            <label class="flex items-center justify-between cursor-pointer group">
-                                <div class="flex items-center gap-4">
-                                    <div
-                                        class="w-5 h-5 {% if payment_method == 'card' %}bg-orange-500 border-[3px] border-orange-200{% else %}border-2 border-gray-300 group-hover:border-orange-400{% endif %} rounded-full flex items-center justify-center transition-colors">
-                                        {% if payment_method == 'card' %}
-                                        <div class="w-1.5 h-1.5 bg-white rounded-full"></div>
-                                        {% endif %}
-                                    </div>
-                                    <div>
-                                        <p class="font-bold text-gray-800">Credit / Debit / ATM Card</p>
-                                        <p class="text-xs text-gray-400 font-medium">All major cards are supported</p>
-                                    </div>
-                                </div>
-                                <div class="flex gap-1 opacity-60">
-                                    <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-                                        <path
-                                            d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z">
-                                        </path>
-                                    </svg>
-                                </div>
-                            </label>
-                        </a>
-                    </div>
+                    <!-- Removed Card Option -->
         
                     <div class="p-6 {% if payment_method == 'cod' %}bg-orange-50/30{% endif %}">
                         <a href="?address={% if selected_address %}{{ selected_address.id }}{% endif %}&method=cod"

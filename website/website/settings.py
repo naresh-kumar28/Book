@@ -175,6 +175,11 @@ STORAGES = {
     },
 }
 
+# RazorPay
+
+RAZORPAY_KEY_ID = os.getenv("RAZORPAY_KEY_ID")
+RAZORPAY_KEY_SECRET = os.getenv("RAZORPAY_KEY_SECRET")
+
 #----------------------------------
 # for msg
 ACCOUNT_ADAPTER = 'allauth.account.adapter.DefaultAccountAdapter'
@@ -194,3 +199,4 @@ ACCOUNT_USERNAME_REQUIRED = False   # username ki requirement hata di (sirf emai
 ACCOUNT_LOGIN_METHODS = {"email"}   # login only email se allowed
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"   # signup ke baad email verify karna compulsory
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True  # email verify karte hi user automatically login ho jayega
+

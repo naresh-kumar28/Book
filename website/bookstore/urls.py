@@ -112,5 +112,9 @@ urlpatterns = [
     path('book/combo/', comboBooks, name='book.combo'),
     path('book/top-selling/', topSellingBooks, name='book.top_selling'),
 
+    #Razarpay
+    path("pay/", start_payment, name="start_payment"),
+    path("success/", payment_success, name="payment_success"),
+
 
 ]+static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

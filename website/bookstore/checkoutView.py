@@ -9,6 +9,9 @@ from django.utils import timezone
 from datetime import timedelta
 from django.db.models import Sum
 from django.db.models import Q
+import razorpay
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponseBadRequest
 
 
 
@@ -352,6 +355,9 @@ def placeOrder(req):
             messages.error(req, "Please select a payment method.")
             return redirect('payment')
 
+        if order.payment_method in ['upi', 'card']:
+            return redirect('start_payment')
+
         order.ordered = True
         order.ordered_date = timezone.now()
         order.total_price = order.get_total()
@@ -604,3 +610,90 @@ def submit_review(request, product_id):
                 messages.success(request, 'Review Submitted')
                 return redirect(url)
     return redirect(url)
+
+
+
+@login_required
+def start_payment(request):
+    if request.session.get('checkout_mode') == 'buy_now':
+        order = Order.objects.filter(user=request.user, ordered=False, is_buy_now=True).first()
+    else:
+        order = Order.objects.filter(user=request.user, ordered=False, is_buy_now=False).first()
+
+    if not order:
+        messages.error(request, "No active order found.")
+        return redirect('cart')
+
+    amount_rupees = int(order.get_total())
+    amount_paise = amount_rupees * 100
+
+    client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+
+    razorpay_order = client.order.create({
+        "amount": amount_paise,
+        "currency": "INR",
+        "receipt": f"receipt_{request.user.id}_{order.id}",
+        "payment_capture": 1
+    })
+
+    payment = Payment.objects.create(
+        user=request.user,
+        order=order,
+        amount=amount_rupees,
+        razorpay_order_id=razorpay_order["id"]
+    )
+
+    context = {
+        "payment": payment,
+        "razorpay_key_id": settings.RAZORPAY_KEY_ID,
+        "amount_paise": amount_paise,
+        "order_id": razorpay_order["id"],
+    }
+    return render(request, "shop/pay.html", context)
+
+
+
+
+@csrf_exempt
+@login_required
+def payment_success(request):
+    if request.method == "POST":
+        razorpay_payment_id = request.POST.get("razorpay_payment_id")
+        razorpay_order_id = request.POST.get("razorpay_order_id")
+        razorpay_signature = request.POST.get("razorpay_signature")
+
+        client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+
+        try:
+            client.utility.verify_payment_signature({
+                "razorpay_order_id": razorpay_order_id,
+                "razorpay_payment_id": razorpay_payment_id,
+                "razorpay_signature": razorpay_signature
+            })
+        except:
+            return HttpResponseBadRequest("Payment verification failed")
+
+        payment = Payment.objects.get(
+            razorpay_order_id=razorpay_order_id,
+            user=request.user
+        )
+
+        payment.razorpay_payment_id = razorpay_payment_id
+        payment.razorpay_signature = razorpay_signature
+        payment.paid = True
+        payment.save()
+
+        # Mark order as ordered
+        order = payment.order
+        if order:
+            order.ordered = True
+            order.ordered_date = timezone.now()
+            order.total_price = order.get_total()
+            order.save()
+            order.items.update(ordered=True)
+            return redirect('order_success', order_id=order.id)
+
+        messages.success(request, "Payment successful")
+        return redirect("home")
+
+    return HttpResponseBadRequest("Invalid request")
