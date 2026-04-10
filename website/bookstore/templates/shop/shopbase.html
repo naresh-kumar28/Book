@@ -4,7 +4,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Book Worm{% endblock %}</title>
+    <!-- SEO Essential Meta Tags -->
+    <title>{% block title %}Book Worm | Checkout & Details{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}Secure checkout and account management at Book Worm.{% endblock %}">
+    <meta name="keywords" content="books, bookstore, online bookstore, buy books, reading, checkout">
+    <meta name="author" content="Book Worm">
+    <meta name="robots" content="noindex, nofollow"> <!-- Prevents indexation of cart checkout flows -->
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/manifest.json">
+
+    <!-- Canonical URL -->
+    {% block canonical %}
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
+    {% endblock %}
+
+    <!-- Open Graph (Facebook / LinkedIn) -->
+    <meta property="og:site_name" content="Book Worm">
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:title" content="{% block og_title %}Book Worm | Secure Checkout{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Secure checkout and account management at Book Worm.{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}https://ui-avatars.com/api/?name=Book+Worm&background=f97316&color=fff&size=512{% endblock %}">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@BookWormStore">
+    <meta name="twitter:title" content="{% block twitter_title %}Book Worm | Secure Checkout{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}Secure checkout and account management at Book Worm.{% endblock %}">
+    <meta name="twitter:image" content="{% block twitter_image %}https://ui-avatars.com/api/?name=Book+Worm&background=f97316&color=fff&size=512{% endblock %}">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
 

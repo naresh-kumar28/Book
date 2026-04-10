@@ -1,7 +1,16 @@
 {% extends 'base.html' %}
 
-{% block title %} product-details {% endblock %}
+{% block title %}{{ product.title }} | Book Worm{% endblock %}
 
+{% block meta_description %}{{ product.description|striptags|truncatechars:160|default:"Buy "|add:product.title|add:" at Book Worm. Discover the best prices and original books." }}{% endblock %}
+
+{% block og_title %}{{ product.title }} | Book Worm{% endblock %}
+{% block og_description %}{{ product.description|striptags|truncatechars:160|default:"Buy "|add:product.title|add:" at Book Worm. Discover the best prices and original books." }}{% endblock %}
+{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{{ product.image.url }}{% endblock %}
+
+{% block twitter_title %}{{ product.title }} | Book Worm{% endblock %}
+{% block twitter_description %}{{ product.description|striptags|truncatechars:160|default:"Buy "|add:product.title|add:" at Book Worm. Discover the best prices and original books." }}{% endblock %}
+{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{{ product.image.url }}{% endblock %}
 {% block content %}
 
     {% include 'includes/category.html' %}
