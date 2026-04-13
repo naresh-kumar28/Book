@@ -214,8 +214,27 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+
+        // --- 1. AUTO-FILL NAME LOGIC ---
+        const nameField = document.getElementById('id_name');
+
+        if (nameField && nameField.value.trim() === '') {
+            // Django variables ko direct JS variables mein dal diya taaki editor red line na de
+            const userFullName = "{{ request.user.first_name|escapejs }} {{ request.user.last_name|escapejs }}".trim();
+            const userName = "{{ request.user.username|escapejs }}";
+
+            // Agar full name hai toh wo dalo, warna username dalo
+            if (userFullName) {
+                nameField.value = userFullName;
+            } else {
+                nameField.value = userName;
+            }
+        }
+        // -------------------------------
+
+        // --- 2. LOCATION LOGIC ---
         const locBtn = document.getElementById('getLocationBtn');
-        const btnText = locBtn.querySelector('.btn-text');
+        const btnText = locBtn ? locBtn.querySelector('.btn-text') : null;
 
         // Check if we need to auto-trigger after page reload
         if (sessionStorage.getItem('triggerLocation') === 'true') {
@@ -257,21 +276,17 @@
                         .then(data => {
                             if (data.address) {
                                 const address = data.address;
-                                console.log("OSM Data:", address); // Console me check karne ke liye ki kya data aa raha hai
+                                console.log("OSM Data:", address);
 
-                                // 1. Fill City
                                 const cityField = document.getElementById('id_city');
                                 if (cityField) cityField.value = address.city || address.town || address.village || address.state_district || '';
 
-                                // 2. Fill State
                                 const stateField = document.getElementById('id_state');
                                 if (stateField) stateField.value = address.state || '';
 
-                                // 3. Fill Pincode
                                 const pincodeField = document.getElementById('id_pincode');
                                 if (pincodeField) pincodeField.value = address.postcode || '';
 
-                                // 4. Fill Street (Super Enhanced)
                                 const streetField = document.getElementById('id_street');
                                 if (streetField) {
                                     let roadArea = [];
@@ -281,12 +296,10 @@
                                     if (address.suburb) roadArea.push(address.suburb);
                                     if (address.city_district) roadArea.push(address.city_district);
 
-                                    // Duplicate hatane ke liye Set ka use
                                     roadArea = [...new Set(roadArea)];
                                     streetField.value = roadArea.join(', ');
                                 }
 
-                                // 5. Fill Landmark (Agar API koi building ya shop bata de)
                                 const landmarkField = document.getElementById('id_landmark');
                                 if (landmarkField) {
                                     let landmark = [];
@@ -299,7 +312,6 @@
                                     landmarkField.value = landmark.join(', ');
                                 }
 
-                                // 6. Fill Near By (Fallback options)
                                 const nearbyField = document.getElementById('id_near_by');
                                 if (nearbyField) {
                                     if (address.county && !address.city_district) {
@@ -309,7 +321,6 @@
                                     }
                                 }
 
-                                // Scroll to form smoothly
                                 document.getElementById('addressFormContainer').scrollIntoView({ behavior: 'smooth' });
                             }
                         })
