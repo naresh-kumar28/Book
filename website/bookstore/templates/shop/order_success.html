@@ -40,7 +40,7 @@
             </p>
 
             <div class="relative bg-gray-50/80 rounded-2xl p-5 mb-8 border border-gray-100">
-            
+
                 <!-- Order ID -->
                 <div class="flex justify-between items-center mb-3">
                     <span class="text-sm font-semibold text-gray-500 tracking-wide">Order ID</span>
@@ -48,7 +48,7 @@
                         #BK-{{ order.id|stringformat:"06d" }}
                     </span>
                 </div>
-            
+
                 <!-- Date -->
                 <div class="flex justify-between items-center mb-3">
                     <span class="text-sm font-semibold text-gray-500 tracking-wide">Date</span>
@@ -56,21 +56,19 @@
                         {{ order.ordered_date|date:"d M Y, h:i A" }}
                     </span>
                 </div>
-            
+
                 <!-- Payment Method -->
                 <div class="flex justify-between items-center mb-3">
                     <span class="text-sm font-semibold text-gray-500 tracking-wide">Payment</span>
                     <span class="text-sm font-bold text-gray-900 uppercase">
                         {% if order.payment_method == 'cod' %}
                         Cash on Delivery
-                        {% elif order.payment_method == 'card' %}
-                        Card
                         {% else %}
-                        UPI
+                        {{ order.payment_method }}
                         {% endif %}
                     </span>
                 </div>
-            
+
                 <!-- Amount -->
                 <div class="flex justify-between items-center mb-4">
                     <span class="text-sm font-semibold text-gray-500 tracking-wide">Amount</span>
@@ -78,13 +76,13 @@
                         ₹{{ order.get_total|floatformat:2 }}
                     </span>
                 </div>
-            
+
                 <!-- dashed line -->
                 <div class="w-full border-t-2 border-dashed border-gray-200 my-4 relative">
                     <div class="absolute -left-7 -top-2.5 w-5 h-5 bg-white rounded-full border border-gray-100"></div>
                     <div class="absolute -right-7 -top-2.5 w-5 h-5 bg-white rounded-full border border-gray-100"></div>
                 </div>
-            
+
                 <!-- Delivery -->
                 <div class="flex justify-between items-center mt-4">
                     <span class="text-sm font-semibold text-gray-500 tracking-wide">Est. Delivery</span>
@@ -92,7 +90,7 @@
                         {{ estimated_delivery_start|date:"d M" }} - {{ estimated_delivery_end|date:"d M" }}
                     </span>
                 </div>
-            
+
             </div>
 
             <div class="relative flex flex-col gap-3">

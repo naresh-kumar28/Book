@@ -28,8 +28,13 @@ def wishlist(request):
     data['wishlist_items'] = wishlist_qs
     data['wishlist_products'] = wishlist_qs.values_list('product_id', flat=True)
 
-    return render(request, 'account/wishlist.html', data)
+    order = Order.objects.filter(user=request.user, ordered=False, is_buy_now=False).first()
+    if order:
+        data['cart_product_ids'] = list(order.items.values_list('item_id', flat=True))
+    else:
+        data['cart_product_ids'] = []
 
+    return render(request, 'account/wishlist.html', data)
 
 @login_required
 def addToWishlist(request, slug):
@@ -65,7 +70,7 @@ def cart(req):
     data = {}
     data['categories'] = Category.objects.all()
     
-    order_qs = Order.objects.filter(user=req.user, ordered=False)
+    order_qs = Order.objects.filter(user=req.user, ordered=False, is_buy_now=False)
 
     if order_qs.exists():
         data['order'] = order_qs[0]
@@ -260,12 +265,14 @@ def address(req):
             address = form.save(commit=False)
             address.user = req.user
             address.save()
-
             if edit_address:
                 messages.success(req, 'Address updated successfully!')
             else:
                 messages.success(req, 'Address added successfully!')
 
+            next_url = req.POST.get('next')
+            if next_url == 'delivery_address':
+                return redirect('delivery_address')
             return redirect('address')
         else:
             messages.error(req, 'Please correct the errors below.')
@@ -683,9 +690,20 @@ def payment_success(request):
         payment.paid = True
         payment.save()
 
+        # Try to get actual payment method from Razorpay
+        try:
+            fetch_payment = client.payment.fetch(razorpay_payment_id)
+            actual_method = fetch_payment.get('method')
+        except:
+            actual_method = None
+
         # Mark order as ordered
         order = payment.order
         if order:
+            if actual_method:
+                # Actual method can be 'upi', 'card', 'netbanking', 'wallet', etc.
+                order.payment_method = actual_method
+                
             order.ordered = True
             order.ordered_date = timezone.now()
             order.total_price = order.get_total()

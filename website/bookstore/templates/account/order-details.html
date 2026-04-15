@@ -40,7 +40,7 @@
 
                         <div
                             class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm text-gray-500 font-medium">
-                            <p>Order ID: <span class="font-bold text-orange-600">#ORD-{{ order.id|stringformat:"06d"}}</span></p>
+                            <p>Order ID: <span class="font-bold text-orange-600">#ORD-{{order.id|stringformat:"06d"}}</span></p>
                             <span class="hidden sm:block w-1.5 h-1.5 bg-gray-300 rounded-full"></span>
                             <p>Placed on {{ order.ordered_date|date:"d M Y, h:i A" }}</p>
                         </div>
@@ -63,7 +63,8 @@
                         <div class="bg-white border border-gray-100 rounded-3xl shadow-sm overflow-hidden">
                             <div class="px-6 py-5 border-b border-gray-100 bg-white flex justify-between items-center">
                                 <h3 class="text-lg font-extrabold text-gray-900 tracking-tight">Items in your Order</h3>
-                                <span class="text-sm font-bold text-gray-500 bg-gray-50 px-3 py-1 rounded-lg">{{order.items.count }} Items</span>
+                                <span
+                                    class="text-sm font-bold text-gray-500 bg-gray-50 px-3 py-1 rounded-lg">{{order.items.count }} Items</span>
                             </div>
 
                             <div class="p-6 space-y-6 bg-gray-50/30">
@@ -90,22 +91,25 @@
                                                 </h4>
                                                 <p
                                                     class="text-xs font-semibold text-gray-400 mt-1 uppercase tracking-wider">
-                                                    BY {% if item.item.author %}{{ item.item.author }}{% else%}BOOKWORM{% endif %}
+                                                    BY {% if item.item.author %}{{ item.item.author }}{% else %}BOOKWORM{% endif %}
                                                 </p>
                                             </div>
                                             <div class="text-right">
-                                                <span class="text-base font-extrabold text-gray-900">₹{{item.get_total_price|floatformat:2 }}</span>
+                                                <span
+                                                    class="text-base font-extrabold text-gray-900">₹{{item.get_total_price|floatformat:2}}</span>
                                             </div>
                                         </div>
 
                                         <div class="mt-4 flex items-center gap-3">
-                                            <span class="text-sm font-bold text-gray-800">₹{{item.item.price|floatformat:2 }}</span>
+                                            <span
+                                                class="text-sm font-bold text-gray-800">₹{{item.item.price|floatformat:2}}</span>
                                             {% if item.item.discount_price %}
-                                            <span class="text-xs font-medium text-gray-400 line-through">₹{{item.item.discount_price|floatformat:2 }}</span>
+                                            <span
+                                                class="text-xs font-medium text-gray-400 line-through">₹{{item.item.discount_price|floatformat:2}}</span>
                                             {% endif %}
                                             {% if item.item.discount_percentage > 0 %}
                                             <span
-                                                class="text-[10px] font-extrabold text-orange-600 bg-orange-50 px-2 py-0.5 rounded uppercase tracking-wider border border-orange-100">{{item.item.discount_percentage }}% Off</span>
+                                                class="text-[10px] font-extrabold text-orange-600 bg-orange-50 px-2 py-0.5 rounded uppercase tracking-wider border border-orange-100">{{item.item.discount_percentage}}% Off</span>
                                             {% endif %}
                                         </div>
 
@@ -144,7 +148,8 @@
                                                 d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                         </svg>
                                     </div>
-                                    <h3 class="text-base font-extrabold text-gray-900 tracking-tight">Delivery Address</h3>
+                                    <h3 class="text-base font-extrabold text-gray-900 tracking-tight">Delivery Address
+                                    </h3>
                                 </div>
 
                                 {% if order.address %}
@@ -152,14 +157,16 @@
                                     <h4 class="font-extrabold text-gray-900 text-base">{{ order.address.name }}</h4>
                                     <p class="leading-relaxed">
                                         {{ order.address.street }}
-                                        {% if order.address.landmark %}<br>Landmark: {{ order.address.landmark }}{%endif %}
+                                        {% if order.address.landmark %}<br>Landmark: {{ order.address.landmark }}{%endif%}
                                         {% if order.address.near_by %}<br>Near: {{ order.address.near_by }}{% endif %}
                                         <br>{{ order.address.city }}, {{ order.address.state }} - <span
                                             class="font-bold text-gray-800">{{ order.address.pincode }}</span>
                                     </p>
                                     <p class="pt-3 border-t border-gray-100 mt-3 text-gray-800">
-                                        <span class="text-gray-500">Phone:</span> <span class="font-bold">{{order.address.contact }}</span>
-                                        {% if order.address.alt_contact %} / <span class="font-bold">{{order.address.alt_contact }}</span>{% endif %}
+                                        <span class="text-gray-500">Phone:</span> <span
+                                            class="font-bold">{{order.address.contact }}</span>
+                                        {% if order.address.alt_contact %} / <span
+                                            class="font-bold">{{order.address.alt_contact }}</span>{% endif %}
                                     </p>
                                 </div>
                                 {% else %}
@@ -181,7 +188,8 @@
                                                 </path>
                                             </svg>
                                         </div>
-                                        <h3 class="text-base font-extrabold text-gray-900 tracking-tight">Payment Method</h3>
+                                        <h3 class="text-base font-extrabold text-gray-900 tracking-tight">Payment Method
+                                        </h3>
                                     </div>
 
                                     <div
@@ -204,10 +212,9 @@
                                             {% endif %}
                                         </div>
                                         <div>
-                                            <p class="text-sm font-extrabold text-gray-900">
+                                            <p class="text-sm font-extrabold text-gray-900 uppercase">
                                                 {% if order.payment_method == 'cod' %}Cash on Delivery
-                                                {% elif order.payment_method == 'card' %}Card Payment
-                                                {% else %}UPI / Online Payment{% endif %}
+                                                {% else %}{{ order.payment_method }} Payment{% endif %}
                                             </p>
                                             <p class="text-xs font-semibold text-green-600 mt-0.5">Payment Verified</p>
                                         </div>
@@ -216,7 +223,8 @@
 
                                 <div class="mt-6 pt-4 border-t border-gray-100 text-center">
                                     <button
-                                        class="text-sm font-bold text-orange-500 hover:text-orange-600 hover:underline">Need help with payment?</button>
+                                        class="text-sm font-bold text-orange-500 hover:text-orange-600 hover:underline">Need
+                                        help with payment?</button>
                                 </div>
                             </div>
                         </div>
@@ -225,35 +233,37 @@
 
                     {% if order and order.items.all %}
                     <div class="xl:col-span-4 sticky top-24">
-                        <div class="bg-white p-6 md:p-7 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-                    
-                            <h3 class="text-lg font-extrabold text-gray-900 tracking-tight mb-5 border-b border-gray-100 pb-4">
+                        <div
+                            class="bg-white p-6 md:p-7 rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+
+                            <h3
+                                class="text-lg font-extrabold text-gray-900 tracking-tight mb-5 border-b border-gray-100 pb-4">
                                 Order Summary
                             </h3>
-                    
+
                             <div class="space-y-3.5 text-sm font-medium text-gray-600 mb-6">
                                 <div class="flex justify-between items-center">
-                                    <span>Subtotal ({{ order.items.count }} item{{ order.items.count|pluralize }})</span>
-                                    <span class="text-gray-900 font-bold">₹{{ order.get_mrp_total|floatformat:2 }}</span>
+                                    <span>Subtotal ({{ order.items.count }} item{{ order.items.count|pluralize}})</span>
+                                    <span class="text-gray-900 font-bold">₹{{ order.get_mrp_total|floatformat:2}}</span>
                                 </div>
-                    
+
                                 {% if order.get_product_discount > 0 %}
                                 <div class="flex justify-between items-center text-emerald-600">
                                     <span>Product Discount</span>
                                     <span class="font-bold">- ₹{{ order.get_product_discount|floatformat:2 }}</span>
                                 </div>
                                 {% endif %}
-                    
+
                                 {% if order.coupon %}
                                 <div class="flex justify-between items-center">
                                     <span class="flex items-center gap-1.5 text-emerald-600">
                                         Coupon Code
-                                        
+
                                     </span>
-                                    <span class="font-bold text-emerald-600">- ₹{{ order.get_discount|floatformat:2 }}</span>
+                                    <span class="font-bold text-emerald-600">- ₹{{ order.get_discount|floatformat:2}}</span>
                                 </div>
                                 {% endif %}
-                    
+
                                 <div class="flex justify-between items-center">
                                     <span>Delivery Charges</span>
                                     <span class="font-bold text-gray-900">
@@ -264,26 +274,30 @@
                                         {% endif %}
                                     </span>
                                 </div>
-                    
+
                                 <div class="flex justify-between items-center">
                                     <span>Tax (Included GST)</span>
                                     <span class="font-bold text-gray-900">₹{{ order.get_tax|floatformat:2 }}</span>
                                 </div>
                             </div>
-                    
+
                             <div class="border-t-2 border-dashed border-gray-100 my-5"></div>
-                    
+
                             <div class="flex justify-between items-end mb-6">
                                 <div>
-                                    <span class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Grand Total</span>
+                                    <span
+                                        class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Grand
+                                        Total</span>
                                 </div>
-                                <span class="text-2xl font-black text-gray-900">₹{{ order.get_total|floatformat:2 }}</span>
+                                <span class="text-2xl font-black text-gray-900">₹{{ order.get_total|floatformat:2}}</span>
                             </div>
-                    
+
                             {% if order.get_product_discount > 0 or order.coupon %}
-                            <div class="bg-emerald-50/70 border border-emerald-100 rounded-2xl p-4 flex items-center gap-3.5 mb-6">
+                            <div
+                                class="bg-emerald-50/70 border border-emerald-100 rounded-2xl p-4 flex items-center gap-3.5 mb-6">
                                 <div class="bg-emerald-100 p-2 rounded-xl shrink-0">
-                                    <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                             d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7">
                                         </path>
@@ -291,12 +305,13 @@
                                 </div>
                                 <div>
                                     <p class="text-xs font-semibold text-emerald-800 leading-snug">
-                                        <span class="text-emerald-600 font-black text-sm">₹{{order.get_product_discount|add:order.get_discount|floatformat:2 }}</span> Saved on this order.
+                                        <span
+                                            class="text-emerald-600 font-black text-sm">₹{{order.get_product_discount|add:order.get_discount|floatformat:2}}</span> Saved on this order.
                                     </p>
                                 </div>
                             </div>
                             {% endif %}
-                    
+
                             <a href="#"
                                 class="w-full inline-flex items-center justify-center px-6 py-3.5 border border-transparent text-sm font-extrabold rounded-xl text-white bg-orange-500 hover:bg-orange-600 shadow-sm transition-all active:scale-[0.98] tracking-wide gap-2">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -180,6 +180,9 @@
                         <form action="" method="post" enctype="multipart/form-data"
                             class="grid grid-cols-1 md:grid-cols-2 gap-5 overflow-hidden">
                             {% csrf_token %}
+                            {% if request.GET.next %}
+                            <input type="hidden" name="next" value="{{ request.GET.next }}">
+                            {% endif %}
 
                             {{ form|crispy }}
 
@@ -249,7 +252,9 @@
                 // Agar form open nahi hai, toh pehle form open karo
                 if (!document.getElementById('id_pincode')) {
                     sessionStorage.setItem('triggerLocation', 'true');
-                    window.location.href = "{% url 'address' %}?add=1";
+                    let currentUrl = new URL(window.location.href);
+                    currentUrl.searchParams.set('add', '1');
+                    window.location.href = currentUrl.toString();
                     return;
                 }
                 fetchLocation();

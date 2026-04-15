@@ -83,7 +83,7 @@ def home(req):
         )
 
         # 🔹 User ka active cart nikalo
-        order = Order.objects.filter(user=req.user, ordered=False).first()
+        order = Order.objects.filter(user=req.user, ordered=False, is_buy_now=False).first()
 
         if order:
             # 🔹 Cart ke andar jo OrderItems hain,
@@ -216,7 +216,7 @@ def productDetails(req, id):
             Wishlist.objects.filter(user=req.user).values_list('product_id', flat=True)
         )
 
-        order = Order.objects.filter(user=req.user, ordered=False).first()
+        order = Order.objects.filter(user=req.user, ordered=False, is_buy_now=False).first()
 
         if order:
             cart_product_ids = list(order.items.values_list('item_id', flat=True))
@@ -284,7 +284,7 @@ def filter(req, slug=None, author_slug=None, publisher_slug=None):
             Wishlist.objects.filter(user=req.user).values_list('product_id', flat=True)
         )
 
-        order = Order.objects.filter(user=req.user, ordered=False).first()
+        order = Order.objects.filter(user=req.user, ordered=False, is_buy_now=False).first()
 
         if order:
             cart_product_ids = list(order.items.values_list('item_id', flat=True))
@@ -312,7 +312,7 @@ def newelyRelase(req):
             Wishlist.objects.filter(user=req.user).values_list('product_id', flat=True)
         )
 
-        order = Order.objects.filter(user=req.user, ordered=False).first()
+        order = Order.objects.filter(user=req.user, ordered=False, is_buy_now=False).first()
 
         if order:
             cart_product_ids = list(order.items.values_list('item_id', flat=True))
@@ -338,7 +338,7 @@ def oldBooks(req):
             Wishlist.objects.filter(user=req.user).values_list('product_id', flat=True)
         )
 
-        order = Order.objects.filter(user=req.user, ordered=False).first()
+        order = Order.objects.filter(user=req.user, ordered=False, is_buy_now=False).first()
 
         if order:
             cart_product_ids = list(order.items.values_list('item_id', flat=True))
@@ -365,7 +365,7 @@ def recentlyAdded(req):
             Wishlist.objects.filter(user=req.user).values_list('product_id', flat=True)
         )
 
-        order = Order.objects.filter(user=req.user, ordered=False).first()
+        order = Order.objects.filter(user=req.user, ordered=False, is_buy_now=False).first()
 
         if order:
             cart_product_ids = list(order.items.values_list('item_id', flat=True))
@@ -391,7 +391,7 @@ def comboBooks(req):
             Wishlist.objects.filter(user=req.user).values_list('product_id', flat=True)
         )
 
-        order = Order.objects.filter(user=req.user, ordered=False).first()
+        order = Order.objects.filter(user=req.user, ordered=False, is_buy_now=False).first()
 
         if order:
             cart_product_ids = list(order.items.values_list('item_id', flat=True))
@@ -434,7 +434,7 @@ def recentViewedBooks(req):
             Wishlist.objects.filter(user=req.user).values_list('product_id', flat=True)
         )
 
-        order = Order.objects.filter(user=req.user, ordered=False).first()
+        order = Order.objects.filter(user=req.user, ordered=False, is_buy_now=False).first()
 
         if order:
             cart_product_ids = list(order.items.values_list('item_id', flat=True))
@@ -465,7 +465,7 @@ def topSellingBooks(req):
     cart_product_ids = []
     if req.user.is_authenticated:
         wishlist_products = list(Wishlist.objects.filter(user=req.user).values_list('product_id', flat=True))
-        order = Order.objects.filter(user=req.user, ordered=False).first()
+        order = Order.objects.filter(user=req.user, ordered=False, is_buy_now=False).first()
         if order:
             cart_product_ids = list(order.items.values_list('item_id', flat=True))
             

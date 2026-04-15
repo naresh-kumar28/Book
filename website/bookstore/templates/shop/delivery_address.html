@@ -12,7 +12,7 @@
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-lg font-bold text-gray-800">Select Delivery Address</h2>
 
-                <a href="{% url 'address' %}?add=1"
+                <a href="{% url 'address' %}?add=1&next=delivery_address"
                     class="flex items-center gap-1 text-orange-600 font-bold text-sm uppercase hover:text-orange-700 transition-colors">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -120,7 +120,7 @@
                     <h3 class="text-lg font-bold text-gray-800">No address found</h3>
                     <p class="text-sm text-gray-500 mt-2">Please add a new address to continue.</p>
             
-                    <a href="{% url 'address' %}?add=1"
+                    <a href="{% url 'address' %}?add=1&next=delivery_address"
                         class="inline-flex items-center gap-2 mt-5 bg-orange-500 text-white px-5 py-3 rounded-lg font-bold text-sm uppercase tracking-wide shadow-md hover:bg-orange-600 transition-all">
                         Add New Address
                     </a>

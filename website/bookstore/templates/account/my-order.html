@@ -118,7 +118,7 @@
 
                             <div class="flex-1 min-w-0">
                                 <h5 class="text-sm md:text-base font-bold text-gray-800 truncate">
-                                    {{ first_item.item.title }}
+                                    {{ first_item.item.title|truncatewords:10 }}
                                     {% if order.items.count > 1 %}
                                     <span class="text-gray-400 font-semibold">
                                         + {{ order.items.count|add:"-1" }} more
