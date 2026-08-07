@@ -1,9 +1,16 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.png' %}">
+    <link rel="apple-touch-icon" href="{% static 'favicon.png' %}">
+    
     <!-- SEO Essential Meta Tags -->
     <title>{% block title %}Book Worm | Checkout & Details{% endblock %}</title>
     <meta name="description" content="{% block meta_description %}Secure checkout and account management at Book Worm.{% endblock %}">
