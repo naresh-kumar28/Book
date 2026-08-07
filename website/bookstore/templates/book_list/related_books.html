@@ -7,7 +7,7 @@
             <h2 class="text-xl font-bold text-gray-900 mb-6">About Author</h2>
             <div class="flex items-center space-x-4">
                 <div
-                    class="w-16 h-16 md:w-20 md:h-20 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 text-2xl md:text-3xl font-bold border-4 border-white shadow-sm overflow-hidden">
+                    class="img-skeleton-container w-16 h-16 md:w-20 md:h-20 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 text-2xl md:text-3xl font-bold border-4 border-white shadow-sm overflow-hidden">
 
                     {% if product.author.author_image %}
                     <img src="{{ product.author.author_image.url }}" alt="{{ product.author.author_name }}"
@@ -69,7 +69,7 @@
 
                     <a href="{% url 'product-details' book.id %}">
 
-                        <div class="relative h-52 flex items-center justify-center mb-4 bg-gray-50 rounded-xl overflow-hidden">
+                        <div class="relative h-52 flex items-center justify-center mb-4 bg-gray-50 rounded-xl overflow-hidden img-skeleton-container">
                             <div class="relative flex items-center justify-center w-full">
                                 <img src="{{ book.image.url }}"
                                     class="w-32 h-40 object-cover rounded shadow-2xl z-10 border-2 border-white">
@@ -135,7 +135,7 @@
             <h2 class="text-xl font-bold text-gray-900 mb-6">About Publisher</h2>
             <div class="flex items-center space-x-4">
                 <div
-                    class="w-16 h-16 md:w-20 md:h-20 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 text-2xl md:text-3xl font-bold border-4 border-white shadow-sm overflow-hidden">
+                    class="img-skeleton-container w-16 h-16 md:w-20 md:h-20 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 text-2xl md:text-3xl font-bold border-4 border-white shadow-sm overflow-hidden">
 
                     {% if product.publisher.publisher_image %}
                     <img src="{{ product.publisher.publisher_image.url }}" alt="{{ product.publisher.publisher_name }}"
@@ -196,7 +196,7 @@
 
                         <a href="{% url 'product-details' book.id %}">
                             <div
-                                class="relative h-52 flex items-center justify-center mb-4 bg-gray-50 rounded-xl overflow-hidden">
+                                class="relative h-52 flex items-center justify-center mb-4 bg-gray-50 rounded-xl overflow-hidden img-skeleton-container">
                                 <div class="relative flex items-center justify-center w-full">
                                     <img src="{{ book.image.url }}"
                                         class="w-32 h-40 object-cover rounded shadow-2xl z-10 border-2 border-white">
